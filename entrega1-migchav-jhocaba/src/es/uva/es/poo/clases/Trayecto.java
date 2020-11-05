@@ -1,4 +1,4 @@
-package es.uva.es.poo.trayecto;
+package es.uva.es.poo.clases;
 
 import es.uva.inf.poo.maps.GPSCoordinate;
 
