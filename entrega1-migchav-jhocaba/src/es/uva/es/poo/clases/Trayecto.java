@@ -1,11 +1,11 @@
 package es.uva.es.poo.clases;
-
 import es.uva.inf.poo.maps.GPSCoordinate;
+
 
 /**
  * Clase en la que se almacena la información relativa a los viajes realizados 
  * por cada contenedor
- * @author Jhon
+ * @author jhocaba
  * @author migchav
  *
  */
