@@ -51,14 +51,14 @@ public class Contenedor {
 	/**
 	 * Cambiar el estado de un contenedor para reflejar que está en recogida
 	 */
-	public void SetRecogida() {
+	public void setRecogida() {
 		this.estado = true;
 	}
 
 	/**
 	 * Cambiar el estado de un contenedor para reflejar que está en tránsito
 	 */
-	public void SetTransito() {
+	public void setTransito() {
 		this.estado = false;
 	}
 	
@@ -66,14 +66,14 @@ public class Contenedor {
 	 * Cambiar a contenedor tiene techo
 	 */
 	
-	public void SetTecho() {
+	public void setTecho() {
 		this.techo = true;
 	}
 	
 	/**
 	 * Cambiar a contenedor no tiene techo
 	 */
-	public void SetNoTecho() {
+	public void setNoTecho() {
 		this.techo = false;
 	}
 	
@@ -81,7 +81,7 @@ public class Contenedor {
 	 * Obtener el volumen del contenedor en metros cúbicos
 	 * @return volumen en metros cuadrados
 	 */
-	public double GetVolumenMetros() {
+	public double getVolumenMetros() {
 		return this.volumen;
 	}
 	
@@ -89,7 +89,7 @@ public class Contenedor {
 	 * Almacenar el volumen en metros cúbicos
 	 * @param volumen
 	 */
-	public void SetVolumenMetros(double volumen) {
+	public void setVolumenMetros(double volumen) {
 		this.volumen = volumen;
 	}
 	
@@ -97,8 +97,8 @@ public class Contenedor {
 	 * Obtener el volumen del contenedor en pies cúbicos
 	 * @return volumen en pies cúbicos
 	 */
-	public double GetVolumenPies() {
-		double piescubicos = GetVolumenMetros() * (353147/10000);
+	public double getVolumenPies() {
+		double piescubicos = getVolumenMetros() * (353147/10000);
 		return piescubicos;
 	}
 	
@@ -106,23 +106,23 @@ public class Contenedor {
 	 * Cambiar el volumen a partir del valor del volumen en pies cubicos
 	 * @param volumen
 	 */
-	public void SetVolumenPies(double volumen) {
+	public void setVolumenPies(double volumen) {
 		double nuevoVolumen = volumen * (10000/353147);
-		SetVolumenMetros(nuevoVolumen);
+		setVolumenMetros(nuevoVolumen);
 	}
 	
 	/**
 	 * Obtener el peso del contenedor en Kilogramos
 	 * @return peso en Kilogramos
 	 */
-	public double GetPesoKilo() {
+	public double getPesoKilo() {
 		return this.peso;
 	}
 	 
 	/**
 	 * Almacenar el peso en kilos
 	 */
-	public void SetPesoKilo(double peso) {
+	public void setPesoKilo(double peso) {
 		this.peso = peso;
 	}
 	
@@ -130,8 +130,8 @@ public class Contenedor {
 	 * Obtener el peso en libras
 	 * @return peso en libras
 	 */
-	public double GetPesoLibra() {
-		double libras = GetPesoKilo() * (110231/50000);
+	public double getPesoLibra() {
+		double libras = getPesoKilo() * (110231/50000);
 		return libras;
 	}
 	
@@ -139,9 +139,9 @@ public class Contenedor {
 	 * Cambiar el peso a partir del valor del peso en libras
 	 * @param peso 
 	 */
-	public void SetPesoLibra(double peso) {
-		double nuevoPeso = GetPesoKilo() * (50000/110231);
-		SetPesoKilo(nuevoPeso);
+	public void setPesoLibra(double peso) {
+		double nuevoPeso = getPesoKilo() * (50000/110231);
+		setPesoKilo(nuevoPeso);
 	}
 	
 	/**
