@@ -1,11 +1,5 @@
 package es.uva.es.poo.clases;
-<<<<<<< HEAD
-/**
- * 
- * @author migchav
- *
- */
-=======
+
 import java.util.ArrayList;
 
 /**
@@ -14,7 +8,6 @@ import java.util.ArrayList;
  * @author migchav
  */
 
->>>>>>> branch 'master' of https://gitlab.inf.uva.es/migchav/entrega1-migchav-jhocaba.git
 public class Puerto {
 	//Atributos
 	

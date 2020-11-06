@@ -99,7 +99,7 @@ public class Trayecto {
 	 * 
 	 * @return resultado 
 	 */
-	public boolean Fechacorrecta(int fecha) {
+	public boolean fechaCorrecta(int fecha) {
 		//TODO: reconocer que una fecha sea incorrecta
 		//TODO: Convertir fechas a numeros
 		if (fecha == 0) {
