@@ -121,7 +121,7 @@ public class Trayecto {
 	 * @return distancia en km entre coordenadas
 	 */
 	
-	public double GetDistancia(GPSCoordinate destino) {
+	public double getDistancia(GPSCoordinate destino) {
 		//Implementar bien la coordenada origen
 		if (destino == null) {	//no hace falta no? ya en getDistanceTo
 			throw new IllegalArgumentException("La coordenada no puede ser nula");
@@ -156,7 +156,7 @@ public class Trayecto {
 	public int costeTrayecto(int precioMilla,int precioDia) {
 		//TODO: precio negativo y origen,destino???????
 		GPSCoordinate destino = new GPSCoordinate(40,40); //???????????????
-		return precioMilla*origen.GetDistancia(destino)*(getFechaFin()-getFechaIni())*precioDia;
+		return precioMilla*origen.getDistancia(destino)*(getFechaFin()-getFechaIni())*precioDia;
 	}
 }
 
