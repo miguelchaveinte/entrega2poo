@@ -155,6 +155,10 @@ public class Contenedor {
 
 		return precio;
 	}
+
+	public String getIndentificador(Contenedor contenedor) {
+		// TODO Auto-generated method stub
+	}
 	
 	
 }
