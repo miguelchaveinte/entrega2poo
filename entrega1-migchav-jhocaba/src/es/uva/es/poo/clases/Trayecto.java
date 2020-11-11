@@ -21,8 +21,7 @@ public class Trayecto {
 	
 	
 	/**
-	 * Inicialización sin argumentos
-	 */
+	 * Inicialización sin argumentos(tiene sentido sin argumentos????????)
 	public Trayecto() {
 		
 	}

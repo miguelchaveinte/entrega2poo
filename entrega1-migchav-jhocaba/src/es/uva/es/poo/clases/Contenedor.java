@@ -12,6 +12,7 @@ import es.uva.inf.poo.maps.GPSCoordinate;
 public class Contenedor {
 	//Atributos
 	
+	private String identificador;
 	private String codigo;
 	private char equipamiento;
 	private int serie;
@@ -36,30 +37,32 @@ public class Contenedor {
 	 * @param identificador - Cadena con el que se identifica cada contenedor
 	 */
 	public Contenedor(String identificador) {	
-		int i;
-		for (i= 0; i<3; i++) {
+		//todo: llamar a lo de carga,code,estado,techos............
+		this.identificador=identificador;
+		for (int i= 0; i<3; i++) {
 			this.codigo = this.codigo + identificador.charAt(i);
 		}
-		this.equipamiento = identificador.charAt(i);
+		equipamiento = identificador.charAt(3);
 		
-		for(i=4; i< identificador.length() - 1; i++) {
+		for(int i=4; i< identificador.length() - 1; i++) {
 			this.serie = this.serie + identificador.length();
 		}
-		this.code = identificador.charAt(i);
+		code = identificador.charAt(identificador.length()- 1);
+		//TODO: transito o en recogida,techo?????
 	}
 	
 	/**
 	 * Cambiar el estado de un contenedor para reflejar que está en recogida
 	 */
 	public void setRecogida() {
-		this.estado = true;
+		estado = true;
 	}
 
 	/**
 	 * Cambiar el estado de un contenedor para reflejar que está en tránsito
 	 */
 	public void setTransito() {
-		this.estado = false;
+		estado = false;
 	}
 	
 	/**
@@ -67,14 +70,18 @@ public class Contenedor {
 	 */
 	
 	public void setTecho() {
-		this.techo = true;
+		techo = true;
 	}
 	
 	/**
 	 * Cambiar a contenedor no tiene techo
 	 */
 	public void setNoTecho() {
-		this.techo = false;
+		techo = false;
+	}
+	
+	public boolean getTecho(Contenedor contenedor) {
+		return contenedor.techo;
 	}
 	
 	/**
@@ -156,9 +163,11 @@ public class Contenedor {
 		return precio;
 	}
 
-	public String getIndentificador(Contenedor contenedor) {
-		// TODO Auto-generated method stub
+	public String getIdentificador(Contenedor contenedor) {
+		return contenedor.identificador;
 	}
+
+
 	
 	
 }
