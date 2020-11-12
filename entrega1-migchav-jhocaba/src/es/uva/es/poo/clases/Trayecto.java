@@ -1,4 +1,8 @@
 package es.uva.es.poo.clases;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
+
 import es.uva.inf.poo.maps.GPSCoordinate;
 
 
@@ -14,10 +18,10 @@ public class Trayecto {
 	
 	private String muelleOrigen;
 	private String puertoOrigen;
-	private int fechaIni;
+	private LocalDate fechaIni;
 	private String muelleDestino;
 	private String puertoDestino;
-	private int fechaFin;
+	private LocalDate fechaFin;
 	
 	
 	/**
@@ -36,7 +40,7 @@ public class Trayecto {
 	 * @param puertoDestino
 	 * @param fechaFin
 	 */
-	public Trayecto(String muelleOrigen,String puertoOrigen,int fechaIni,String muelleDestino,String puertoDestino,int fechaFin,Contenedor contenedor) {
+	public Trayecto(String muelleOrigen,String puertoOrigen,LocalDate fechaIni,String muelleDestino,String puertoDestino,LocalDate fechaFin) {
 		//USO DE THIS: Distinguir el atributo del argumento formal
 		//TODO: SET ?? 
 		//TODO: DAR MUELLO ORIGEN ,PUERTO ORIGEN...
@@ -80,14 +84,14 @@ public class Trayecto {
 	 * Consulta dato de la fecha inicio
 	 * @return el valor de la fecha inicio del trayecto
 	 */
-	public int getFechaIni() {
+	public LocalDate getFechaIni() {
 		return fechaIni;
 	}
 	/**
 	 * Consulta dato de la fecha fin
 	 * @return el valor de la fecha final del trayecto
 	 */
-	public int getFechaFin() {
+	public LocalDate getFechaFin() {
 		return fechaFin;
 	}
 
@@ -157,17 +161,6 @@ public class Trayecto {
 		//TODO: precio negativo y origen,destino???????
 		GPSCoordinate destino = new GPSCoordinate(40,40); //???????????????
 		//Uso de ChronoUnit.DAYS para obtener el numero de dias entre las fechas indicadas
-		return (precioMilla*origen.getDistancia(destino)*(ChronoUnit.DAYS.between(getFechaFin(), getFechaIni()))*precioDia);
+		return precioMilla*origen.getDistancia(destino)*(ChronoUnit.DAYS.between(getFechaFin(), getFechaIni()))*precioDia;
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
