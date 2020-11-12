@@ -36,7 +36,7 @@ public class Trayecto {
 	 * @param puertoDestino
 	 * @param fechaFin
 	 */
-	public Trayecto(String muelleOrigen,String puertoOrigen,int fechaIni,String muelleDestino,String puertoDestino,int fechaFin) {
+	public Trayecto(String muelleOrigen,String puertoOrigen,int fechaIni,String muelleDestino,String puertoDestino,int fechaFin,Contenedor contenedor) {
 		//USO DE THIS: Distinguir el atributo del argumento formal
 		//TODO: SET ?? 
 		this.muelleOrigen = muelleOrigen; 
@@ -122,6 +122,7 @@ public class Trayecto {
 	
 	public double getDistancia(GPSCoordinate destino) {
 		//Implementar bien la coordenada origen
+		//TODO:COORDENADAS????????????????
 		if (destino == null) {	//no hace falta no? ya en getDistanceTo
 			throw new IllegalArgumentException("La coordenada no puede ser nula");
 		}
@@ -129,7 +130,7 @@ public class Trayecto {
 		double distancia;	
 		GPSCoordinate coordenadaOrigen = new GPSCoordinate(40,40); //Grados decimales
 		distancia = coordenadaOrigen.getDistanceTo(destino);
-		return distancia;
+		return (distancia/1.852);//para pasarlo a millas marinas
 	}
 	/**
 	 * Agrupa en una cadena la información relativa a la localidad,pais y fecha tanto
@@ -153,7 +154,7 @@ public class Trayecto {
 	 * @return el coste en euros total del trayecto.
 	 */
 	public int costeTrayecto(int precioMilla,int precioDia) {
-		//TODO: precio negativo y origen,destino???????
+		//TODO: precio negativo y origen,destino,FECHAS???????
 		GPSCoordinate destino = new GPSCoordinate(40,40); //???????????????
 		return precioMilla*origen.getDistancia(destino)*(getFechaFin()-getFechaIni())*precioDia;
 	}

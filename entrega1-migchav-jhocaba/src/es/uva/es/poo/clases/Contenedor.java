@@ -19,7 +19,7 @@ public class Contenedor {
 	private int code;
 	
 	private double peso;
-	private int carga;			//Por defecto recibimos Kilogramos
+	private double carga;			//Por defecto recibimos Kilogramos
 	private double volumen; 	//Por defecto recibimos metros cúbicos
 	private boolean estado;		//Transito = False -- Recogida = True
 	private boolean techo;
@@ -36,8 +36,8 @@ public class Contenedor {
 	 * Inicialización a partir de argumentos
 	 * @param identificador - Cadena con el que se identifica cada contenedor
 	 */
-	public Contenedor(String identificador) {	
-		//todo: llamar a lo de carga,code,estado,techos............
+	public Contenedor(String identificador,double peso,double carga,double volumen) {	
+		//TODO: llamar a lo de carga,code,estado,techos............
 		this.identificador=identificador;
 		for (int i= 0; i<3; i++) {
 			this.codigo = this.codigo + identificador.charAt(i);
@@ -48,8 +48,16 @@ public class Contenedor {
 			this.serie = this.serie + identificador.length();
 		}
 		code = identificador.charAt(identificador.length()- 1);
+		this.peso=peso;
+		this.carga=carga;
+		this.volumen=volumen;
 		//TODO: transito o en recogida,techo?????
 	}
+	
+	public String getIdentificador(Contenedor contenedor) {
+		return contenedor.identificador;
+	}
+
 	
 	/**
 	 * Cambiar el estado de un contenedor para reflejar que está en recogida
@@ -89,7 +97,7 @@ public class Contenedor {
 	 * @return volumen en metros cuadrados
 	 */
 	public double getVolumenMetros() {
-		return this.volumen;
+		return volumen;
 	}
 	
 	/**
@@ -113,10 +121,13 @@ public class Contenedor {
 	 * Cambiar el volumen a partir del valor del volumen en pies cubicos
 	 * @param volumen
 	 */
+	/**
+	 * 
 	public void setVolumenPies(double volumen) {
 		double nuevoVolumen = volumen * (10000/353147);
 		setVolumenMetros(nuevoVolumen);
 	}
+	*/
 	
 	/**
 	 * Obtener el peso del contenedor en Kilogramos
@@ -145,11 +156,11 @@ public class Contenedor {
 	/**
 	 * Cambiar el peso a partir del valor del peso en libras
 	 * @param peso 
-	 */
 	public void setPesoLibra(double peso) {
 		double nuevoPeso = getPesoKilo() * (50000/110231);
 		setPesoKilo(nuevoPeso);
 	}
+	*/
 	
 	/**
 	 * Obtener el precio del transporte total de un contenedor a partir de 
@@ -163,9 +174,6 @@ public class Contenedor {
 		return precio;
 	}
 
-	public String getIdentificador(Contenedor contenedor) {
-		return contenedor.identificador;
-	}
 
 
 	
