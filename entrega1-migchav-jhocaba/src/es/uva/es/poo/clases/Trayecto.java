@@ -39,6 +39,7 @@ public class Trayecto {
 	public Trayecto(String muelleOrigen,String puertoOrigen,int fechaIni,String muelleDestino,String puertoDestino,int fechaFin,Contenedor contenedor) {
 		//USO DE THIS: Distinguir el atributo del argumento formal
 		//TODO: SET ?? 
+		//TODO: DAR MUELLO ORIGEN ,PUERTO ORIGEN...
 		this.muelleOrigen = muelleOrigen; 
 		this.puertoOrigen = puertoOrigen;
 		this.fechaIni = fechaIni ;
@@ -89,23 +90,22 @@ public class Trayecto {
 	public int getFechaFin() {
 		return fechaFin;
 	}
+
+	
 	/**
-	 * Conocer si la fecha de fin es mayor a una dada
+	 * Conocer si la fecha de fin es superior a una dada
+	 * Si es mayor, la funcion devolverá true
 	 *  
-	 * @param fecha
-	 * @throws IllegalArgumentException en el caso de que no se reciba ninguna fecha 
-	 * o se reciba una fecha incorrecta 
+	 * @param fecha 
+	 * @throws Cualquier excepcion es lanzada por la clase LocalDate, asi como fechas nulas 
+	 * o fechas incorrectas debido a un año bisiesto.
 	 * 
 	 * @return resultado 
 	 */
-	public boolean fechaCorrecta(int fecha) {
-		//TODO: reconocer que una fecha sea incorrecta
-		//TODO: Convertir fechas a numeros
-		if (fecha == 0) {
-			throw new IllegalArgumentException("Fecha nula o fecha incorrecta");
-		}
+	public boolean fechaCorrecta(LocalDate fecha) {
 		boolean resultado = false;
-		if (fechaFin > fecha) {
+		
+		if (this.fechaFin.isAfter(fecha)) {
 			resultado = true;
 		}
 		
@@ -154,9 +154,10 @@ public class Trayecto {
 	 * @return el coste en euros total del trayecto.
 	 */
 	public int costeTrayecto(int precioMilla,int precioDia) {
-		//TODO: precio negativo y origen,destino,FECHAS???????
+		//TODO: precio negativo y origen,destino???????
 		GPSCoordinate destino = new GPSCoordinate(40,40); //???????????????
-		return precioMilla*origen.getDistancia(destino)*(getFechaFin()-getFechaIni())*precioDia;
+		//Uso de ChronoUnit.DAYS para obtener el numero de dias entre las fechas indicadas
+		return (precioMilla*origen.getDistancia(destino)*(ChronoUnit.DAYS.between(getFechaFin(), getFechaIni()))*precioDia);
 	}
 }
 
