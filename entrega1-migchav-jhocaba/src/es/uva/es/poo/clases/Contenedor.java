@@ -168,6 +168,7 @@ public class Contenedor {
 	 */
 	public float Precio() {
 		//TODO implementar correctamente
+		//TODO:PRECIO MILLA Y PRECIO DIA
 		Trayecto aux = new Trayecto();
 		float precio = aux.costeTrayecto(precioMilla, precioDia);
 

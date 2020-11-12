@@ -14,7 +14,7 @@ import java.util.List;
 public class Puerto {
 	//Atributos
 	
-	private String país;
+	private String pais;
 	private String localidad;
 	private List<Muelle> muelles;
 	
@@ -32,11 +32,16 @@ public class Puerto {
 	 */
 	public Puerto(String identidad) {
 		String [] array = identidad.split("-");
-		this.país = array[0];
+		this.pais = array[0];
 		this.localidad = array[1];
 		muelles=new ArrayList<Muelle>();
 	}
-	
+	public String getLocalidad() {
+		return localidad;
+	}
+	public String getPais() {
+		return pais;
+	}
 	public void añadirMuelle(Muelle añadir) {
 		muelles.add(añadir);
 	}

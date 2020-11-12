@@ -1,5 +1,6 @@
 package es.uva.es.poo.clases;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter; 
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
 
@@ -16,11 +17,11 @@ import es.uva.inf.poo.maps.GPSCoordinate;
 
 public class Trayecto {	
 	
-	private String muelleOrigen;
-	private String puertoOrigen;
+	private Muelle muelleOrigen;
+	private Puerto puertoOrigen;
 	private LocalDate fechaIni;
-	private String muelleDestino;
-	private String puertoDestino;
+	private Muelle muelleDestino;
+	private Puerto puertoDestino;
 	private LocalDate fechaFin;
 	
 	
@@ -35,34 +36,34 @@ public class Trayecto {
 	 * Almacena todas las instancias necesarias
 	 * @param muelleOrigen
 	 * @param puertoOrigen
-	 * @param fechaIni
+	 * @param fechaIni en formato aaaa-mm-dd
 	 * @param muelleDestino
 	 * @param puertoDestino
-	 * @param fechaFin
+	 * @param fechaFin en formato aaaa-mm-dd
 	 */
-	public Trayecto(String muelleOrigen,String puertoOrigen,LocalDate fechaIni,String muelleDestino,String puertoDestino,LocalDate fechaFin) {
+	public Trayecto(Muelle muelleOrigen,Puerto puertoOrigen,String fechaIni,Muelle muelleDestino,Puerto puertoDestino,String fechaFin) {
 		//USO DE THIS: Distinguir el atributo del argumento formal
 		//TODO: SET ?? 
 		//TODO: DAR MUELLO ORIGEN ,PUERTO ORIGEN...
 		this.muelleOrigen = muelleOrigen; 
 		this.puertoOrigen = puertoOrigen;
-		this.fechaIni = fechaIni ;
+		this.fechaIni = LocalDate.parse(fechaIni);
 		this.muelleDestino=muelleDestino;
 		this.puertoDestino = puertoDestino;
-		this.fechaFin = fechaFin;
+		this.fechaFin = LocalDate.parse(fechaFin);
 	}
 	/**
 	 * Consulta dato Muelle de origen
 	 * @return el nombre del muelle origen
 	 */
-	public String getMuelleOrigen() {
+	public Muelle getMuelleOrigen() {
 		return muelleOrigen;
 	}
 	/**
 	 * Consulta dato Puerto de origen
 	 * @return el nombre del puerte origen
 	 */
-	public String getPuertoOrigen() {
+	public Puerto getPuertoOrigen() {
 		return puertoOrigen;
 	}
 	
@@ -70,14 +71,14 @@ public class Trayecto {
 	 * Consulta dato Muelle de destino
 	 * @return el nombre del muelle origen
 	 */
-	public String getMuelleDestino() {
+	public Muelle getMuelleDestino() {
 		return muelleDestino;
 	}
 	/**
 	 * Consulta dato Puerto de Destino
 	 * @return el nombre del puerto destino
 	 */
-	public String getPuertoDestino() {
+	public Puerto getPuertoDestino() {
 		return puertoDestino;
 	}
 	/**
@@ -124,16 +125,17 @@ public class Trayecto {
 	 * @return distancia en km entre coordenadas
 	 */
 	
-	public double getDistancia(GPSCoordinate destino) {
+	public double getDistancia() {
 		//Implementar bien la coordenada origen
 		//TODO:COORDENADAS????????????????
-		if (destino == null) {	//no hace falta no? ya en getDistanceTo
-			throw new IllegalArgumentException("La coordenada no puede ser nula");
-		}
+		//if (destino == null) {	//no hace falta no? ya en getDistanceTo
+		//	throw new IllegalArgumentException("La coordenada no puede ser nula");
+		//}
 		
 		double distancia;	
-		GPSCoordinate coordenadaOrigen = new GPSCoordinate(40,40); //Grados decimales
-		distancia = coordenadaOrigen.getDistanceTo(destino);
+		GPSCoordinate coordenadaOrigen = getMuelleOrigen().getCoordenada();
+		GPSCoordinate coordenadaDestino=getMuelleDestino().getCoordenada();
+		distancia = coordenadaOrigen.getDistanceTo(coordenadaDestino);
 		return (distancia/1.852);//para pasarlo a millas marinas
 	}
 	/**
@@ -143,10 +145,14 @@ public class Trayecto {
 	 */
 	public String infoTrayecto() {
 		//localidad y pais en clase puerto
-		return("La locadidad del puerto origen es:"+getLocalidad()+" en el pais de: "+ getPais()+
-				" y la localidad del puerto destino es "+ getLocalidad()+ " que esta en el pais: "
-				+ getPais()+ ". La fecha de inicio del trayecto es:"+ getFechaIni()+" y la fecha "
-				+ "del fin de trayecto es: "+getFechaFin());
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YYYY"); 
+		String inicio=(formatter.format(getFechaIni())); 
+        String fin=(formatter.format(getFechaFin())); 
+		return("La locadidad del puerto origen es:"+getPuertoOrigen().getLocalidad()+" en el pais de: "+ getPuertoOrigen().getPais()+
+				" y la localidad del puerto destino es "+ getPuertoDestino().getLocalidad()+ " que esta en el pais: "
+				+ getPuertoDestino().getPais()+ ". La fecha de inicio del trayecto es:"+ inicio+" y la fecha "
+				+ "del fin de trayecto es: "+fin);
 	}
 	
 	/**
@@ -159,8 +165,9 @@ public class Trayecto {
 	 */
 	public int costeTrayecto(int precioMilla,int precioDia) {
 		//TODO: precio negativo y origen,destino???????
-		GPSCoordinate destino = new GPSCoordinate(40,40); //???????????????
+		GPSCoordinate coordenadaOrigen = getMuelleOrigen().getCoordenada();
+		GPSCoordinate coordenadaDestino=getMuelleDestino().getCoordenada();
 		//Uso de ChronoUnit.DAYS para obtener el numero de dias entre las fechas indicadas
-		return precioMilla*origen.getDistancia(destino)*(ChronoUnit.DAYS.between(getFechaFin(), getFechaIni()))*precioDia;
+		return (int) (precioMilla*coordenadaOrigen.getDistanceTo(coordenadaDestino)*((int)ChronoUnit.DAYS.between(getFechaFin(), getFechaIni()))*precioDia);
 	}
 }

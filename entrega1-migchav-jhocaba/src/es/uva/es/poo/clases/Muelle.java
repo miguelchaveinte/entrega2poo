@@ -34,7 +34,13 @@ public class Muelle {
 	public Muelle(){
 		
 	}
-	
+	/**
+	 * Inicializador de muelle con parametros
+	 * @param identificador
+	 * @param coordenada
+	 * @param estado
+	 * @param numPlazas
+	 */
 	public Muelle(int identificador,GPSCoordinate coordenada,char estado,int numPlazas) {
 		this.identificador=identificador;
 		this.coordenada=coordenada;
@@ -66,6 +72,10 @@ public class Muelle {
 	public String getEstadoPlaza() {
 		return estadoPlaza;
 	}
+	/**
+	 * Guardamos un arraylist de las plazas
+	 * @param numPlazas
+	 */
 	public void setPlazas(int numPlazas) {
 		plazas=new ArrayList<Muelle>();
 		for(int i=0;i<numPlazas;i++) {
@@ -141,6 +151,13 @@ public class Muelle {
 			}
 		}
 	}
+	/**
+	 * Sacamos un contenedor dado su identificador.
+	 * Primero le buscamos  en que plaza se encuentra y posteriormente
+	 * analizamos el nivel de dicha plaza y obtenemos el objeto contenedor que nos pedian.
+	 * @param identificador
+	 * @return
+	 */
 	public Contenedor sacarContenedor(String identificador) {
 		//TODO: ELSE IF -> Y SI NO COINCIDE CON NINGUNO ELSE Y RETURN new Contenedor() o return null??;
 		int indexPlaza=getPlaza(identificador);
