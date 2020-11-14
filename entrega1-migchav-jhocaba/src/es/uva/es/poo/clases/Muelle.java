@@ -41,6 +41,8 @@ public class Muelle {
 	 * @param estado
 	 * @param numPlazas
 	 */
+	
+	//TODO: THROWS EXCEPTION SI QUE NO SE AJUSTA
 	public Muelle(int identificador,GPSCoordinate coordenada,char estado,int numPlazas) {
 		this.identificador=identificador;
 		this.coordenada=coordenada;
@@ -49,8 +51,10 @@ public class Muelle {
 		setPlazas(numPlazas);
 	}
 
-	public void setEstado(char estado) {
-		//TODO: SINO ES NI O NI F?????
+	public void setEstado(char estado) throws Exception {
+		if (estado!='O' && estado!='F') {
+			throw new Exception("Estado no valido");
+		}
 		if (estado =='O') {
 				this.estado=true;
 		}
@@ -75,8 +79,12 @@ public class Muelle {
 	/**
 	 * Guardamos un arraylist de las plazas
 	 * @param numPlazas
+	 * @throws Exception
 	 */
-	public void setPlazas(int numPlazas) {
+	public void setPlazas(int numPlazas) throws Exception {
+		if(numPlazas<=0) {
+			throw new Exception("El número de plazas no puede ser menor o igual a 0");
+		}
 		plazas=new ArrayList<Muelle>();
 		for(int i=0;i<numPlazas;i++) {
 			Muelle descripcionPlazas=new Muelle();

@@ -1,6 +1,6 @@
 package es.uva.es.poo.clases;
 import es.uva.inf.poo.maps.GPSCoordinate;
-
+import java. util. *;
 /**
  * Clase relativa a los contenedores
  * 
@@ -23,6 +23,8 @@ public class Contenedor {
 	private double volumen; 	//Por defecto recibimos metros cúbicos
 	private boolean estado;		//Transito = False -- Recogida = True
 	private boolean techo;
+	private List<Trayecto> trayectos;
+	//private Object contenedor;
 	
 	/**
 	 * Inicializacion sin argumentos
@@ -51,6 +53,8 @@ public class Contenedor {
 		this.peso=peso;
 		this.carga=carga;
 		this.volumen=volumen;
+		trayectos=new ArrayList<Trayecto>();
+		//this.contenedor=Contenedor.this;
 		//TODO: transito o en recogida,techo?????
 	}
 	
@@ -162,21 +166,28 @@ public class Contenedor {
 	}
 	*/
 	
+	public void hacerTrayecto(Muelle muelleOrigen,Puerto puertoOrigen,String fechaIni,
+			Muelle muelleDestino,Puerto puertoDestino,String fechaFin) 
+	{
+		trayectos.add(new Trayecto(muelleOrigen,puertoOrigen,fechaIni,
+			muelleDestino, puertoDestino, fechaFin));
+	}
+	
 	/**
 	 * Obtener el precio del transporte total de un contenedor a partir de 
 	 * sus trayectos
 	 */
-	public float Precio() {
-		//TODO implementar correctamente
-		//TODO:PRECIO MILLA Y PRECIO DIA
-		Trayecto aux = new Trayecto();
-		float precio = aux.costeTrayecto(precioMilla, precioDia);
-
-		return precio;
+	public double Precio(int precioMilla,int precioDia) {
+		double sumaTrayectos=0;
+		Iterator<Trayecto> itrTrayectos=trayectos.iterator();
+		while(itrTrayectos.hasNext()) {
+			Trayecto analisis=itrTrayectos.next();
+			double precio = analisis.costeTrayecto(precioMilla, precioDia);
+			sumaTrayectos+=precio;
+		}
+		return sumaTrayectos;
 	}
-
-
-
-	
-	
 }
+
+	
+	

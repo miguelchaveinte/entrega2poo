@@ -43,6 +43,7 @@ public class Puerto {
 		return pais;
 	}
 	public void añadirMuelle(Muelle añadir) {
+		//añadir.setPuertoPertenece(this.Puerto);
 		muelles.add(añadir);
 	}
 	public void eliminarMuelle(int eliminar) {

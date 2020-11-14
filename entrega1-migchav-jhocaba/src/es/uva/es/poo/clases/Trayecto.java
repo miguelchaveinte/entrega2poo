@@ -44,7 +44,7 @@ public class Trayecto {
 	public Trayecto(Muelle muelleOrigen,Puerto puertoOrigen,String fechaIni,Muelle muelleDestino,Puerto puertoDestino,String fechaFin) {
 		//USO DE THIS: Distinguir el atributo del argumento formal
 		//TODO: SET ?? 
-		//TODO: DAR MUELLO ORIGEN ,PUERTO ORIGEN...
+		//TODO: DAR MUELLO ORIGEN ,PUERTO ORIGEN... contenedor a mover!!!!!!!!!!!!!
 		this.muelleOrigen = muelleOrigen; 
 		this.puertoOrigen = puertoOrigen;
 		this.fechaIni = LocalDate.parse(fechaIni);
@@ -163,11 +163,11 @@ public class Trayecto {
 	 * @param precioDia - Coste en euros de 1 dia de trayecto.
 	 * @return el coste en euros total del trayecto.
 	 */
-	public int costeTrayecto(int precioMilla,int precioDia) {
+	public double costeTrayecto(int precioMilla,int precioDia) {
 		//TODO: precio negativo y origen,destino???????
 		GPSCoordinate coordenadaOrigen = getMuelleOrigen().getCoordenada();
 		GPSCoordinate coordenadaDestino=getMuelleDestino().getCoordenada();
 		//Uso de ChronoUnit.DAYS para obtener el numero de dias entre las fechas indicadas
-		return (int) (precioMilla*coordenadaOrigen.getDistanceTo(coordenadaDestino)*((int)ChronoUnit.DAYS.between(getFechaFin(), getFechaIni()))*precioDia);
+		return (double) (precioMilla*coordenadaOrigen.getDistanceTo(coordenadaDestino)*((int)ChronoUnit.DAYS.between(getFechaFin(), getFechaIni()))*precioDia);
 	}
 }
