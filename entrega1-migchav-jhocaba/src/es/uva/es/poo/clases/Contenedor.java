@@ -37,28 +37,45 @@ public class Contenedor {
 	/**
 	 * Inicialización a partir de argumentos
 	 * @param identificador - Cadena con el que se identifica cada contenedor
+	 * @throws Exception 
 	 */
-	public Contenedor(String identificador,double peso,double carga,double volumen) {	
+	public Contenedor(String identificador,double peso,double carga,double volumen) throws Exception {	
 		//TODO: llamar a lo de carga,code,estado,techos............
-		this.identificador=identificador;
-		for (int i= 0; i<3; i++) {
-			this.codigo = this.codigo + identificador.charAt(i);
+		boolean correcto=Muelle.comprobarIdentificador(identificador);
+		if (correcto){
+			this.identificador=identificador;
+			
+			StringBuilder codigoString=new StringBuilder();
+			for (int i= 0; i<3; i++) {
+				codigoString = codigoString.append(identificador.charAt(i));
+			}
+			codigo=codigoString.toString();
+			
+			equipamiento = identificador.charAt(3);
+			
+			StringBuilder serieString=new StringBuilder();
+			for(int i=4; i< identificador.length() - 1; i++) {
+				serieString = serieString.append(identificador.charAt(i));
+			}
+			String sb=serieString.toString();
+			serie=Integer.parseInt(sb);
+			
+			code = identificador.charAt(identificador.length()- 1);
+			this.peso=peso;
+			this.carga=carga;
+			this.volumen=volumen;
+			trayectos=new ArrayList<Trayecto>();
 		}
-		equipamiento = identificador.charAt(3);
-		
-		for(int i=4; i< identificador.length() - 1; i++) {
-			this.serie = this.serie + identificador.length();
-		}
-		code = identificador.charAt(identificador.length()- 1);
-		this.peso=peso;
-		this.carga=carga;
-		this.volumen=volumen;
-		trayectos=new ArrayList<Trayecto>();
+		else
+			throw new Exception("Identificador no valido");
 		//this.contenedor=Contenedor.this;
 		//TODO: transito o en recogida,techo?????
 	}
 	
 	public String getIdentificador(Contenedor contenedor) {
+		if (contenedor==null) {
+			throw new IllegalArgumentException("El contenedor no puede ser vacio ni la plaza<0");
+		}
 		return contenedor.identificador;
 	}
 
@@ -93,6 +110,9 @@ public class Contenedor {
 	}
 	
 	public boolean getTecho(Contenedor contenedor) {
+		if (contenedor==null) {
+			throw new IllegalArgumentException("El contenedor no puede ser vacio ni la plaza<0");
+		}
 		return contenedor.techo;
 	}
 	

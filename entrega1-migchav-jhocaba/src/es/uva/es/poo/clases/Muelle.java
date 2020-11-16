@@ -40,15 +40,21 @@ public class Muelle {
 	 * @param coordenada
 	 * @param estado
 	 * @param numPlazas
+	 * @throws Exception 
 	 */
 	
 	//TODO: THROWS EXCEPTION SI QUE NO SE AJUSTA
-	public Muelle(int identificador,GPSCoordinate coordenada,char estado,int numPlazas) {
-		this.identificador=identificador;
-		this.coordenada=coordenada;
-		this.numPlazas=numPlazas;
-		setEstado(estado);	
-		setPlazas(numPlazas);
+	public Muelle(int identificador,GPSCoordinate coordenada,char estado,int numPlazas) throws Exception {
+		if(Integer.toString(identificador).length()==2 && coordenada!=null) {
+			this.identificador=identificador;
+			this.coordenada=coordenada;
+			this.numPlazas=numPlazas;
+			setEstado(estado);	
+			setPlazas(numPlazas);
+		}
+		else {
+			throw new IllegalArgumentException("El identificador de muelle debe ser un número de 2 digitos y la coordenada no nula");
+		}
 	}
 
 	public void setEstado(char estado) throws Exception {
@@ -100,29 +106,31 @@ public class Muelle {
 	public GPSCoordinate getCoordenada() {
 		return coordenada;
 	}
-	
+	//TODO:PARA CADA TIPO DE ESTADO UN METODOXXX
 	public void setEstadoPlaza(String estado) {
 		estadoPlaza=estado;
 	}
 	public void setNivel1(Contenedor contenedor){
-		//si es null????? IGUAL CREO
+		//PUEDE ADMITIR NULLS
 		nivel1=contenedor;
 	}
 	public void setNivel2(Contenedor contenedor){
-		//si es null????? IGUAL CREO
+		//PUEDE ADMITIR NULLS
 		nivel2=contenedor;
 	}
 	public void setNivel3(Contenedor contenedor){
-		//si es null????? IGUAL CREO
+		//PUEDE ADMITIR NULLS
 		nivel3=contenedor;
 	}
 	public void setNivel4(Contenedor contenedor){
-		//si es null????? IGUAL CREO
+		//PUEDE ADMITIR NULLS
 		nivel4=contenedor;
 	}
 	public void asignarPlaza(Contenedor contenedor,int plaza) {
+		if (contenedor==null || plaza<0) {
+			throw new IllegalArgumentException("El contenedor no puede ser vacio ni la plaza<0");
+		}
 		String estado=plazas.get(plaza).estadoPlaza;
-		// si es null,excepción(puede haber un null -> si si existe el inicializador vacio??)
 		if (estado=="Llena") {
 			for(int iterador=0;iterador<plazas.size();iterador++) {
 				if(plazas.get(iterador).estadoPlaza.equals("Semi-llena")){
@@ -165,12 +173,13 @@ public class Muelle {
 	 * analizamos el nivel de dicha plaza y obtenemos el objeto contenedor que nos pedian.
 	 * @param identificador
 	 * @return
+	 * @throws Exception 
 	 */
-	public Contenedor sacarContenedor(String identificador) {
+	public Contenedor sacarContenedor(String identificador) throws Exception {
 		//TODO: ELSE IF -> Y SI NO COINCIDE CON NINGUNO ELSE Y RETURN new Contenedor() o return null??;
 		int indexPlaza=getPlaza(identificador);
 		if (indexPlaza==-1){
-			//Lanzar excepción!!!!!!!!!!!!!
+			throw new Exception("El contenedor no se ha encontrado");
 		}
 		if((plazas.get(indexPlaza).nivel1.getIdentificador(plazas.get(indexPlaza).nivel1)).equals(identificador)){
 			Contenedor retorno=plazas.get(indexPlaza).nivel1;
@@ -222,7 +231,7 @@ public class Muelle {
 				return retorno;
 			}
 		}
-		if((plazas.get(indexPlaza).nivel2.getIdentificador(plazas.get(indexPlaza).nivel2)).equals(identificador)){
+		else if((plazas.get(indexPlaza).nivel2.getIdentificador(plazas.get(indexPlaza).nivel2)).equals(identificador)){
 			Contenedor retorno=plazas.get(indexPlaza).nivel2;
 			if	(retorno.getTecho(retorno)){
 				plazas.get(indexPlaza).setNivel2(plazas.get(indexPlaza).nivel3);
@@ -253,7 +262,7 @@ public class Muelle {
 				return retorno;
 			}
 		}
-		if((plazas.get(indexPlaza).nivel3.getIdentificador(plazas.get(indexPlaza).nivel3)).equals(identificador)){
+		else if((plazas.get(indexPlaza).nivel3.getIdentificador(plazas.get(indexPlaza).nivel3)).equals(identificador)){
 			Contenedor retorno=plazas.get(indexPlaza).nivel3;
 			if	(retorno.getTecho(retorno)){
 				plazas.get(indexPlaza).setNivel3(plazas.get(indexPlaza).nivel4);
@@ -273,13 +282,14 @@ public class Muelle {
 				return retorno;
 			}
 		}
-		if((plazas.get(indexPlaza).nivel4.getIdentificador(plazas.get(indexPlaza).nivel4)).equals(identificador)){
+		else if((plazas.get(indexPlaza).nivel4.getIdentificador(plazas.get(indexPlaza).nivel4)).equals(identificador)){
 			Contenedor retorno=plazas.get(indexPlaza).nivel4;
 			plazas.get(indexPlaza).setNivel4(new Contenedor());
 			plazas.get(indexPlaza).setEstadoPlaza("Semi-llena");
 			return retorno;
 		}
-		return new Contenedor();		
+		else 
+			return new Contenedor();		
 	}
 	public String estadoPlazas() {
 		//TODO:RETURN EN FORMA DE STRING O MEJOR EN INT PARA OTRAS COSAS!!!!!!!!!!
@@ -322,36 +332,66 @@ public class Muelle {
 		return null;
 	}
 	 */
-	
-	public int getPlaza(String identificador) {
-		int index=-1;
-		for(int iterador=0;iterador<plazas.size();iterador++) {
-			if((plazas.get(iterador).nivel1.getIdentificador(plazas.get(iterador).nivel1)).equals(identificador)){
-				index=iterador;
-				break;
-			}
-			if((plazas.get(iterador).nivel2.getIdentificador(plazas.get(iterador).nivel2)).equals(identificador)){
-				index=iterador;
-				break;
-			}
-			if((plazas.get(iterador).nivel3.getIdentificador(plazas.get(iterador).nivel3)).equals(identificador)){
-				index=iterador;
-				break;
-			}
-			if((plazas.get(iterador).nivel4.getIdentificador(plazas.get(iterador).nivel4)).equals(identificador)){
-				index=iterador;
-				break;
-			}
+	public static boolean comprobarIdentificador(String identificador) {
+		boolean correcto=true;
+		if(identificador.length()!=11) {
+			correcto=false;
+			return correcto;
 		}
-		return index;
+		StringBuilder codigoString=new StringBuilder();
+		for (int i= 0; i<3; i++) {
+			codigoString = codigoString.append(identificador.charAt(i));
+		}
+		String codigo=codigoString.toString();
+		char equipamiento = identificador.charAt(3);
+		
+		StringBuilder serieString=new StringBuilder();
+		for(int i=4; i< identificador.length() - 1; i++) {
+			serieString = serieString.append(identificador.charAt(i));
+		}
+		String serie=serieString.toString();
+	
+		if (codigo.equals(codigo.toUpperCase()) && (equipamiento=='U'||equipamiento=='J'||equipamiento=='Z') && serie.length()==6) {
+			return correcto;
+		}
+		else {
+			correcto=false;
+			return correcto;
+		}
 	}
-	public String getNivelPlaza(String identificador) {
+	public int getPlaza(String identificador) throws Exception {
+		boolean correcto=comprobarIdentificador(identificador);
+		if (correcto){
+			int index=-1;
+			for(int iterador=0;iterador<plazas.size();iterador++) {
+				if((plazas.get(iterador).nivel1.getIdentificador(plazas.get(iterador).nivel1)).equals(identificador)){
+					index=iterador;
+					break;
+				}
+				if((plazas.get(iterador).nivel2.getIdentificador(plazas.get(iterador).nivel2)).equals(identificador)){
+					index=iterador;
+					break;
+				}
+				if((plazas.get(iterador).nivel3.getIdentificador(plazas.get(iterador).nivel3)).equals(identificador)){
+					index=iterador;
+					break;
+				}
+				if((plazas.get(iterador).nivel4.getIdentificador(plazas.get(iterador).nivel4)).equals(identificador)){
+					index=iterador;
+					break;
+				}
+			}
+			return index;
+		}
+		else
+			throw new Exception("Identificador no valido");
+	}
+	public String getNivelPlaza(String identificador) throws Exception {
 		//TODO:MEJORA Y NO RETORNAR TEXTO .../...
 		int indexPlaza=getPlaza(identificador);
 		String nivel;
 		if (indexPlaza==-1){
-			nivel="Ese contenedor no se encuentra en ninguna plaza";
-			return nivel;
+			throw new Exception("El contenedor no se ha encontrado");
 		}
 		if((plazas.get(indexPlaza).nivel1.getIdentificador(plazas.get(indexPlaza).nivel1)).equals(identificador)){
 			nivel="Ese contenedor se encuentra en la plaza "+indexPlaza+" y en el nivel 1";
