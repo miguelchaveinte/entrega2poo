@@ -31,7 +31,7 @@ public class Puerto {
 	 * @param 
 	 */
 	public Puerto(String identidad) {
-		if (identidad.contains("-")) {
+		if (identidad.charAt(2)=='-') {
 			String [] array = identidad.split("-");
 			if(array[0].equals(array[0].toUpperCase()) && array[1].equals(array[1].toUpperCase())){
 				this.pais = array[0];
@@ -41,9 +41,8 @@ public class Puerto {
 			else
 				throw new IllegalArgumentException("La identidad del puerto(país y localidad) debe ser en mayusculas");
 		}
-		else
-			throw new IllegalArgumentException("String " + identidad + " no contiene - y por tanto no es "
-					+ "un identificador valido de puerto");
+		else 
+			throw new IllegalArgumentException("Identidad no correcta(no contiene: - )");
 	}
 	public String getLocalidad() {
 		return localidad;
