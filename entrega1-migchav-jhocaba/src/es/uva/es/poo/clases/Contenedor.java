@@ -129,6 +129,8 @@ public class Contenedor {
 	 * @param volumen
 	 */
 	public void setVolumenMetros(double volumen) {
+		if(volumen<=0)
+			throw new IllegalArgumentException("El contenedor no puede tener volumnen<=0");
 		this.volumen = volumen;
 	}
 	
@@ -165,6 +167,8 @@ public class Contenedor {
 	 * Almacenar el peso en kilos
 	 */
 	public void setPesoKilo(double peso) {
+		if(peso<=0)
+			throw new IllegalArgumentException("El contenedor no puede tener peso <=0");
 		this.peso = peso;
 	}
 	
@@ -189,6 +193,7 @@ public class Contenedor {
 	public void hacerTrayecto(Muelle muelleOrigen,Puerto puertoOrigen,String fechaIni,
 			Muelle muelleDestino,Puerto puertoDestino,String fechaFin) 
 	{
+		//TODO??: OBTENER MUELLE ORIGEN Y ESO , MIRAR TODOIST
 		trayectos.add(new Trayecto(muelleOrigen,puertoOrigen,fechaIni,
 			muelleDestino, puertoDestino, fechaFin));
 	}
@@ -198,6 +203,8 @@ public class Contenedor {
 	 * sus trayectos
 	 */
 	public double Precio(int precioMilla,int precioDia) {
+		if(precioMilla<=0 || precioDia<=0)
+			throw new IllegalArgumentException("Los precios no pueden ser<=0");
 		double sumaTrayectos=0;
 		Iterator<Trayecto> itrTrayectos=trayectos.iterator();
 		while(itrTrayectos.hasNext()) {

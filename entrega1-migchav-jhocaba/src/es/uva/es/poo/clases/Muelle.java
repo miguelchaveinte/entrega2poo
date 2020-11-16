@@ -98,7 +98,7 @@ public class Muelle {
 			descripcionPlazas.setNivel2(new Contenedor());
 			descripcionPlazas.setNivel3(new Contenedor());
 			descripcionPlazas.setNivel4(new Contenedor());
-			descripcionPlazas.setEstadoPlaza("Vacia");
+			descripcionPlazas.setEstPlazaVacia();
 			plazas.add(descripcionPlazas);
 		}
 	}
@@ -107,8 +107,14 @@ public class Muelle {
 		return coordenada;
 	}
 	//TODO:PARA CADA TIPO DE ESTADO UN METODOXXX
-	public void setEstadoPlaza(String estado) {
-		estadoPlaza=estado;
+	public void setEstPlazaVacia() {
+		estadoPlaza="vacia";
+	}
+	public void setEstPlazaSemi() {
+		estadoPlaza="semillena";
+	}
+	public void setEstPlazaLlena() {
+		estadoPlaza="llena";
 	}
 	public void setNivel1(Contenedor contenedor){
 		//PUEDE ADMITIR NULLS
@@ -131,18 +137,18 @@ public class Muelle {
 			throw new IllegalArgumentException("El contenedor no puede ser vacio ni la plaza<0");
 		}
 		String estado=plazas.get(plaza).estadoPlaza;
-		if (estado=="Llena") {
+		if (estado=="llena") {
 			for(int iterador=0;iterador<plazas.size();iterador++) {
-				if(plazas.get(iterador).estadoPlaza.equals("Semi-llena")){
+				if(plazas.get(iterador).estadoPlaza.equals("semillena")){
 					asignarPlaza(contenedor,iterador);
 				}
-				if(plazas.get(iterador).estadoPlaza.equals("Vacia")) {
+				if(plazas.get(iterador).estadoPlaza.equals("vacia")) {
 					asignarPlaza(contenedor,iterador);
 				}
 			}
 		}
 		else {
-			if(estado=="Semi-llena"){
+			if(estado=="semillena"){
 				if(plazas.get(plaza).nivel2.getIdentificador(plazas.get(plaza).nivel2)==null) {
 					plazas.get(plaza).setNivel2(contenedor);
 				}
@@ -152,17 +158,17 @@ public class Muelle {
 					}
 					else {
 						plazas.get(plaza).setNivel4(contenedor);
-						plazas.get(plaza).setEstadoPlaza("Llena");
+						plazas.get(plaza).setEstPlazaLlena();
 					}
 				}
 			}
 			else {//vacia
 				plazas.get(plaza).setNivel1(contenedor);
 				if(contenedor.getTecho(contenedor)) {
-					plazas.get(plaza).setEstadoPlaza("Semi-llena");
+					plazas.get(plaza).setEstPlazaSemi();
 				}
 				else {
-					plazas.get(plaza).setEstadoPlaza("Llena");
+					plazas.get(plaza).setEstPlazaLlena();
 				}
 			}
 		}
@@ -189,37 +195,37 @@ public class Muelle {
 				plazas.get(indexPlaza).setNivel3(plazas.get(indexPlaza).nivel4);
 				plazas.get(indexPlaza).setNivel4(new Contenedor());
 				if (plazas.get(indexPlaza).nivel1.getIdentificador(plazas.get(indexPlaza).nivel1)==null) {
-					plazas.get(indexPlaza).setEstadoPlaza("Vacia");
+					plazas.get(indexPlaza).setEstPlazaVacia();
 					return retorno;
 				}
 				else {
 					if (plazas.get(indexPlaza).nivel2.getIdentificador(plazas.get(indexPlaza).nivel2)==null) {
 						if(plazas.get(indexPlaza).nivel1.getTecho(plazas.get(indexPlaza).nivel1)) {
-							plazas.get(indexPlaza).setEstadoPlaza("Semi-llena");
+							plazas.get(indexPlaza).setEstPlazaSemi();
 							return retorno;
 						}
 						else {
-							plazas.get(indexPlaza).setEstadoPlaza("Llena");
+							plazas.get(indexPlaza).setEstPlazaLlena();
 							return retorno;
 						}
 					}
 					else if (plazas.get(indexPlaza).nivel3.getIdentificador(plazas.get(indexPlaza).nivel3)==null) {
 						if(plazas.get(indexPlaza).nivel2.getTecho(plazas.get(indexPlaza).nivel2)) {
-							plazas.get(indexPlaza).setEstadoPlaza("Semi-llena");
+							plazas.get(indexPlaza).setEstPlazaSemi();
 							return retorno;
 						}
 						else {
-							plazas.get(indexPlaza).setEstadoPlaza("Llena");
+							plazas.get(indexPlaza).setEstPlazaLlena();
 							return retorno;
 						}
 					}
 					else {
 						if(plazas.get(indexPlaza).nivel3.getTecho(plazas.get(indexPlaza).nivel3)) {
-							plazas.get(indexPlaza).setEstadoPlaza("Semi-llena");
+							plazas.get(indexPlaza).setEstPlazaSemi();
 							return retorno;
 						}
 						else {
-							plazas.get(indexPlaza).setEstadoPlaza("Llena");
+							plazas.get(indexPlaza).setEstPlazaLlena();
 							return retorno;
 						}
 					}
@@ -227,7 +233,7 @@ public class Muelle {
 			}
 			else {
 				plazas.get(indexPlaza).setNivel1(new Contenedor());
-				plazas.get(indexPlaza).setEstadoPlaza("Vacia");
+				plazas.get(indexPlaza).setEstPlazaVacia();
 				return retorno;
 			}
 		}
@@ -238,27 +244,27 @@ public class Muelle {
 				plazas.get(indexPlaza).setNivel3(plazas.get(indexPlaza).nivel4);
 				plazas.get(indexPlaza).setNivel4(new Contenedor());
 				if (plazas.get(indexPlaza).nivel2.getIdentificador(plazas.get(indexPlaza).nivel2)==null) {
-					plazas.get(indexPlaza).setEstadoPlaza("Semi-llena");
+					plazas.get(indexPlaza).setEstPlazaSemi();
 					return retorno;
 				}
 				else if (plazas.get(indexPlaza).nivel3.getIdentificador(plazas.get(indexPlaza).nivel3)==null) {
 					if(plazas.get(indexPlaza).nivel2.getTecho(plazas.get(indexPlaza).nivel2)) {
-						plazas.get(indexPlaza).setEstadoPlaza("Semi-llena");
+						plazas.get(indexPlaza).setEstPlazaSemi();
 						return retorno;
 					}
 					else {
-						plazas.get(indexPlaza).setEstadoPlaza("Llena");
+						plazas.get(indexPlaza).setEstPlazaLlena();
 						return retorno;
 					}
 				}
 				else {
-					plazas.get(indexPlaza).setEstadoPlaza("Semi-llena");
+					plazas.get(indexPlaza).setEstPlazaSemi();
 					return retorno;
 				}
 			}	
 			else {
 				plazas.get(indexPlaza).setNivel2(new Contenedor());
-				plazas.get(indexPlaza).setEstadoPlaza("Semi-llena");
+				plazas.get(indexPlaza).setEstPlazaSemi();
 				return retorno;
 			}
 		}
@@ -268,24 +274,24 @@ public class Muelle {
 				plazas.get(indexPlaza).setNivel3(plazas.get(indexPlaza).nivel4);
 				plazas.get(indexPlaza).setNivel4(new Contenedor());
 				if(plazas.get(indexPlaza).nivel3.getTecho(plazas.get(indexPlaza).nivel3)) {
-					plazas.get(indexPlaza).setEstadoPlaza("Semi-llena");
+					plazas.get(indexPlaza).setEstPlazaSemi();
 					return retorno;
 				}
 				else {
-					plazas.get(indexPlaza).setEstadoPlaza("Llena");
+					plazas.get(indexPlaza).setEstPlazaLlena();
 					return retorno;
 				}
 			}
 			else {
 				plazas.get(indexPlaza).setNivel4(new Contenedor());
-				plazas.get(indexPlaza).setEstadoPlaza("Semi-llena");
+				plazas.get(indexPlaza).setEstPlazaSemi();
 				return retorno;
 			}
 		}
 		else if((plazas.get(indexPlaza).nivel4.getIdentificador(plazas.get(indexPlaza).nivel4)).equals(identificador)){
 			Contenedor retorno=plazas.get(indexPlaza).nivel4;
 			plazas.get(indexPlaza).setNivel4(new Contenedor());
-			plazas.get(indexPlaza).setEstadoPlaza("Semi-llena");
+			plazas.get(indexPlaza).setEstPlazaSemi();
 			return retorno;
 		}
 		else 
@@ -300,9 +306,9 @@ public class Muelle {
 		while(itrPlazas.hasNext()) {
 			Muelle plaza=itrPlazas.next();
 			String estado = plaza.estadoPlaza;
-			if (estado=="Vacia")
+			if (estado=="vacia")
 				vacias++;
-			else if (estado=="Semi-llena")
+			else if (estado=="semillena")
 				semi++;
 			else
 				llenas++;

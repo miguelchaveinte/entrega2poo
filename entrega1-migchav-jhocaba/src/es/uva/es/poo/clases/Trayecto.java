@@ -42,8 +42,7 @@ public class Trayecto {
 	 * @param fechaFin en formato aaaa-mm-dd
 	 */
 	public Trayecto(Muelle muelleOrigen,Puerto puertoOrigen,String fechaIni,Muelle muelleDestino,Puerto puertoDestino,String fechaFin) {
-		//USO DE THIS: Distinguir el atributo del argumento formal
-		//TODO: SET ?? 
+		//TODO: Lanzar excepciones...(localdate????==null)
 		//TODO: DAR MUELLO ORIGEN ,PUERTO ORIGEN... contenedor a mover!!!!!!!!!!!!!
 		this.muelleOrigen = muelleOrigen; 
 		this.puertoOrigen = puertoOrigen;
@@ -108,6 +107,8 @@ public class Trayecto {
 	 * @return resultado 
 	 */
 	public boolean fechaCorrecta(LocalDate fecha) {
+		if (fecha==null)
+			throw new IllegalArgumentException("La fecha no puede ser nula");
 		boolean resultado = false;
 		
 		if (this.fechaFin.isAfter(fecha)) {
@@ -164,6 +165,8 @@ public class Trayecto {
 	 * @return el coste en euros total del trayecto.
 	 */
 	public double costeTrayecto(int precioMilla,int precioDia) {
+		if(precioMilla<=0 || precioDia<=0)
+			throw new IllegalArgumentException("Los precios no pueden ser<=0");
 		//TODO: precio negativo y origen,destino???????
 		GPSCoordinate coordenadaOrigen = getMuelleOrigen().getCoordenada();
 		GPSCoordinate coordenadaDestino=getMuelleDestino().getCoordenada();
