@@ -71,7 +71,10 @@ public class Puerto {
 			throw new IllegalArgumentException("El identificador de muelle debe ser un número de 2 digitos");
 		}
 	}
-	
+	/***
+	 * 
+	 * @return boolean completo=false... analizando todos los muelles del puerto esten o no operativos
+	 */
 	public boolean getCompleto() {
 		boolean completo=false;
 		Iterator<Muelle> itrMuelles=muelles.iterator();
@@ -105,7 +108,10 @@ public class Puerto {
 		}
 		return lista;
 	}
-	
+	/**
+	 * 
+	 * @return lista muelles con espacio esten o no esten operativos
+	 */
 	public List<Muelle> muellesEspacio(){
 		List<Muelle> lista=new ArrayList<Muelle>();
 		Iterator<Muelle> itrMuelles=muelles.iterator();
@@ -127,22 +133,21 @@ public class Puerto {
 	}
 	
 	public List<Muelle> muellesCerca(GPSCoordinate punto,double distancia){
-		if(punto==null || distancia<=0) {
-			throw new IllegalArgumentException("La coordenada no puede ser null o la distacia no puede ser <=0");
-		}
-		else {
-			List<Muelle> lista=new ArrayList<Muelle>();
-			Iterator<Muelle> itrMuelles=muelles.iterator();
-			while(itrMuelles.hasNext()) {
-				Muelle analisis=itrMuelles.next();
-				GPSCoordinate localizacion=analisis.getCoordenada();
-				if (localizacion.getDistanceTo(punto)<distancia) {
-					lista.add(analisis);
-				}
+		if(punto==null) throw new IllegalArgumentException("La coordenada no puede ser null ");
+		if(distancia<0) throw new IllegalArgumentException("La distacia no puede ser <0");
+		List<Muelle> lista=new ArrayList<Muelle>();
+		Iterator<Muelle> itrMuelles=muelles.iterator();
+		while(itrMuelles.hasNext()) {
+			Muelle analisis=itrMuelles.next();
+			GPSCoordinate localizacion=analisis.getCoordenada();
+			if (localizacion.getDistanceTo(punto)<distancia) {
+				lista.add(analisis);
 			}
-			return lista;
 		}
-
+		return lista;
 	}
+
+	
 	
 }
+
