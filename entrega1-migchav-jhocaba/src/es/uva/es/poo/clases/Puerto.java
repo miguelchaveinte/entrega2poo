@@ -31,6 +31,8 @@ public class Puerto {
 	 * @param 
 	 */
 	public Puerto(String identidad) {
+		if (identidad==null) throw new NullPointerException ("Identidad no puede ser nula");
+		if(identidad.length()!=6)throw new IllegalArgumentException("Identidad no correcta");
 		if (identidad.charAt(2)=='-') {
 			String [] array = identidad.split("-");
 			if(array[0].equals(array[0].toUpperCase()) && array[1].equals(array[1].toUpperCase())){
