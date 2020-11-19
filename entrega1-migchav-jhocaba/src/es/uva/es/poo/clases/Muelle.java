@@ -22,10 +22,10 @@ public class Muelle {
 	private boolean estado;	
 	private int numPlazas;
 	private List<Muelle> plazas;
-	private Contenedor nivel1;
-	private Contenedor nivel2;
-	private Contenedor nivel3;
-	private Contenedor nivel4;
+	private Contenedor nivelUno;
+	private Contenedor nivelDos;
+	private Contenedor nivelTres;
+	private Contenedor nivelCuatro;
 	private String estadoPlaza;
 
 	/**
@@ -45,22 +45,18 @@ public class Muelle {
 	
 	//TODO: THROWS EXCEPTION SI QUE NO SE AJUSTA
 	public Muelle(int identificador,GPSCoordinate coordenada,char estado,int numPlazas) throws Exception {
-		if(Integer.toString(identificador).length()==2 && coordenada!=null) {
-			this.identificador=identificador;
-			this.coordenada=coordenada;
-			this.numPlazas=numPlazas;
-			setEstado(estado);	
-			setPlazas(numPlazas);
-		}
-		else {
-			throw new IllegalArgumentException("El identificador de muelle debe ser un número de 2 digitos y la coordenada no nula");
-		}
+		if(Integer.toString(identificador).length()!=2 )throw new IllegalArgumentException("El identificador de muelle debe ser un número de 2 digitos");
+		if(coordenada==null) throw new IllegalArgumentException("la coordenada debe no ser  nula ");
+		this.identificador=identificador;
+		this.coordenada=coordenada;
+		this.numPlazas=numPlazas;
+		setEstado(estado);	
+		setPlazas(numPlazas);
 	}
 
+
 	public void setEstado(char estado) throws Exception {
-		if (estado!='O' && estado!='F') {
-			throw new Exception("Estado no valido");
-		}
+		if (estado!='O' && estado!='F') throw new IllegalArgumentException("Estado no valido");
 		if (estado =='O') {
 				this.estado=true;
 		}
@@ -78,7 +74,10 @@ public class Muelle {
 	public int getNumPlazas() {
 		return numPlazas;
 	}
-	
+
+	public List<Muelle> getListPlazas(){
+		return plazas;
+	}
 	public String getEstadoPlaza() {
 		return estadoPlaza;
 	}
@@ -89,15 +88,15 @@ public class Muelle {
 	 */
 	public void setPlazas(int numPlazas) throws Exception {
 		if(numPlazas<=0) {
-			throw new Exception("El número de plazas no puede ser menor o igual a 0");
+			throw new IllegalArgumentException("El número de plazas no puede ser menor o igual a 0");
 		}
 		plazas=new ArrayList<Muelle>();
 		for(int i=0;i<numPlazas;i++) {
 			Muelle descripcionPlazas=new Muelle();
-			descripcionPlazas.setNivel1(new Contenedor());
-			descripcionPlazas.setNivel2(new Contenedor());
-			descripcionPlazas.setNivel3(new Contenedor());
-			descripcionPlazas.setNivel4(new Contenedor());
+			descripcionPlazas.setNivelUno(new Contenedor());
+			descripcionPlazas.setNivelDos(new Contenedor());
+			descripcionPlazas.setNivelTres(new Contenedor());
+			descripcionPlazas.setNivelCuatro(new Contenedor());
 			descripcionPlazas.setEstPlazaVacia();
 			plazas.add(descripcionPlazas);
 		}
@@ -116,54 +115,69 @@ public class Muelle {
 	public void setEstPlazaLlena() {
 		estadoPlaza="llena";
 	}
-	public void setNivel1(Contenedor contenedor){
-		//PUEDE ADMITIR NULLS
-		nivel1=contenedor;
+	public void setNivelUno(Contenedor contenedor){
+		if(contenedor==null) throw new IllegalArgumentException("El contenedor no puede ser null");
+		nivelUno=contenedor;
 	}
-	public void setNivel2(Contenedor contenedor){
-		//PUEDE ADMITIR NULLS
-		nivel2=contenedor;
+	public void setNivelDos(Contenedor contenedor){
+		if(contenedor==null) throw new IllegalArgumentException("El contenedor no puede ser null");
+		nivelDos=contenedor;
 	}
-	public void setNivel3(Contenedor contenedor){
-		//PUEDE ADMITIR NULLS
-		nivel3=contenedor;
+	public void setNivelTres(Contenedor contenedor){
+		if(contenedor==null) throw new IllegalArgumentException("El contenedor no puede ser null");
+		nivelTres=contenedor;
 	}
-	public void setNivel4(Contenedor contenedor){
-		//PUEDE ADMITIR NULLS
-		nivel4=contenedor;
+	public void setNivelCuatro(Contenedor contenedor){
+		if(contenedor==null) throw new IllegalArgumentException("El contenedor no puede ser null");
+		nivelCuatro=contenedor;
 	}
+	
+	public Contenedor getNivelUno() {
+		return nivelUno;
+	}
+	public Contenedor getNivelDos() {
+		return nivelDos;
+	}
+	public Contenedor getNivelTres() {
+		return nivelTres;
+	}
+	public Contenedor getNivelCuatro() {
+		return nivelCuatro;
+	}
+	
 	public void asignarPlaza(Contenedor contenedor,int plaza) {
-		if (contenedor==null || plaza<0) {
-			throw new IllegalArgumentException("El contenedor no puede ser vacio ni la plaza<0");
-		}
+		if(contenedor==null || contenedor.getIdentificador(contenedor)==null) throw new IllegalArgumentException("El contenedor no puede ser nulo");
+		if(plaza<0) throw new IllegalArgumentException("La plaza no debe ser <0");
 		String estado=plazas.get(plaza).estadoPlaza;
 		if (estado=="llena") {
 			for(int iterador=0;iterador<plazas.size();iterador++) {
 				if(plazas.get(iterador).estadoPlaza.equals("semillena")){
 					asignarPlaza(contenedor,iterador);
+					break;
 				}
 				if(plazas.get(iterador).estadoPlaza.equals("vacia")) {
 					asignarPlaza(contenedor,iterador);
+					break;
 				}
 			}
 		}
 		else {
 			if(estado=="semillena"){
-				if(plazas.get(plaza).nivel2.getIdentificador(plazas.get(plaza).nivel2)==null) {
-					plazas.get(plaza).setNivel2(contenedor);
-				}
+				if(plazas.get(plaza).getNivelDos().getIdentificador(plazas.get(plaza).getNivelDos())==null) {
+					plazas.get(plaza).setNivelDos(contenedor);
+				} 
 				else {
-					if (plazas.get(plaza).nivel3.getIdentificador(plazas.get(plaza).nivel3)==null) {
-						plazas.get(plaza).setNivel3(contenedor);
+					if (plazas.get(plaza).getNivelTres().getIdentificador(plazas.get(plaza).getNivelTres())==null) {
+						plazas.get(plaza).setNivelTres(contenedor);
 					}
 					else {
-						plazas.get(plaza).setNivel4(contenedor);
+						plazas.get(plaza).setNivelCuatro(contenedor);
 						plazas.get(plaza).setEstPlazaLlena();
 					}
 				}
 			}
 			else {//vacia
-				plazas.get(plaza).setNivel1(contenedor);
+				plazas.get(plaza).setNivelUno(contenedor);
 				if(contenedor.getTecho(contenedor)) {
 					plazas.get(plaza).setEstPlazaSemi();
 				}
@@ -185,22 +199,22 @@ public class Muelle {
 		//TODO: ELSE IF -> Y SI NO COINCIDE CON NINGUNO ELSE Y RETURN new Contenedor() o return null??;
 		int indexPlaza=getPlaza(identificador);
 		if (indexPlaza==-1){
-			throw new Exception("El contenedor no se ha encontrado");
+			throw new IllegalArgumentException("El contenedor no se ha encontrado");
 		}
-		if((plazas.get(indexPlaza).nivel1.getIdentificador(plazas.get(indexPlaza).nivel1)).equals(identificador)){
-			Contenedor retorno=plazas.get(indexPlaza).nivel1;
+		if((plazas.get(indexPlaza).getNivelUno().getIdentificador(plazas.get(indexPlaza).getNivelUno()))==identificador){
+			Contenedor retorno=plazas.get(indexPlaza).getNivelUno();
 			if	(retorno.getTecho(retorno)){
-				plazas.get(indexPlaza).setNivel1(plazas.get(indexPlaza).nivel2);
-				plazas.get(indexPlaza).setNivel2(plazas.get(indexPlaza).nivel3);
-				plazas.get(indexPlaza).setNivel3(plazas.get(indexPlaza).nivel4);
-				plazas.get(indexPlaza).setNivel4(new Contenedor());
-				if (plazas.get(indexPlaza).nivel1.getIdentificador(plazas.get(indexPlaza).nivel1)==null) {
+				plazas.get(indexPlaza).setNivelUno(plazas.get(indexPlaza).getNivelDos());
+				plazas.get(indexPlaza).setNivelDos(plazas.get(indexPlaza).getNivelTres());
+				plazas.get(indexPlaza).setNivelTres(plazas.get(indexPlaza).getNivelCuatro());
+				plazas.get(indexPlaza).setNivelCuatro(new Contenedor());
+				if (plazas.get(indexPlaza).getNivelUno().getIdentificador(plazas.get(indexPlaza).getNivelUno())==null) {
 					plazas.get(indexPlaza).setEstPlazaVacia();
 					return retorno;
 				}
 				else {
-					if (plazas.get(indexPlaza).nivel2.getIdentificador(plazas.get(indexPlaza).nivel2)==null) {
-						if(plazas.get(indexPlaza).nivel1.getTecho(plazas.get(indexPlaza).nivel1)) {
+					if (plazas.get(indexPlaza).getNivelDos().getIdentificador(plazas.get(indexPlaza).getNivelDos())==null) {
+						if(plazas.get(indexPlaza).getNivelUno().getTecho(plazas.get(indexPlaza).getNivelUno())) {
 							plazas.get(indexPlaza).setEstPlazaSemi();
 							return retorno;
 						}
@@ -209,8 +223,8 @@ public class Muelle {
 							return retorno;
 						}
 					}
-					else if (plazas.get(indexPlaza).nivel3.getIdentificador(plazas.get(indexPlaza).nivel3)==null) {
-						if(plazas.get(indexPlaza).nivel2.getTecho(plazas.get(indexPlaza).nivel2)) {
+					else if (plazas.get(indexPlaza).getNivelTres().getIdentificador(plazas.get(indexPlaza).getNivelTres())==null) {
+						if(plazas.get(indexPlaza).getNivelDos().getTecho(plazas.get(indexPlaza).getNivelDos())) {
 							plazas.get(indexPlaza).setEstPlazaSemi();
 							return retorno;
 						}
@@ -220,7 +234,7 @@ public class Muelle {
 						}
 					}
 					else {
-						if(plazas.get(indexPlaza).nivel3.getTecho(plazas.get(indexPlaza).nivel3)) {
+						if(plazas.get(indexPlaza).getNivelTres().getTecho(plazas.get(indexPlaza).getNivelTres())) {
 							plazas.get(indexPlaza).setEstPlazaSemi();
 							return retorno;
 						}
@@ -232,23 +246,23 @@ public class Muelle {
 				}
 			}
 			else {
-				plazas.get(indexPlaza).setNivel1(new Contenedor());
+				plazas.get(indexPlaza).setNivelUno(new Contenedor());
 				plazas.get(indexPlaza).setEstPlazaVacia();
 				return retorno;
 			}
 		}
-		else if((plazas.get(indexPlaza).nivel2.getIdentificador(plazas.get(indexPlaza).nivel2)).equals(identificador)){
-			Contenedor retorno=plazas.get(indexPlaza).nivel2;
+		else if((plazas.get(indexPlaza).getNivelDos().getIdentificador(plazas.get(indexPlaza).getNivelDos()))==identificador){
+			Contenedor retorno=plazas.get(indexPlaza).getNivelDos();
 			if	(retorno.getTecho(retorno)){
-				plazas.get(indexPlaza).setNivel2(plazas.get(indexPlaza).nivel3);
-				plazas.get(indexPlaza).setNivel3(plazas.get(indexPlaza).nivel4);
-				plazas.get(indexPlaza).setNivel4(new Contenedor());
-				if (plazas.get(indexPlaza).nivel2.getIdentificador(plazas.get(indexPlaza).nivel2)==null) {
+				plazas.get(indexPlaza).setNivelDos(plazas.get(indexPlaza).getNivelTres());
+				plazas.get(indexPlaza).setNivelTres(plazas.get(indexPlaza).getNivelCuatro());
+				plazas.get(indexPlaza).setNivelCuatro(new Contenedor());
+				if (plazas.get(indexPlaza).getNivelDos().getIdentificador(plazas.get(indexPlaza).getNivelDos())==null) {
 					plazas.get(indexPlaza).setEstPlazaSemi();
 					return retorno;
 				}
-				else if (plazas.get(indexPlaza).nivel3.getIdentificador(plazas.get(indexPlaza).nivel3)==null) {
-					if(plazas.get(indexPlaza).nivel2.getTecho(plazas.get(indexPlaza).nivel2)) {
+				else if (plazas.get(indexPlaza).getNivelTres().getIdentificador(plazas.get(indexPlaza).getNivelTres())==null) {
+					if(plazas.get(indexPlaza).getNivelDos().getTecho(plazas.get(indexPlaza).getNivelDos())) {
 						plazas.get(indexPlaza).setEstPlazaSemi();
 						return retorno;
 					}
@@ -263,17 +277,17 @@ public class Muelle {
 				}
 			}	
 			else {
-				plazas.get(indexPlaza).setNivel2(new Contenedor());
+				plazas.get(indexPlaza).setNivelDos(new Contenedor());
 				plazas.get(indexPlaza).setEstPlazaSemi();
 				return retorno;
 			}
 		}
-		else if((plazas.get(indexPlaza).nivel3.getIdentificador(plazas.get(indexPlaza).nivel3)).equals(identificador)){
-			Contenedor retorno=plazas.get(indexPlaza).nivel3;
+		else if((plazas.get(indexPlaza).getNivelTres().getIdentificador(plazas.get(indexPlaza).getNivelTres()))==identificador){
+			Contenedor retorno=plazas.get(indexPlaza).getNivelTres();
 			if	(retorno.getTecho(retorno)){
-				plazas.get(indexPlaza).setNivel3(plazas.get(indexPlaza).nivel4);
-				plazas.get(indexPlaza).setNivel4(new Contenedor());
-				if(plazas.get(indexPlaza).nivel3.getTecho(plazas.get(indexPlaza).nivel3)) {
+				plazas.get(indexPlaza).setNivelTres(plazas.get(indexPlaza).getNivelCuatro());
+				plazas.get(indexPlaza).setNivelCuatro(new Contenedor());
+				if(plazas.get(indexPlaza).getNivelTres().getTecho(plazas.get(indexPlaza).getNivelTres())) {
 					plazas.get(indexPlaza).setEstPlazaSemi();
 					return retorno;
 				}
@@ -283,14 +297,14 @@ public class Muelle {
 				}
 			}
 			else {
-				plazas.get(indexPlaza).setNivel4(new Contenedor());
+				plazas.get(indexPlaza).setNivelCuatro(new Contenedor());
 				plazas.get(indexPlaza).setEstPlazaSemi();
 				return retorno;
 			}
 		}
-		else if((plazas.get(indexPlaza).nivel4.getIdentificador(plazas.get(indexPlaza).nivel4)).equals(identificador)){
-			Contenedor retorno=plazas.get(indexPlaza).nivel4;
-			plazas.get(indexPlaza).setNivel4(new Contenedor());
+		else if((plazas.get(indexPlaza).getNivelCuatro().getIdentificador(plazas.get(indexPlaza).getNivelCuatro()))==identificador){
+			Contenedor retorno=plazas.get(indexPlaza).getNivelCuatro();
+			plazas.get(indexPlaza).setNivelCuatro(new Contenedor());
 			plazas.get(indexPlaza).setEstPlazaSemi();
 			return retorno;
 		}
@@ -317,27 +331,7 @@ public class Muelle {
 	}
 
 	
-	//TODO:los puedo quitar??????????' solo lo utilizo ahora en estadoPlaza() y se va a modificar!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	/**
-	 * 
-	 * 
-	public Contenedor getNivel1() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public Contenedor getNivel2() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public Contenedor getNivel3() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	public Contenedor getNivel4() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	 */
+	// CREAR UN CONTENEDOR CON ESE IDENTIFICADOR Y QUE DE ALLI EL ERROR Y SINO DE VICIO
 	public static boolean comprobarIdentificador(String identificador) {
 		boolean correcto=true;
 		if(identificador.length()!=11) {
@@ -370,19 +364,19 @@ public class Muelle {
 		if (correcto){
 			int index=-1;
 			for(int iterador=0;iterador<plazas.size();iterador++) {
-				if((plazas.get(iterador).nivel1.getIdentificador(plazas.get(iterador).nivel1)).equals(identificador)){
+				if((plazas.get(iterador).getNivelUno().getIdentificador(plazas.get(iterador).getNivelUno()))==identificador){
 					index=iterador;
 					break;
 				}
-				if((plazas.get(iterador).nivel2.getIdentificador(plazas.get(iterador).nivel2)).equals(identificador)){
+				if((plazas.get(iterador).getNivelDos().getIdentificador(plazas.get(iterador).getNivelDos()))==identificador){
 					index=iterador;
 					break;
 				}
-				if((plazas.get(iterador).nivel3.getIdentificador(plazas.get(iterador).nivel3)).equals(identificador)){
+				if((plazas.get(iterador).getNivelTres().getIdentificador(plazas.get(iterador).getNivelTres()))==identificador){
 					index=iterador;
 					break;
 				}
-				if((plazas.get(iterador).nivel4.getIdentificador(plazas.get(iterador).nivel4)).equals(identificador)){
+				if((plazas.get(iterador).getNivelCuatro().getIdentificador(plazas.get(iterador).getNivelCuatro()))==identificador){
 					index=iterador;
 					break;
 				}
@@ -390,7 +384,7 @@ public class Muelle {
 			return index;
 		}
 		else
-			throw new Exception("Identificador no valido");
+			throw new IllegalArgumentException("Identificador no valido");
 	}
 	public String getNivelPlaza(String identificador) throws Exception {
 		//TODO:MEJORA Y NO RETORNAR TEXTO .../...
@@ -399,19 +393,19 @@ public class Muelle {
 		if (indexPlaza==-1){
 			throw new Exception("El contenedor no se ha encontrado");
 		}
-		if((plazas.get(indexPlaza).nivel1.getIdentificador(plazas.get(indexPlaza).nivel1)).equals(identificador)){
+		if((plazas.get(indexPlaza).getNivelUno().getIdentificador(plazas.get(indexPlaza).getNivelUno()))==identificador){
 			nivel="Ese contenedor se encuentra en la plaza "+indexPlaza+" y en el nivel 1";
 			return nivel;
 		}
-		else if((plazas.get(indexPlaza).nivel2.getIdentificador(plazas.get(indexPlaza).nivel2)).equals(identificador)){
+		else if((plazas.get(indexPlaza).getNivelDos().getIdentificador(plazas.get(indexPlaza).getNivelDos()))==identificador){
 			nivel="Ese contenedor se encuentra en la plaza "+indexPlaza+" y en el nivel 2";
 			return nivel;
 		}
-		else if((plazas.get(indexPlaza).nivel3.getIdentificador(plazas.get(indexPlaza).nivel3)).equals(identificador)){
+		else if((plazas.get(indexPlaza).getNivelTres().getIdentificador(plazas.get(indexPlaza).getNivelTres()))==identificador){
 			nivel="Ese contenedor se encuentra en la plaza "+indexPlaza+" y en el nivel 3";
 			return nivel;
 		}
-		else if((plazas.get(indexPlaza).nivel4.getIdentificador(plazas.get(indexPlaza).nivel4)).equals(identificador)){
+		else if((plazas.get(indexPlaza).getNivelCuatro().getIdentificador(plazas.get(indexPlaza).getNivelCuatro()))==identificador){
 			nivel="Ese contenedor se encuentra en la plaza "+indexPlaza+" y en el nivel 4";
 			return nivel;
 		}
