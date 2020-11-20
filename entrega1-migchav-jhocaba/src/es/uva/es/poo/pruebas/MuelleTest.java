@@ -10,257 +10,255 @@ import es.uva.inf.poo.maps.GPSCoordinate;
 public class MuelleTest {
 
 	@Test
-	public void testMuelleInicializador() throws Exception {
+	public void testMuelleInicializador() {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(12,coordenada,'O',50);
-		Muelle añadir2=new Muelle(12,coordenada,'F',50);
-		assertNotNull(añadir);
-		assertNotNull(añadir2);
+		Muelle aÃ±adir=new Muelle(12,coordenada,'O',50);
+		assertNotNull(aÃ±adir);
 	}
 	@Test
-	public void testMuelleInicializadorDos() throws Exception {
+	public void testMuelleInicializadorDos(){
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(12,coordenada,'F',50);
-		assertNotNull(añadir);
+		Muelle aÃ±adir=new Muelle(12,coordenada,'F',50);
+		assertNotNull(aÃ±adir);
 	}
 	
 	@Test(expected=IllegalArgumentException.class) 
-	public void testMuelleCoordenadaNull() throws Exception  {
+	public void testMuelleCoordenadaNull() {
 		GPSCoordinate coordenada=null;
-		Muelle añadir=new Muelle(12,coordenada,'O',50);
+		Muelle aÃ±adir=new Muelle(12,coordenada,'O',50);
 	}
 	@Test(expected=IllegalArgumentException.class) 
-	public void testMuelleIdentificadoNoValido() throws Exception  {
+	public void testMuelleIdentificadoNoValido()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(100,coordenada,'O',50);
+		Muelle aÃ±adir=new Muelle(100,coordenada,'O',50);
 	}
 	@Test(expected=IllegalArgumentException.class) 
-	public void testMuelleEstadoNoValido() throws Exception  {
+	public void testMuelleEstadoNoValido() {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'o',50);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'o',50);
 	}
 	@Test(expected=IllegalArgumentException.class) 
-	public void testMuellePlazasNoValidas() throws Exception  {
+	public void testMuellePlazasNoValidas()   {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',0);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',0);
 	}
 	@Test
-	public void testGetIdMuelle() throws Exception {
+	public void testGetIdMuelle()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		assertEquals(añadir.getIdMuelle(),20);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
+		assertEquals(aÃ±adir.getIdMuelle(),20);
 	}
 	@Test
-	public void testGetEstado() throws Exception {
+	public void testGetEstado()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		assertFalse(añadir.getEstado());
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
+		assertFalse(aÃ±adir.getEstado());
 	}
 	@Test
-	public void testGetNumPlazas() throws Exception {
+	public void testGetNumPlazas()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		assertEquals(añadir.getNumPlazas(),5);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
+		assertEquals(aÃ±adir.getNumPlazas(),5);
 	}
 	@Test
-	public void testGetEstadoPlaza() throws Exception {
+	public void testGetEstadoPlaza()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		assertEquals(añadir.getListPlazas().get(0).getEstadoPlaza(),"vacia");
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
+		assertEquals(aÃ±adir.getListPlazas().get(0).getEstadoPlaza(),"vacia");
 	}
 	@Test
-	public void testGetListPlazas()throws Exception {
+	public void testGetListPlazas() {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		assertNotNull(añadir.getListPlazas());
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
+		assertNotNull(aÃ±adir.getListPlazas());
 	}
 	@Test(expected=IllegalArgumentException.class) 
-	public void testSetPlazas() throws Exception {
+	public void testSetPlazas()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		añadir.setPlazas(-5);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
+		aÃ±adir.setPlazas(-5);
 	}
 	
 	@Test
-	public void testGetCoordenada() throws Exception {
+	public void testGetCoordenada()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		assertEquals(añadir.getCoordenada(),coordenada);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
+		assertEquals(aÃ±adir.getCoordenada(),coordenada);
 	}
 	@Test
-	public void testSetEstPlazaVacia() throws Exception {
+	public void testSetEstPlazaVacia()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		añadir.setEstPlazaVacia();
-		assertEquals(añadir.getEstadoPlaza(),"vacia");
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
+		aÃ±adir.setEstPlazaVacia();
+		assertEquals(aÃ±adir.getEstadoPlaza(),"vacia");
 	}
 	@Test
-	public void testSetEstPlazaSemi() throws Exception {
+	public void testSetEstPlazaSemi()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		añadir.setEstPlazaSemi();
-		assertEquals(añadir.getEstadoPlaza(),"semillena");
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
+		aÃ±adir.setEstPlazaSemi();
+		assertEquals(aÃ±adir.getEstadoPlaza(),"semillena");
 	}
 	@Test
-	public void testSetEstPlazaLlena() throws Exception {
+	public void testSetEstPlazaLlena()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		añadir.setEstPlazaLlena();
-		assertEquals(añadir.getEstadoPlaza(),"llena");
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
+		aÃ±adir.setEstPlazaLlena();
+		assertEquals(aÃ±adir.getEstadoPlaza(),"llena");
 	}
 	@Test
-	public void testSetNivelUno() throws Exception {
+	public void testSetNivelUno()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
 		Contenedor prueba=new Contenedor();
-		añadir.setNivelUno(prueba);
+		aÃ±adir.setNivelUno(prueba);
 		assertNotEquals(prueba,null);
 	}
 	@Test(expected=IllegalArgumentException.class) 
-	public void testSetNivelUnoContenedorNull() throws Exception {
+	public void testSetNivelUnoContenedorNull()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
 		Contenedor prueba=null;
-		añadir.setNivelUno(prueba);
+		aÃ±adir.setNivelUno(prueba);
 	}
 	@Test
-	public void testSetNivelDos() throws Exception {
+	public void testSetNivelDos()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
 		Contenedor prueba=new Contenedor();
-		añadir.setNivelDos(prueba);
+		aÃ±adir.setNivelDos(prueba);
 		assertNotEquals(prueba,null);
 	}
 	@Test(expected=IllegalArgumentException.class) 
-	public void testSetNivelDosContenedorNull() throws Exception {
+	public void testSetNivelDosContenedorNull()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
 		Contenedor prueba=null;
-		añadir.setNivelDos(prueba);
+		aÃ±adir.setNivelDos(prueba);
 	}
 	@Test
-	public void testSetNivelTres() throws Exception {
+	public void testSetNivelTres()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
 		Contenedor prueba=new Contenedor();
-		añadir.setNivelTres(prueba);
+		aÃ±adir.setNivelTres(prueba);
 		assertNotEquals(prueba,null);
 	}
 	@Test(expected=IllegalArgumentException.class) 
-	public void testSetNivelTresContenedorNull() throws Exception {
+	public void testSetNivelTresContenedorNull()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
 		Contenedor prueba=null;
-		añadir.setNivelTres(prueba);
+		aÃ±adir.setNivelTres(prueba);
 	}
 	@Test
-	public void testSetNivelCuatro() throws Exception {
+	public void testSetNivelCuatro()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
 		Contenedor prueba=new Contenedor();
-		añadir.setNivelCuatro(prueba);
+		aÃ±adir.setNivelCuatro(prueba);
 		assertNotEquals(prueba,null);
 	}
 	@Test(expected=IllegalArgumentException.class) 
-	public void testSetNivelCuatroContenedorNull() throws Exception {
+	public void testSetNivelCuatroContenedorNull()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
 		Contenedor prueba=null;
-		añadir.setNivelCuatro(prueba);
+		aÃ±adir.setNivelCuatro(prueba);
 	}
 	@Test
-	public void testAsignarPlaza() throws Exception {
+	public void testAsignarPlaza()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
 		Contenedor prueba=new Contenedor("DUXU1234568",500.0,200.0,100.0);
-		añadir.asignarPlaza(prueba, 2);
-		assertEquals(añadir.getListPlazas().get(2).getNivelUno(),prueba);
+		aÃ±adir.asignarPlaza(prueba, 2);
+		assertEquals(aÃ±adir.getListPlazas().get(2).getNivelUno(),prueba);
 	}
 	@Test(expected=IllegalArgumentException.class) 
-	public void testAsignarPlazaContenedorNull() throws Exception {
+	public void testAsignarPlazaContenedorNull()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		añadir.asignarPlaza(null, 2);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
+		aÃ±adir.asignarPlaza(null, 2);
 	}
 	@Test(expected=IllegalArgumentException.class) 
-	public void testAsignarPlazaContenedorIdNulo() throws Exception {
+	public void testAsignarPlazaContenedorIdNulo()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
 		Contenedor prueba=new Contenedor();
-		añadir.asignarPlaza(prueba, 2);
+		aÃ±adir.asignarPlaza(prueba, 2);
 	}
 	@Test(expected=IllegalArgumentException.class) 
-	public void testAsignarPlazaPlazaNegativa() throws Exception {
+	public void testAsignarPlazaPlazaNegativa()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
 		Contenedor prueba=new Contenedor("DUXU1234568",500.0,200.0,100.0);
-		añadir.asignarPlaza(prueba, -1);
+		aÃ±adir.asignarPlaza(prueba, -1);
 	}
 	@Test
-	public void testSacarContenedor() throws Exception {
+	public void testSacarContenedor()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
 		Contenedor prueba=new Contenedor("DUXU1234568",500.0,200.0,100.0);
 		prueba.setTecho();
-		añadir.asignarPlaza(prueba, 2);
-		Contenedor salida=añadir.sacarContenedor("DUXU1234568");
+		aÃ±adir.asignarPlaza(prueba, 2);
+		Contenedor salida=aÃ±adir.sacarContenedor("DUXU1234568");
 		assertEquals(salida,prueba);
 	}
 	@Test(expected=IllegalArgumentException.class) 
-	public void testSacarContenedorIdInvalido() throws Exception {
+	public void testSacarContenedorIdInvalido()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
 		Contenedor prueba=new Contenedor("DUXU1234568",500.0,200.0,100.0);
-		añadir.asignarPlaza(prueba, 2);
-		Contenedor salida=añadir.sacarContenedor("DUUXU1234568");
+		aÃ±adir.asignarPlaza(prueba, 2);
+		Contenedor salida=aÃ±adir.sacarContenedor("DUUXU1234568");
 	}
 	@Test
-	public void testEstadoPlaza() throws Exception {
+	public void testEstadoPlaza()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
 		Contenedor prueba=new Contenedor("DUXU1234568",500.0,200.0,100.0);
 		prueba.setTecho();
-		añadir.asignarPlaza(prueba, 2);
-		String resultado=añadir.estadoPlazas();
+		aÃ±adir.asignarPlaza(prueba, 2);
+		String resultado=aÃ±adir.estadoPlazas();
 		assertEquals(resultado,"4/1/0");
 	}
 	@Test
-	public void testGetPlaza() throws Exception {
+	public void testGetPlaza()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
 		Contenedor prueba=new Contenedor("DUXU1234568",500.0,200.0,100.0);
 		prueba.setTecho();
-		añadir.asignarPlaza(prueba, 2);
-		int resultado=añadir.getPlaza("DUXU1234568");
+		aÃ±adir.asignarPlaza(prueba, 2);
+		int resultado=aÃ±adir.getPlaza("DUXU1234568");
 		assertEquals(resultado,2);
 	}	
 	@Test(expected=IllegalArgumentException.class)
-	public void testGetPlazaIdInvalido() throws Exception {
+	public void testGetPlazaIdInvalido()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
 		Contenedor prueba=new Contenedor("DUXU1234568",500.0,200.0,100.0);
 		prueba.setTecho();
-		añadir.asignarPlaza(prueba, 2);
-		int resultado=añadir.getPlaza("DUXU12345685");
+		aÃ±adir.asignarPlaza(prueba, 2);
+		int resultado=aÃ±adir.getPlaza("DUXU12345685");
 	}
 	@Test
-	public void testGetNivelPlaza() throws Exception {
+	public void testGetNivelPlaza()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
 		Contenedor prueba=new Contenedor("DUXU1234568",500.0,200.0,100.0);
 		prueba.setTecho();
-		añadir.asignarPlaza(prueba, 2);
-		String resultado=añadir.getNivelPlaza("DUXU1234568");
+		aÃ±adir.asignarPlaza(prueba, 2);
+		String resultado=aÃ±adir.getNivelPlaza("DUXU1234568");
 		assertEquals(resultado,"Ese contenedor se encuentra en la plaza 2 y en el nivel 1");
 	}	
 	
 	@Test(expected=IllegalArgumentException.class)
-	public void testGetNivelPlazaIdInvalido() throws Exception {
+	public void testGetNivelPlazaIdInvalido()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle añadir=new Muelle(20,coordenada,'F',5);
+		Muelle aÃ±adir=new Muelle(20,coordenada,'F',5);
 		Contenedor prueba=new Contenedor("DUXU1234568",500.0,200.0,100.0);
 		prueba.setTecho();
-		añadir.asignarPlaza(prueba, 2);
-		String resultado=añadir.getNivelPlaza("DUXU12345685");
+		aÃ±adir.asignarPlaza(prueba, 2);
+		String resultado=aÃ±adir.getNivelPlaza("DUXU12345685");
 	}
 }

@@ -1,6 +1,7 @@
 package es.uva.es.poo.clases;
 import es.uva.inf.poo.maps.GPSCoordinate;
 import java. util. *;
+import es.uva.es.poo.clases.*;
 /**
  * Clase relativa a los contenedores
  * 
@@ -20,7 +21,7 @@ public class Contenedor {
 	
 	private double peso;
 	private double carga;			//Por defecto recibimos Kilogramos
-	private double volumen; 	//Por defecto recibimos metros cúbicos
+	private double volumen; 	//Por defecto recibimos metros cÃºbicos
 	private boolean estado;		//Transito = False -- Recogida = True
 	private boolean techo;
 	private List<Trayecto> trayectos;
@@ -35,17 +36,17 @@ public class Contenedor {
 	}
 	
 	/**
-	 * Inicialización a partir de argumentos
+	 * InicializaciÃ³n a partir de argumentos
 	 * @param identificador - Cadena con el que se identifica cada contenedor
-	 * @throws Exception 
+	 * @throws IllegalArgumentException
 	 */
-	public Contenedor(String identificador,double peso,double carga,double volumen) throws Exception {	
+	public Contenedor(String identificador,double peso,double carga,double volumen)  {	
 		//TODO: llamar a lo de carga,code,estado,techos............
 		boolean correcto=Muelle.comprobarIdentificador(identificador);
 		if (correcto){
 			this.identificador=identificador;
 			
-			StringBuilder codigoString=new StringBuilder();
+			StringBuilder codigoString=new StringBuilder(); 
 			for (int i= 0; i<3; i++) {
 				codigoString = codigoString.append(identificador.charAt(i));
 			}
@@ -64,10 +65,11 @@ public class Contenedor {
 			this.peso=peso;
 			this.carga=carga;
 			this.volumen=volumen;
+			setTransito();
 			trayectos=new ArrayList<Trayecto>();
 		}
 		else
-			throw new Exception("Identificador no valido");
+			throw new IllegalArgumentException("Identificador no valido");
 		//this.contenedor=Contenedor.this;
 		//TODO: transito o en recogida,techo?????
 	}
@@ -81,14 +83,14 @@ public class Contenedor {
 
 	
 	/**
-	 * Cambiar el estado de un contenedor para reflejar que está en recogida
+	 * Cambiar el estado de un contenedor para reflejar que estÃ¡ en recogida
 	 */
 	public void setRecogida() {
 		estado = true;
 	}
 
 	/**
-	 * Cambiar el estado de un contenedor para reflejar que está en tránsito
+	 * Cambiar el estado de un contenedor para reflejar que estÃ¡ en trÃ¡nsito
 	 */
 	public void setTransito() {
 		estado = false;
@@ -117,7 +119,7 @@ public class Contenedor {
 	}
 	
 	/**
-	 * Obtener el volumen del contenedor en metros cúbicos
+	 * Obtener el volumen del contenedor en metros cÃºbicos
 	 * @return volumen en metros cuadrados
 	 */
 	public double getVolumenMetros() {
@@ -125,7 +127,7 @@ public class Contenedor {
 	}
 	
 	/**
-	 * Almacenar el volumen en metros cúbicos
+	 * Almacenar el volumen en metros cÃºbicos
 	 * @param volumen
 	 */
 	public void setVolumenMetros(double volumen) {
@@ -135,8 +137,8 @@ public class Contenedor {
 	}
 	
 	/**
-	 * Obtener el volumen del contenedor en pies cúbicos
-	 * @return volumen en pies cúbicos
+	 * Obtener el volumen del contenedor en pies cÃºbicos
+	 * @return volumen en pies cÃºbicos
 	 */
 	public double getVolumenPies() {
 		double piescubicos = getVolumenMetros() * (353147/10000);
@@ -190,18 +192,52 @@ public class Contenedor {
 	}
 	*/
 	
-	public void hacerTrayecto(Muelle muelleOrigen,Puerto puertoOrigen,String fechaIni,
-			Muelle muelleDestino,Puerto puertoDestino,String fechaFin) 
+	public void hacerTrayecto(Puerto destino) 
 	{
 		//TODO??: OBTENER MUELLE ORIGEN Y ESO , MIRAR TODOIST
-		trayectos.add(new Trayecto(muelleOrigen,puertoOrigen,fechaIni,
-			muelleDestino, puertoDestino, fechaFin));
+		//estado en trayecto
+		Trayecto destinoFinal=new Trayecto();
+		destinoFinal.setPuertoFinal(destino);
+		trayectos.add(destinoFinal);
+	}
+	/***
+	 * 
+	 * @param contenedor
+	 * @param inicio
+	 * @param puertoFin
+	 * @param muelleFin
+	 * @param fechaInicio
+	 * @param fechaFin
+	 * @throws IllegalArgumentException
+	 */
+	public void hacerViajes(Contenedor contenedor,Puerto puertoOrigen,Puerto puertoDestino,Muelle muelleDestino,String fechaInicio,String fechaFin)  {
+		List<Muelle> listaMuelles=puertoOrigen.getListaMuelles();
+		int posicionMuelle=-1;
+		int i;
+		for (i=0;i<listaMuelles.size();i++) {
+			Muelle analisis=listaMuelles.get(i);
+			int plaza=analisis.getPlaza(contenedor.getIdentificador(contenedor));
+			if(plaza==-1) continue;
+			posicionMuelle=i;
+			break;
+		}
+		if (posicionMuelle==-1) throw new IllegalArgumentException("El contenedor no esta en ese puerto");
+		Muelle muelleOrigen=listaMuelles.get(posicionMuelle);
+		if(puertoOrigen.equals(trayectos.get(0).getPuertoFinal()))throw new IllegalArgumentException("Ya se habÃ­a llegado al puerto destino del trayecto.Inicie un nuevo trayecto global");
+		trayectos.add(new Trayecto(muelleOrigen,puertoOrigen,fechaInicio,muelleDestino,puertoDestino,fechaFin));
+		if(puertoDestino.equals(trayectos.get(0).getPuertoFinal())) contenedor.setRecogida();
 	}
 	
+
 	/**
-	 * Obtener el precio del transporte total de un contenedor a partir de 
-	 * sus trayectos
+	 * 
+	 * @param precioMilla
+	 * @param precioDia
+	 * @return
+	 * @throws IllegalArgumentException
 	 */
+	
+	//TODO:NO MIRAR EL PRIMER TRAYECTO
 	public double Precio(int precioMilla,int precioDia) {
 		if(precioMilla<=0 || precioDia<=0)
 			throw new IllegalArgumentException("Los precios no pueden ser<=0");
@@ -209,6 +245,7 @@ public class Contenedor {
 		Iterator<Trayecto> itrTrayectos=trayectos.iterator();
 		while(itrTrayectos.hasNext()) {
 			Trayecto analisis=itrTrayectos.next();
+			if(analisis.getMuelleOrigen()==null) continue;
 			double precio = analisis.costeTrayecto(precioMilla, precioDia);
 			sumaTrayectos+=precio;
 		}

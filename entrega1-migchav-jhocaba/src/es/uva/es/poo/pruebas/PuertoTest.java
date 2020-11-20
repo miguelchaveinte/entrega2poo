@@ -67,49 +67,57 @@ public class PuertoTest {
 		assertEquals(prueba.getPais(),"ES");
 	}
 	@Test
-	public void testA�adirMuelle() throws Exception {
+	public void testAñadirMuelle() {
 		String identidad="ES-MAD";
 		Puerto prueba=new Puerto(identidad);
-		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle a�adir=new Muelle(12,coordenada,'O',50);
-		prueba.a�adirMuelle(a�adir);
+		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5); 
+		Muelle añadir=new Muelle(12,coordenada,'O',50);
+		prueba.añadirMuelle(añadir);  
 		
-		assertEquals(prueba.muellesOperativos().get(0),a�adir);
+		assertEquals(prueba.muellesOperativos().get(0),añadir);
 	}
 	@Test(expected=IllegalArgumentException.class) 
-	public void testA�adirMuelleNull() {
+	public void testAñadirMuelleNull() {
 		String identidad="ES-MAD";
 		Puerto prueba=new Puerto(identidad);
-		Muelle a�adir=null;
-		prueba.a�adirMuelle(a�adir);
+		Muelle añadir=null;
+		prueba.añadirMuelle(añadir);
 	}
 	@Test
-	public void testEliminarMuelle() throws Exception {
+	public void testEliminarMuelle() {
 		String identidad="ES-MAD";
 		Puerto prueba=new Puerto(identidad);
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle a�adir=new Muelle(12,coordenada,'O',50);
-		prueba.a�adirMuelle(a�adir);
-		prueba.eliminarMuelle(20);
+		Muelle añadir=new Muelle(12,coordenada,'O',50);
+		prueba.añadirMuelle(añadir);
 		prueba.eliminarMuelle(12);	
 		assertTrue(prueba.muellesOperativos().isEmpty());
 	}
 	@Test(expected=IllegalArgumentException.class) 
-	public void testEliminarMuelleIdentidadNoValida() throws Exception {
+	public void testEliminarMuelleNoEncontrado(){
 		String identidad="ES-MAD";
 		Puerto prueba=new Puerto(identidad);
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle a�adir=new Muelle(12,coordenada,'O',50);
-		prueba.a�adirMuelle(a�adir);
+		Muelle añadir=new Muelle(12,coordenada,'O',50);
+		prueba.añadirMuelle(añadir);
+		prueba.eliminarMuelle(36);	
+	}
+	@Test(expected=IllegalArgumentException.class) 
+	public void testEliminarMuelleIdentidadNoValida()  {
+		String identidad="ES-MAD";
+		Puerto prueba=new Puerto(identidad);
+		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
+		Muelle añadir=new Muelle(12,coordenada,'O',50);
+		prueba.añadirMuelle(añadir);
 		prueba.eliminarMuelle(100);
 	}
 	@Test
-	public void testGetCompleto() throws Exception {
+	public void testGetCompleto() {
 		String identidad="ES-MAD";
 		Puerto prueba=new Puerto(identidad);
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle a�adir=new Muelle(12,coordenada,'O',50);
-		prueba.a�adirMuelle(a�adir);
+		Muelle añadir=new Muelle(12,coordenada,'O',50);
+		prueba.añadirMuelle(añadir);
 		boolean completo=prueba.getCompleto();
 		prueba.eliminarMuelle(12);
 		boolean completo2=prueba.getCompleto();
@@ -118,37 +126,37 @@ public class PuertoTest {
 	}
 	
 	@Test
-	public void testMuellesOperativos() throws Exception {
+	public void testMuellesOperativos()  {
 		String identidad="ES-MAD";
 		Puerto prueba=new Puerto(identidad);
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle a�adir=new Muelle(12,coordenada,'O',50);
-		prueba.a�adirMuelle(a�adir);
+		Muelle añadir=new Muelle(12,coordenada,'O',50);
+		prueba.añadirMuelle(añadir);
 		assertFalse(prueba.muellesOperativos().isEmpty());
 		prueba.eliminarMuelle(12);
-		Muelle a�adir2=new Muelle(12,coordenada,'F',50);
-		prueba.a�adirMuelle(a�adir2);
+		Muelle añadir2=new Muelle(12,coordenada,'F',50);
+		prueba.añadirMuelle(añadir2);
 		assertTrue(prueba.muellesOperativos().isEmpty());
 	}
 	@Test
-	public void testMuellesEspacio() throws Exception {
+	public void testMuellesEspacio()  {
 		String identidad="ES-MAD";
 		Puerto prueba=new Puerto(identidad);
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle a�adir=new Muelle(12,coordenada,'O',50);
-		prueba.a�adirMuelle(a�adir);
+		Muelle añadir=new Muelle(12,coordenada,'O',50);
+		prueba.añadirMuelle(añadir);
 		assertFalse(prueba.muellesEspacio().isEmpty());
 		prueba.eliminarMuelle(12);
 		assertTrue(prueba.muellesEspacio().isEmpty());
 	}
 	
 	@Test
-	public void testMuellesCerca() throws Exception {
+	public void testMuellesCerca()  {
 		String identidad="ES-MAD";
 		Puerto prueba=new Puerto(identidad);
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle a�adir=new Muelle(12,coordenada,'O',50);
-		prueba.a�adirMuelle(a�adir);
+		Muelle añadir=new Muelle(12,coordenada,'O',50);
+		prueba.añadirMuelle(añadir);
 		GPSCoordinate coordenadaDistancia=new GPSCoordinate(40.0,40.0);
 		GPSCoordinate coordenadaDistancia2=new GPSCoordinate(40.5,40.5);
 		double distancia=4000.0;
@@ -159,24 +167,24 @@ public class PuertoTest {
 	}
 	
 	@Test(expected=IllegalArgumentException.class) 
-	public void testMuellesCercaCoordenadaNull() throws Exception {
+	public void testMuellesCercaCoordenadaNull()  {
 		String identidad="ES-MAD";
 		Puerto prueba=new Puerto(identidad);
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle a�adir=new Muelle(12,coordenada,'O',50);
-		prueba.a�adirMuelle(a�adir);
+		Muelle añadir=new Muelle(12,coordenada,'O',50);
+		prueba.añadirMuelle(añadir);
 		GPSCoordinate coordenadaDistancia=null;
 		double distancia=4000.0;
 		prueba.muellesCerca(coordenadaDistancia, distancia);
 	}
 	
 	@Test(expected=IllegalArgumentException.class) 
-	public void testMuellesCercaDistanciaNoValida() throws Exception {
+	public void testMuellesCercaDistanciaNoValida()  {
 		String identidad="ES-MAD";
 		Puerto prueba=new Puerto(identidad);
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle a�adir=new Muelle(12,coordenada,'O',50);
-		prueba.a�adirMuelle(a�adir);
+		Muelle añadir=new Muelle(12,coordenada,'O',50);
+		prueba.añadirMuelle(añadir);
 		GPSCoordinate coordenadaDistancia=new GPSCoordinate(40.0,40.0);
 		double distancia=-4000.0;
 		prueba.muellesCerca(coordenadaDistancia, distancia);

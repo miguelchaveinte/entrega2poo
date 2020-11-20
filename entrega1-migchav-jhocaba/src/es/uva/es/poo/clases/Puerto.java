@@ -6,7 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Clase que proporciona la gestiÛn de un puerto de una localidad
+ * Clase que proporciona la gesti√≥n de un puerto de una localidad
  * @author jhocaba
  * @author migchav
  */
@@ -27,7 +27,7 @@ public class Puerto {
 	}
 	
 	/**
-	 * InicializaciÛn a partir de argumentos
+	 * Inicializaci√≥n a partir de argumentos
 	 * @param 
 	 */
 	public Puerto(String identidad) {
@@ -41,10 +41,13 @@ public class Puerto {
 				muelles=new ArrayList<Muelle>();
 			}
 			else
-				throw new IllegalArgumentException("La identidad del puerto(paÌs y localidad) debe ser en mayusculas");
+				throw new IllegalArgumentException("La identidad del puerto(pa√≠s y localidad) debe ser en mayusculas");
 		}
 		else 
 			throw new IllegalArgumentException("Identidad no correcta(no contiene: - )");
+	}
+	public List<Muelle> getListaMuelles(){
+		return muelles;
 	}
 	public String getLocalidad() {
 		return localidad;
@@ -52,24 +55,34 @@ public class Puerto {
 	public String getPais() {
 		return pais;
 	}
-	public void aÒadirMuelle(Muelle aÒadir) {
-		//aÒadir.setPuertoPertenece(this.Puerto);
-		if(aÒadir!=null)
-			muelles.add(aÒadir);
-		else
-			throw new IllegalArgumentException("El muelle no puede ser vacio");
+	/**
+	 * 
+	 * @param a√±adir
+	 * @throws IllegalArgumentException
+	 */
+	public void a√±adirMuelle(Muelle a√±adir) {
+		//a√±adir.setPuertoPertenece(this.Puerto);
+		if(a√±adir==null)throw new IllegalArgumentException("El muelle no puede ser vacio");
+		muelles.add(a√±adir);
+			
 	}
+	
+	/**
+	 * 
+	 * @param eliminar
+	 * @throws IllegalArgumentException
+	 */
 	public void eliminarMuelle(int eliminar) {
-		if(Integer.toString(eliminar).length()==2) {
-			for (int i=0;i<muelles.size();i++) {
-				if((muelles.get(i).getIdMuelle())==eliminar){
-					muelles.remove(i);
-				}
+		if(Integer.toString(eliminar).length()!=2) throw new IllegalArgumentException("El identificador de muelle debe ser un n√∫mero de 2 digitos");
+		boolean eliminado=false;
+		for (int i=0;i<muelles.size();i++) {
+			if((muelles.get(i).getIdMuelle())==eliminar){
+				muelles.remove(i);
+				eliminado=true;
+				break;
 			}
 		}
-		else {
-			throw new IllegalArgumentException("El identificador de muelle debe ser un n˙mero de 2 digitos");
-		}
+		if (eliminado!=true) throw new IllegalArgumentException("El muelle no se ha eliminado porque no se ha encontrado");
 	}
 	/***
 	 * 

@@ -8,7 +8,7 @@ import es.uva.inf.poo.maps.GPSCoordinate;
 
 
 /**
- * Clase en la que se almacena la informaciÛn relativa a los viajes realizados 
+ * Clase en la que se almacena la informaci√≥n relativa a los viajes realizados 
  * por cada contenedor
  * @author jhocaba
  * @author migchav
@@ -23,16 +23,19 @@ public class Trayecto {
 	private Muelle muelleDestino;
 	private Puerto puertoDestino;
 	private LocalDate fechaFin;
+	private Puerto puertoFinal;
 	
 	
 	/**
-	 * InicializaciÛn sin argumentos(tiene sentido sin argumentos????????)
+	 * Inicializaci√≥n sin argumentos(tiene sentido sin argumentos????????)
+	*/
+	
 	public Trayecto() {
 		
 	}
 	
 	/**
-	 * InicializaciÛn a partir de los arguementos
+	 * Inicializaci√≥n a partir de los arguementos
 	 * Almacena todas las instancias necesarias
 	 * @param muelleOrigen
 	 * @param puertoOrigen
@@ -51,6 +54,15 @@ public class Trayecto {
 		this.puertoDestino = puertoDestino;
 		this.fechaFin = LocalDate.parse(fechaFin);
 	}
+	
+	public void setPuertoFinal(Puerto destino) {
+		puertoDestino=destino;
+	}
+	
+	public Puerto getPuertoFinal() {
+		return puertoFinal;
+	}
+	
 	/**
 	 * Consulta dato Muelle de origen
 	 * @return el nombre del muelle origen
@@ -98,11 +110,11 @@ public class Trayecto {
 	
 	/**
 	 * Conocer si la fecha de fin es superior a una dada
-	 * Si es mayor, la funcion devolver· true
+	 * Si es mayor, la funcion devolver√° true
 	 *  
 	 * @param fecha 
 	 * @throws Cualquier excepcion es lanzada por la clase LocalDate, asi como fechas nulas 
-	 * o fechas incorrectas debido a un aÒo bisiesto.
+	 * o fechas incorrectas debido a un a√±o bisiesto.
 	 * 
 	 * @return resultado 
 	 */
@@ -140,7 +152,7 @@ public class Trayecto {
 		return (distancia/1.852);//para pasarlo a millas marinas
 	}
 	/**
-	 * Agrupa en una cadena la informaciÛn relativa a la localidad,pais y fecha tanto
+	 * Agrupa en una cadena la informaci√≥n relativa a la localidad,pais y fecha tanto
 	 * del origen como del destino
 	 * @return cadena que agrupa de forma legible dicha informacion
 	 */
@@ -171,6 +183,6 @@ public class Trayecto {
 		GPSCoordinate coordenadaOrigen = getMuelleOrigen().getCoordenada();
 		GPSCoordinate coordenadaDestino=getMuelleDestino().getCoordenada();
 		//Uso de ChronoUnit.DAYS para obtener el numero de dias entre las fechas indicadas
-		return (double) (precioMilla*coordenadaOrigen.getDistanceTo(coordenadaDestino)*((int)ChronoUnit.DAYS.between(getFechaFin(), getFechaIni()))*precioDia);
+		return (double) (precioMilla*coordenadaOrigen.getDistanceTo(coordenadaDestino)*((int)ChronoUnit.DAYS.between(getFechaIni(),getFechaFin()))*precioDia);
 	}
 }

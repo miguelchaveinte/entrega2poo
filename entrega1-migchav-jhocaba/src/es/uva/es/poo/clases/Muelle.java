@@ -34,18 +34,18 @@ public class Muelle {
 	public Muelle(){
 		
 	}
+
+	
 	/**
-	 * Inicializador de muelle con parametros
+	 * 
 	 * @param identificador
 	 * @param coordenada
 	 * @param estado
 	 * @param numPlazas
-	 * @throws Exception 
+	 * @throws IllegalArgumentException
 	 */
-	
-	//TODO: THROWS EXCEPTION SI QUE NO SE AJUSTA
-	public Muelle(int identificador,GPSCoordinate coordenada,char estado,int numPlazas) throws Exception {
-		if(Integer.toString(identificador).length()!=2 )throw new IllegalArgumentException("El identificador de muelle debe ser un número de 2 digitos");
+	public Muelle(int identificador,GPSCoordinate coordenada,char estado,int numPlazas) {
+		if(Integer.toString(identificador).length()!=2 )throw new IllegalArgumentException("El identificador de muelle debe ser un nÃºmero de 2 digitos");
 		if(coordenada==null) throw new IllegalArgumentException("la coordenada debe no ser  nula ");
 		this.identificador=identificador;
 		this.coordenada=coordenada;
@@ -54,8 +54,12 @@ public class Muelle {
 		setPlazas(numPlazas);
 	}
 
-
-	public void setEstado(char estado) throws Exception {
+	/**
+	 * 
+	 * @param estado
+	 * @throws IllegalArgumentException
+	 */
+	public void setEstado(char estado) {
 		if (estado!='O' && estado!='F') throw new IllegalArgumentException("Estado no valido");
 		if (estado =='O') {
 				this.estado=true;
@@ -84,11 +88,11 @@ public class Muelle {
 	/**
 	 * Guardamos un arraylist de las plazas
 	 * @param numPlazas
-	 * @throws Exception
+	 * @throws IllegalArgumentException
 	 */
-	public void setPlazas(int numPlazas) throws Exception {
+	public void setPlazas(int numPlazas) {
 		if(numPlazas<=0) {
-			throw new IllegalArgumentException("El número de plazas no puede ser menor o igual a 0");
+			throw new IllegalArgumentException("El nÃºmero de plazas no puede ser menor o igual a 0");
 		}
 		plazas=new ArrayList<Muelle>();
 		for(int i=0;i<numPlazas;i++) {
@@ -193,9 +197,9 @@ public class Muelle {
 	 * analizamos el nivel de dicha plaza y obtenemos el objeto contenedor que nos pedian.
 	 * @param identificador
 	 * @return
-	 * @throws Exception 
+	 * @throws IllegalArgumentException
 	 */
-	public Contenedor sacarContenedor(String identificador) throws Exception {
+	public Contenedor sacarContenedor(String identificador)  {
 		//TODO: ELSE IF -> Y SI NO COINCIDE CON NINGUNO ELSE Y RETURN new Contenedor() o return null??;
 		int indexPlaza=getPlaza(identificador);
 		if (indexPlaza==-1){
@@ -359,7 +363,13 @@ public class Muelle {
 			return correcto;
 		}
 	}
-	public int getPlaza(String identificador) throws Exception {
+	/**
+	 * 
+	 * @param identificador
+	 * @return
+	 * @throws IllegalArgumentException
+	 */
+	public int getPlaza(String identificador)  {
 		boolean correcto=comprobarIdentificador(identificador);
 		if (correcto){
 			int index=-1;
@@ -383,15 +393,23 @@ public class Muelle {
 			}
 			return index;
 		}
+		//TODO: INDEX ==-1 NO SE ENCUENTRA
 		else
 			throw new IllegalArgumentException("Identificador no valido");
 	}
-	public String getNivelPlaza(String identificador) throws Exception {
+	/**
+	 * 
+	 * @param identificador
+	 * @return
+	 * 
+	 * @throws IllegalArgumentException
+	 */
+	public String getNivelPlaza(String identificador)  {
 		//TODO:MEJORA Y NO RETORNAR TEXTO .../...
 		int indexPlaza=getPlaza(identificador);
 		String nivel;
 		if (indexPlaza==-1){
-			throw new Exception("El contenedor no se ha encontrado");
+			throw new IllegalArgumentException("El contenedor no se ha encontrado");
 		}
 		if((plazas.get(indexPlaza).getNivelUno().getIdentificador(plazas.get(indexPlaza).getNivelUno()))==identificador){
 			nivel="Ese contenedor se encuentra en la plaza "+indexPlaza+" y en el nivel 1";
@@ -410,7 +428,7 @@ public class Muelle {
 			return nivel;
 		}
 		else
-			return ("Ese contenedor no se encuentra en ningún nivel");
+			return ("Ese contenedor no se encuentra en ningÃºn nivel");
 	}
 
 
