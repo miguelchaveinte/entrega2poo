@@ -27,8 +27,12 @@ public class Puerto {
 	}
 	
 	/**
-	 * Inicialización a partir de argumentos
-	 * @param 
+	 * Inicializacion a partir de argumentos
+	 * @param identidad - Define el los atributos localidad 
+	 * y pais mediante el formato(PP-LLL) siendo PP el codigo de pais 
+	 * y LLL el codigo de localidad- no puede ser null
+	 * @throws IllegalArgumentException - cuando el argumento no cumple las condiciones PP-LLL
+	 * @throws NullPointerException - cuando identidad==null
 	 */
 	public Puerto(String identidad) {
 		if (identidad==null) throw new NullPointerException ("Identidad no puede ser nula");
@@ -46,37 +50,48 @@ public class Puerto {
 		else 
 			throw new IllegalArgumentException("Identidad no correcta(no contiene: - )");
 	}
+	/**
+	 * Devuelve la lista de todos los muelles del puerto
+	 * @return lista de Muelles del puerto
+	 */
 	public List<Muelle> getListaMuelles(){
 		return muelles;
 	}
+	/**
+	 * Devuelve el string correspondiente al codigo localidad 
+	 * @return codigo localidad
+	 */
 	public String getLocalidad() {
 		return localidad;
 	}
+	/**
+	 * Devuelve el string correspondiente al codigo del pais 
+	 * @return codigo pais
+	 */
 	public String getPais() {
 		return pais;
 	}
 	/**
-	 * 
-	 * @param añadir
-	 * @throws IllegalArgumentException
+	 * Incluye en el puerto el muelle que se pasa por argumento
+	 * @param muelleToAdd - no puede ser null
+	 * @throws IllegalArgumentException-si muelleToAdd es null
 	 */
-	public void añadirMuelle(Muelle añadir) {
-		//añadir.setPuertoPertenece(this.Puerto);
-		if(añadir==null)throw new IllegalArgumentException("El muelle no puede ser vacio");
-		muelles.add(añadir);
+	public void addMuelle(Muelle muelleToAdd) {
+		if(muelleToAdd==null)throw new IllegalArgumentException("El muelle no puede ser vacio");
+		muelles.add(muelleToAdd);
 			
 	}
 	
 	/**
 	 * 
-	 * @param eliminar
-	 * @throws IllegalArgumentException
+	 * @param IdMuelleToEliminar
+	 * @throws IllegalArgumentException-si 
 	 */
-	public void eliminarMuelle(int eliminar) {
-		if(Integer.toString(eliminar).length()!=2) throw new IllegalArgumentException("El identificador de muelle debe ser un número de 2 digitos");
+	public void eliminarMuelle(int IdMuelleToEliminar) {
+		if(Integer.toString(IdMuelleToEliminar).length()!=2) throw new IllegalArgumentException("El identificador de muelle debe ser un número de 2 digitos");
 		boolean eliminado=false;
 		for (int i=0;i<muelles.size();i++) {
-			if((muelles.get(i).getIdMuelle())==eliminar){
+			if((muelles.get(i).getIdMuelle())==IdMuelleToEliminar){
 				muelles.remove(i);
 				eliminado=true;
 				break;
