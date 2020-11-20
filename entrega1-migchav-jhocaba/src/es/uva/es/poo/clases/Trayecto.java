@@ -45,8 +45,10 @@ public class Trayecto {
 	 * @param fechaFin en formato aaaa-mm-dd
 	 */
 	public Trayecto(Muelle muelleOrigen,Puerto puertoOrigen,String fechaIni,Muelle muelleDestino,Puerto puertoDestino,String fechaFin) {
-		//TODO: Lanzar excepciones...(localdate????==null)
-		//TODO: DAR MUELLO ORIGEN ,PUERTO ORIGEN... contenedor a mover!!!!!!!!!!!!!
+		if(muelleOrigen==null) throw new IllegalArgumentException("El muelle no debe ser  nulo ");
+        if(muelleDestino==null) throw new IllegalArgumentException("El muelle no debe ser  nulo ");
+        if(puertoOrigen==null) throw new IllegalArgumentException("El puerto no debe ser  nulo ");
+        if(puertoDestino==null) throw new IllegalArgumentException("El puerto no debe ser  nulo ");
 		this.muelleOrigen = muelleOrigen; 
 		this.puertoOrigen = puertoOrigen;
 		this.fechaIni = LocalDate.parse(fechaIni);
