@@ -40,40 +40,163 @@ public class Contenedor {
 	 * @param identificador - Cadena con el que se identifica cada contenedor
 	 * @throws IllegalArgumentException
 	 */
-	public Contenedor(String identificador,double peso,double carga,double volumen)  {	
-		//TODO: llamar a lo de carga,code,estado,techos............
-		boolean correcto=Muelle.comprobarIdentificador(identificador);
-		if (correcto){
-			this.identificador=identificador;
-			
-			StringBuilder codigoString=new StringBuilder(); 
-			for (int i= 0; i<3; i++) {
-				codigoString = codigoString.append(identificador.charAt(i));
-			}
-			codigo=codigoString.toString();
-			
-			equipamiento = identificador.charAt(3);
-			
-			StringBuilder serieString=new StringBuilder();
-			for(int i=4; i< identificador.length() - 1; i++) {
-				serieString = serieString.append(identificador.charAt(i));
-			}
-			String sb=serieString.toString();
-			serie=Integer.parseInt(sb);
-			
-			code = identificador.charAt(identificador.length()- 1);
-			this.peso=peso;
-			this.carga=carga;
-			this.volumen=volumen;
-			setTransito();
-			trayectos=new ArrayList<Trayecto>();
+	public Contenedor(String identificador,String peso,double carga,String volumen,boolean techo)  {	
+		comprobarIdentificador(identificador);
+		int codigoControlBueno=obtenerDigitoControl(identificador);
+
+		int codigoArgumento =Character.getNumericValue(identificador.charAt(identificador.length()- 1));
+		if(codigoControlBueno!=codigoArgumento)throw new IllegalArgumentException("Identificador no valido(codigo control no valido)");
+		code=codigoControlBueno;
+		if(techo) {
+			setTecho();
 		}
-		else
+		else setNoTecho();
+		comprobarUnidadesPeso(peso);
+		if (carga<0) throw new IllegalArgumentException("Carga no puede ser negativa");
+		this.carga=carga;
+		comprobarUnidadesVolumen(volumen);
+		setTransito();
+		trayectos=new ArrayList<Trayecto>();
+	}
+	/**
+	 * 
+	 * @param identificador
+	 * @throws IllegalArgumentException
+	 */
+	public void comprobarIdentificador(String identificador) {
+		if(identificador.length()!=11)throw new IllegalArgumentException("Identificador no valido");
+		StringBuilder codigoString=new StringBuilder();
+		for (int i= 0; i<3; i++) {
+			codigoString = codigoString.append(identificador.charAt(i));
+		}
+		String codigo=codigoString.toString();
+		char equipamiento = identificador.charAt(3);
+		
+		StringBuilder serieString=new StringBuilder();
+		for(int i=4; i< identificador.length() - 1; i++) {
+			serieString = serieString.append(identificador.charAt(i));
+		}
+		String serie=serieString.toString();
+	
+		if (codigo.equals(codigo.toUpperCase()) && (equipamiento=='U'||equipamiento=='J'||equipamiento=='Z') && serie.length()==6) {
+			this.identificador=identificador;
+			this.codigo=codigo;
+			this.equipamiento=equipamiento;
+			this.serie=Integer.parseInt(serie);
+		}
+		else {
 			throw new IllegalArgumentException("Identificador no valido");
-		//this.contenedor=Contenedor.this;
-		//TODO: transito o en recogida,techo?????
+		}
 	}
 	
+	/**
+     * Obtener el digito de control del contenedor
+     * @return digito de control
+     */
+    public int obtenerDigitoControl(String identificador) {
+        //utilizo un mapa para guardar las letra con sus correspondientes valor
+        Map<String, Integer> tabla = new HashMap<String, Integer>();
+        tabla.put("A", 10);tabla.put("B", 12);tabla.put("C", 13);tabla.put("D", 14);tabla.put("E", 15);tabla.put("F", 16);tabla.put("G", 17);tabla.put("H", 18);tabla.put("I", 19);tabla.put("J", 20);tabla.put("K", 21);tabla.put("L", 23);tabla.put("M", 24);tabla.put("N", 25);tabla.put("O", 26);tabla.put("P", 27);tabla.put("Q", 28);tabla.put("R", 29);tabla.put("S", 30);tabla.put("T", 31);tabla.put("U", 32);tabla.put("V", 34);tabla.put("W", 35);tabla.put("X", 36);tabla.put("Y", 37);tabla.put("Z", 38);
+        //En este vector guardo los valores de cada caracter y la serie de numeros
+        int vector[] = new int[10];
+        for (int i =0; i<identificador.length()-1; i++) {
+            if (i < 4) {
+                vector[i] = tabla.get(Character.toString(identificador.charAt(i))); //Obtengo el valor del String correspondiente y lo almaceno en el vector
+            }
+            else {
+                vector[i] = Integer.parseInt(String.valueOf(identificador.charAt(i))); //Convierto cada caracter a entero y lo almaceno
+            }
+        }
+        //Multiplicar cada valor por 2^pos
+        double suma = 0;
+        for (int i=0; i<vector.length; i++) {
+            suma += vector[i] * Math.pow(2, i);
+        }
+        double resultado = suma/11;
+        resultado = Math.round(resultado);
+        resultado = resultado * 11;
+        int codigoControl=(int)(suma - resultado);
+        if(codigoControl==10) return 0;
+        return codigoControl;
+    }
+	
+    
+    /**
+	 * Para almacenar el peso, utilizamos un String y el metodo split para detectar si se tratan de Kg o de lb (Ej: 3000-kg || 500-lb)
+	 * @param Peso del contenedor
+	 */
+	public void comprobarUnidadesPeso(String peso) { //3000-Kg 400lb
+		String [] array = peso.split("-");
+		double pesoContenedor = (double) Integer.parseInt(array[0]);
+		if( array[1].equals("Kg")){
+			setPesoKilo(pesoContenedor);
+		}
+		else if(array[1].equals("lb")){
+			conviertePesoKilo(pesoContenedor);	
+		}
+		else { throw new IllegalArgumentException("String Peso no correcto unidades ");
+		}	
+	}
+	
+	/**
+	 * Cambiar el peso de libras a kilogramos
+	 * @param pesocontenedor
+	 * @throws IllegalArgumentException
+	 */
+	public void conviertePesoKilo(double pesoContenedor) {
+		if(pesoContenedor<0) throw new IllegalArgumentException("Peso no puede ser negativo");
+		double nuevoPeso = pesoContenedor * (50000/110231);
+		setPesoKilo(nuevoPeso);
+	}
+	
+	/**
+	 * Guardar peso
+	 * @param peso
+	 * @throws IllegalArgumentException
+	 */
+	public void setPesoKilo(double peso) {
+		if(peso<0) throw new IllegalArgumentException("Peso no puede ser negativo");
+		this.peso = peso;
+	}
+	
+	/**
+	* Para almacenar el volumen, utilizamos un String y el metodo split para detectar si se tratan de m3 o de ft3 (Ej: 30-m3 || 40-ft3)
+	* @param Peso del contenedor
+	* @throws IllegalArgumentException
+	*/
+	public void comprobarUnidadesVolumen(String volumen) { //30-m3 40ft3
+		String [] array = volumen.split("-");
+		double volumenContenedor = (double) Integer.parseInt(array[0]);
+		if(array[1].equals("m3")){
+			setVolumenMetros(volumenContenedor);
+		}
+		else if(array[1].equals("ft3")){
+			convierteVolumenMetros(volumenContenedor);	
+		}
+		else { throw new IllegalArgumentException("String Volumen no correcto unidades o <0");
+		}	
+	}
+	
+	/**
+	 * Cambiar el volumen de pies cúbicos a metros cúbicos
+	 * @param volumencontenedor
+	 */
+	public void convierteVolumenMetros(double volumenContenedor) {
+		if(volumenContenedor<0) throw new IllegalArgumentException("Volumen no puede ser negativo");
+		double nuevoVolumen = volumenContenedor * ((10000/353147));
+		setPesoKilo(nuevoVolumen);
+	}
+		
+	/**
+	 * Guardar volumen
+	 * @param volumen en metros cúbicos
+	 * @throws IllegalArgumentException
+	 */
+	public void setVolumenMetros(double volumen) {
+		if(volumen<0) throw new IllegalArgumentException("Volumen no puede ser negativo");
+		this.volumen = volumen;
+	}
+    
 	public String getIdentificador(Contenedor contenedor) {
 		if (contenedor==null) {
 			throw new IllegalArgumentException("El contenedor no puede ser vacio ni la plaza<0");
@@ -126,15 +249,8 @@ public class Contenedor {
 		return volumen;
 	}
 	
-	/**
-	 * Almacenar el volumen en metros cúbicos
-	 * @param volumen
-	 */
-	public void setVolumenMetros(double volumen) {
-		if(volumen<=0)
-			throw new IllegalArgumentException("El contenedor no puede tener volumnen<=0");
-		this.volumen = volumen;
-	}
+
+
 	
 	/**
 	 * Obtener el volumen del contenedor en pies cúbicos
@@ -165,14 +281,7 @@ public class Contenedor {
 		return this.peso;
 	}
 	 
-	/**
-	 * Almacenar el peso en kilos
-	 */
-	public void setPesoKilo(double peso) {
-		if(peso<=0)
-			throw new IllegalArgumentException("El contenedor no puede tener peso <=0");
-		this.peso = peso;
-	}
+
 	
 	/**
 	 * Obtener el peso en libras

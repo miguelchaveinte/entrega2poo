@@ -335,34 +335,7 @@ public class Muelle {
 	}
 
 	
-	// CREAR UN CONTENEDOR CON ESE IDENTIFICADOR Y QUE DE ALLI EL ERROR Y SINO DE VICIO
-	public static boolean comprobarIdentificador(String identificador) {
-		boolean correcto=true;
-		if(identificador.length()!=11) {
-			correcto=false;
-			return correcto;
-		}
-		StringBuilder codigoString=new StringBuilder();
-		for (int i= 0; i<3; i++) {
-			codigoString = codigoString.append(identificador.charAt(i));
-		}
-		String codigo=codigoString.toString();
-		char equipamiento = identificador.charAt(3);
-		
-		StringBuilder serieString=new StringBuilder();
-		for(int i=4; i< identificador.length() - 1; i++) {
-			serieString = serieString.append(identificador.charAt(i));
-		}
-		String serie=serieString.toString();
 	
-		if (codigo.equals(codigo.toUpperCase()) && (equipamiento=='U'||equipamiento=='J'||equipamiento=='Z') && serie.length()==6) {
-			return correcto;
-		}
-		else {
-			correcto=false;
-			return correcto;
-		}
-	}
 	/**
 	 * 
 	 * @param identificador
@@ -370,33 +343,31 @@ public class Muelle {
 	 * @throws IllegalArgumentException
 	 */
 	public int getPlaza(String identificador)  {
-		boolean correcto=comprobarIdentificador(identificador);
-		if (correcto){
-			int index=-1;
-			for(int iterador=0;iterador<plazas.size();iterador++) {
-				if((plazas.get(iterador).getNivelUno().getIdentificador(plazas.get(iterador).getNivelUno()))==identificador){
-					index=iterador;
-					break;
-				}
-				if((plazas.get(iterador).getNivelDos().getIdentificador(plazas.get(iterador).getNivelDos()))==identificador){
-					index=iterador;
-					break;
-				}
-				if((plazas.get(iterador).getNivelTres().getIdentificador(plazas.get(iterador).getNivelTres()))==identificador){
-					index=iterador;
-					break;
-				}
-				if((plazas.get(iterador).getNivelCuatro().getIdentificador(plazas.get(iterador).getNivelCuatro()))==identificador){
-					index=iterador;
-					break;
-				}
+		Contenedor identificadorCorrecto=new Contenedor(identificador,0.0,0.0,0.0,true);
+		int index=-1;
+		for(int iterador=0;iterador<plazas.size();iterador++) {
+			if((plazas.get(iterador).getNivelUno().getIdentificador(plazas.get(iterador).getNivelUno()))==identificador){
+				index=iterador;
+				break;
 			}
-			return index;
+			if((plazas.get(iterador).getNivelDos().getIdentificador(plazas.get(iterador).getNivelDos()))==identificador){
+				index=iterador;
+				break;
+			}
+			if((plazas.get(iterador).getNivelTres().getIdentificador(plazas.get(iterador).getNivelTres()))==identificador){
+				index=iterador;
+				break;
+			}
+			if((plazas.get(iterador).getNivelCuatro().getIdentificador(plazas.get(iterador).getNivelCuatro()))==identificador){
+				index=iterador;
+				break;
+			}
 		}
-		//TODO: INDEX ==-1 NO SE ENCUENTRA
-		else
-			throw new IllegalArgumentException("Identificador no valido");
-	}
+		return index;
+		}
+		//TODO: INDEX ==-1 NO SE ENCUENTRA creo que esta implementado en las clases que lo piden
+
+	
 	/**
 	 * 
 	 * @param identificador

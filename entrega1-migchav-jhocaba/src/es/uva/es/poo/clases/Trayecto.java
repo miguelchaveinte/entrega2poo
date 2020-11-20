@@ -58,7 +58,7 @@ public class Trayecto {
 	}
 	
 	public void setPuertoFinal(Puerto destino) {
-		puertoDestino=destino;
+		puertoFinal=destino;
 	}
 	
 	public Puerto getPuertoFinal() {

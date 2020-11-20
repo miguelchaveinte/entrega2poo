@@ -170,7 +170,7 @@ public class MuelleTest {
 	public void testAsignarPlaza()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
 		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		Contenedor prueba=new Contenedor("DUXU1234568",500.0,200.0,100.0);
+		Contenedor prueba=new Contenedor("CSQU3054383",500.0,200.0,100.0,false);
 		añadir.asignarPlaza(prueba, 2);
 		assertEquals(añadir.getListPlazas().get(2).getNivelUno(),prueba);
 	}
@@ -191,64 +191,63 @@ public class MuelleTest {
 	public void testAsignarPlazaPlazaNegativa()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
 		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		Contenedor prueba=new Contenedor("DUXU1234568",500.0,200.0,100.0);
+		Contenedor prueba=new Contenedor("CSQU3054383",500.0,200.0,100.0,false);
 		añadir.asignarPlaza(prueba, -1);
 	}
 	@Test
 	public void testSacarContenedor()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
 		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		Contenedor prueba=new Contenedor("DUXU1234568",500.0,200.0,100.0);
+		Contenedor prueba=new Contenedor("CSQU3054383",500.0,200.0,100.0,false);
 		prueba.setTecho();
 		añadir.asignarPlaza(prueba, 2);
-		Contenedor salida=añadir.sacarContenedor("DUXU1234568");
+		Contenedor salida=añadir.sacarContenedor("CSQU3054383");
 		assertEquals(salida,prueba);
 	}
 	@Test(expected=IllegalArgumentException.class) 
 	public void testSacarContenedorIdInvalido()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
 		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		Contenedor prueba=new Contenedor("DUXU1234568",500.0,200.0,100.0);
+		Contenedor prueba=new Contenedor("CSQU3054383",500.0,200.0,100.0,false);
 		añadir.asignarPlaza(prueba, 2);
-		Contenedor salida=añadir.sacarContenedor("DUUXU1234568");
+		Contenedor salida=añadir.sacarContenedor("CSUQU3054383");
 	}
 	@Test
 	public void testEstadoPlaza()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
 		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		Contenedor prueba=new Contenedor("DUXU1234568",500.0,200.0,100.0);
-		prueba.setTecho();
+		Contenedor prueba=new Contenedor("CSQU3054383",500.0,200.0,100.0,false);
 		añadir.asignarPlaza(prueba, 2);
 		String resultado=añadir.estadoPlazas();
-		assertEquals(resultado,"4/1/0");
+		assertEquals(resultado,"4/0/1");
 	}
 	@Test
 	public void testGetPlaza()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
 		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		Contenedor prueba=new Contenedor("DUXU1234568",500.0,200.0,100.0);
+		Contenedor prueba=new Contenedor("CSQU3054383",500.0,200.0,100.0,true);
 		prueba.setTecho();
 		añadir.asignarPlaza(prueba, 2);
-		int resultado=añadir.getPlaza("DUXU1234568");
+		int resultado=añadir.getPlaza("CSQU3054383");
 		assertEquals(resultado,2);
 	}	
 	@Test(expected=IllegalArgumentException.class)
 	public void testGetPlazaIdInvalido()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
 		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		Contenedor prueba=new Contenedor("DUXU1234568",500.0,200.0,100.0);
+		Contenedor prueba=new Contenedor("CSQU3054383",500.0,200.0,100.0,false);
 		prueba.setTecho();
 		añadir.asignarPlaza(prueba, 2);
-		int resultado=añadir.getPlaza("DUXU12345685");
+		int resultado=añadir.getPlaza("CSQU3054385");
 	}
 	@Test
 	public void testGetNivelPlaza()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
 		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		Contenedor prueba=new Contenedor("DUXU1234568",500.0,200.0,100.0);
+		Contenedor prueba=new Contenedor("CSQU3054383",500.0,200.0,100.0,true);
 		prueba.setTecho();
 		añadir.asignarPlaza(prueba, 2);
-		String resultado=añadir.getNivelPlaza("DUXU1234568");
+		String resultado=añadir.getNivelPlaza("CSQU3054383");
 		assertEquals(resultado,"Ese contenedor se encuentra en la plaza 2 y en el nivel 1");
 	}	
 	
@@ -256,9 +255,9 @@ public class MuelleTest {
 	public void testGetNivelPlazaIdInvalido()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
 		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		Contenedor prueba=new Contenedor("DUXU1234568",500.0,200.0,100.0);
+		Contenedor prueba=new Contenedor("CSQU3054383",500.0,200.0,100.0,true);
 		prueba.setTecho();
 		añadir.asignarPlaza(prueba, 2);
-		String resultado=añadir.getNivelPlaza("DUXU12345685");
+		String resultado=añadir.getNivelPlaza("CSQU3054385");
 	}
 }
