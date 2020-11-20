@@ -170,7 +170,7 @@ public class MuelleTest {
 	public void testAsignarPlaza()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
 		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		Contenedor prueba=new Contenedor("CSQU3054383",500.0,200.0,100.0,false);
+		Contenedor prueba=new Contenedor("CSQU3054383","500-Kg",200.0,"100-m3",false);
 		añadir.asignarPlaza(prueba, 2);
 		assertEquals(añadir.getListPlazas().get(2).getNivelUno(),prueba);
 	}
@@ -191,14 +191,14 @@ public class MuelleTest {
 	public void testAsignarPlazaPlazaNegativa()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
 		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		Contenedor prueba=new Contenedor("CSQU3054383",500.0,200.0,100.0,false);
+		Contenedor prueba=new Contenedor("CSQU3054383","500-Kg",200.0,"100-m3",false);
 		añadir.asignarPlaza(prueba, -1);
 	}
 	@Test
 	public void testSacarContenedor()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
 		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		Contenedor prueba=new Contenedor("CSQU3054383",500.0,200.0,100.0,false);
+		Contenedor prueba=new Contenedor("CSQU3054383","500-Kg",200.0,"100-m3",false);
 		prueba.setTecho();
 		añadir.asignarPlaza(prueba, 2);
 		Contenedor salida=añadir.sacarContenedor("CSQU3054383");
@@ -208,7 +208,7 @@ public class MuelleTest {
 	public void testSacarContenedorIdInvalido()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
 		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		Contenedor prueba=new Contenedor("CSQU3054383",500.0,200.0,100.0,false);
+		Contenedor prueba=new Contenedor("CSQU3054383","500-Kg",200.0,"100-m3",false);
 		añadir.asignarPlaza(prueba, 2);
 		Contenedor salida=añadir.sacarContenedor("CSUQU3054383");
 	}
@@ -216,7 +216,7 @@ public class MuelleTest {
 	public void testEstadoPlaza()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
 		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		Contenedor prueba=new Contenedor("CSQU3054383",500.0,200.0,100.0,false);
+		Contenedor prueba=new Contenedor("CSQU3054383","500-Kg",200.0,"100-m3",false);
 		añadir.asignarPlaza(prueba, 2);
 		String resultado=añadir.estadoPlazas();
 		assertEquals(resultado,"4/0/1");
@@ -225,7 +225,7 @@ public class MuelleTest {
 	public void testGetPlaza()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
 		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		Contenedor prueba=new Contenedor("CSQU3054383",500.0,200.0,100.0,true);
+		Contenedor prueba=new Contenedor("CSQU3054383","500-Kg",200.0,"100-m3",true);
 		prueba.setTecho();
 		añadir.asignarPlaza(prueba, 2);
 		int resultado=añadir.getPlaza("CSQU3054383");
@@ -235,7 +235,7 @@ public class MuelleTest {
 	public void testGetPlazaIdInvalido()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
 		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		Contenedor prueba=new Contenedor("CSQU3054383",500.0,200.0,100.0,false);
+		Contenedor prueba=new Contenedor("CSQU3054383","500-Kg",200.0,"100-m3",false);
 		prueba.setTecho();
 		añadir.asignarPlaza(prueba, 2);
 		int resultado=añadir.getPlaza("CSQU3054385");
@@ -244,7 +244,7 @@ public class MuelleTest {
 	public void testGetNivelPlaza()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
 		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		Contenedor prueba=new Contenedor("CSQU3054383",500.0,200.0,100.0,true);
+		Contenedor prueba=new Contenedor("CSQU3054383","500-Kg",200.0,"100-m3",true);
 		prueba.setTecho();
 		añadir.asignarPlaza(prueba, 2);
 		String resultado=añadir.getNivelPlaza("CSQU3054383");
@@ -255,7 +255,7 @@ public class MuelleTest {
 	public void testGetNivelPlazaIdInvalido()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
 		Muelle añadir=new Muelle(20,coordenada,'F',5);
-		Contenedor prueba=new Contenedor("CSQU3054383",500.0,200.0,100.0,true);
+		Contenedor prueba=new Contenedor("CSQU3054383","500-Kg",200.0,"100-m3",true);
 		prueba.setTecho();
 		añadir.asignarPlaza(prueba, 2);
 		String resultado=añadir.getNivelPlaza("CSQU3054385");

@@ -343,7 +343,7 @@ public class Muelle {
 	 * @throws IllegalArgumentException
 	 */
 	public int getPlaza(String identificador)  {
-		Contenedor identificadorCorrecto=new Contenedor(identificador,0.0,0.0,0.0,true);
+		Contenedor identificadorCorrecto=new Contenedor(identificador,"500-Kg",200.0,"100-m3",true);
 		int index=-1;
 		for(int iterador=0;iterador<plazas.size();iterador++) {
 			if((plazas.get(iterador).getNivelUno().getIdentificador(plazas.get(iterador).getNivelUno()))==identificador){
