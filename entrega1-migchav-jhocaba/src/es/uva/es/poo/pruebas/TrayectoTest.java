@@ -35,7 +35,7 @@ public class TrayectoTest {
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
-	public void testMuellDestinoNull()   {
+	public void testMuelleDestinoNull()   {
 		Muelle origenmuelle = new Muelle();
 		Muelle destinomuelle = null;
 		Puerto origenpuerto = new Puerto();
@@ -51,7 +51,41 @@ public class TrayectoTest {
 		Puerto destinopuerto = new Puerto();
 		Trayecto nuevo = new Trayecto(origenmuelle, origenpuerto, "2020-11-19", destinomuelle, destinopuerto,"2020-12-31");
 	}
+	@Test
+	public void testSetPuertoFinal() {
+		Muelle origenmuelle = new Muelle();
+		Muelle destinomuelle = new Muelle();
+		Puerto origenpuerto = new Puerto();
+		Puerto destinopuerto = new Puerto();
+		Trayecto nuevo = new Trayecto(origenmuelle, origenpuerto, "2020-11-19", destinomuelle, destinopuerto,"2020-12-31");
+		Puerto finalrecorrido = new Puerto();
+		nuevo.setPuertoFinal(finalrecorrido);
+		
+		assertEquals(nuevo.getPuertoFinal(), finalrecorrido);
+	}
+
+	@Test(expected=IllegalArgumentException.class)
+	public void testSetPuertoFinalNull()  {
+		Muelle origenmuelle = new Muelle();
+		Muelle destinomuelle = new Muelle();
+		Puerto origenpuerto = new Puerto();
+		Puerto destinopuerto = new Puerto();
+		Trayecto nuevo = new Trayecto(origenmuelle, origenpuerto, "2020-11-19", destinomuelle, destinopuerto,"2020-12-31");
+		Puerto finalrecorrido = null;
 	
+		nuevo.setPuertoFinal(null);
+	}
+	
+	@Test
+	public void testGetPuertoFinal() {
+		Muelle origenmuelle = new Muelle();
+		Muelle destinomuelle = new Muelle();
+		Puerto origenpuerto = new Puerto();
+		Puerto destinopuerto = new Puerto();
+		Puerto finalrecorrido = new Puerto();
+		Trayecto nuevo = new Trayecto(origenmuelle, origenpuerto, "2020-11-19", destinomuelle, destinopuerto,"2020-12-31");
+		assertNull(nuevo.getPuertoFinal());
+	}
 	@Test(expected=IllegalArgumentException.class)
 	public void testPuertoDestinoNull()   {
 		Muelle origenmuelle = new Muelle();

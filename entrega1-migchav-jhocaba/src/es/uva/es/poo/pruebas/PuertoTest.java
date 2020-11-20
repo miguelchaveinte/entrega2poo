@@ -52,6 +52,7 @@ public class PuertoTest {
 		String identidad="ESMADD";
 		Puerto prueba=new Puerto(identidad);
 	}
+	
 	@Test
 	public void testGetLocalidad() {
 		String identidad="ES-MAD";

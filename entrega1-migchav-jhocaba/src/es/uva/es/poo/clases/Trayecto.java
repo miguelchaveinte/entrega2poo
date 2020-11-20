@@ -56,8 +56,13 @@ public class Trayecto {
 		this.puertoDestino = puertoDestino;
 		this.fechaFin = LocalDate.parse(fechaFin);
 	}
-	
+	/**
+	 * 
+	 * @param destino
+	 * @throws IllegalArgumentException 
+	 */
 	public void setPuertoFinal(Puerto destino) {
+		if(destino==null)  throw new IllegalArgumentException("Puerto destino final de trayecto no puede ser null");
 		puertoFinal=destino;
 	}
 	
