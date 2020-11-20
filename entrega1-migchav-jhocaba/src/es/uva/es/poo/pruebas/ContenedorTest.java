@@ -271,14 +271,14 @@ public class ContenedorTest {
 		Puerto destino=new Puerto("ES-MAD");
 		GPSCoordinate coordenadaMuelle=new GPSCoordinate(40.5,40.5);
 		Muelle destinoMuelle=new Muelle(12,coordenadaMuelle,'O',50);
-		destino.añadirMuelle(destinoMuelle);
+		destino.addMuelle(destinoMuelle);
 		
 		pruebaContenedor.hacerTrayecto(destino);
 		Puerto puertoOrigen=new Puerto("ES-VAL");
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
 		Muelle añadirOrigen=new Muelle(20,coordenada,'F',5);
 		añadirOrigen.asignarPlaza(pruebaContenedor, 2);
-		puertoOrigen.añadirMuelle(añadirOrigen);
+		puertoOrigen.addMuelle(añadirOrigen);
 		
 
 		pruebaContenedor.hacerViajes(pruebaContenedor, puertoOrigen, destino, destinoMuelle, "2020-11-19", "2020-12-31");
@@ -290,14 +290,14 @@ public class ContenedorTest {
 		Puerto destino=new Puerto("ES-MAD");
 		GPSCoordinate coordenadaMuelle=new GPSCoordinate(40.5,40.5);
 		Muelle destinoMuelle=new Muelle(12,coordenadaMuelle,'O',50);
-		destino.añadirMuelle(destinoMuelle);
+		destino.addMuelle(destinoMuelle);
 		
 		pruebaContenedor.hacerTrayecto(destino);
 		Puerto puertoOrigen=new Puerto("ES-VAL");
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
 		Muelle añadirOrigen=new Muelle(20,coordenada,'F',5);
 		añadirOrigen.asignarPlaza(pruebaContenedor, 2);
-		puertoOrigen.añadirMuelle(añadirOrigen);
+		puertoOrigen.addMuelle(añadirOrigen);
 		
 		Contenedor contenedorNoEsta=new Contenedor("TTNU9843220","500-Kg",200.0,"100-m3",false);
 		
@@ -311,14 +311,14 @@ public class ContenedorTest {
 		Puerto destino=new Puerto("ES-MAD");
 		GPSCoordinate coordenadaMuelle=new GPSCoordinate(40.5,40.5);
 		Muelle destinoMuelle=new Muelle(12,coordenadaMuelle,'O',50);
-		destino.añadirMuelle(destinoMuelle);
+		destino.addMuelle(destinoMuelle);
 		
 		pruebaContenedor.hacerTrayecto(destino);
 		Puerto puertoOrigen=new Puerto("ES-VAL");
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
 		Muelle añadirOrigen=new Muelle(20,coordenada,'F',5);
 		añadirOrigen.asignarPlaza(pruebaContenedor, 2);
-		puertoOrigen.añadirMuelle(añadirOrigen);
+		puertoOrigen.addMuelle(añadirOrigen);
 		
 
 		pruebaContenedor.hacerViajes(pruebaContenedor, puertoOrigen, destino, destinoMuelle, "2020-31-19", "2020-12-31");
@@ -330,14 +330,14 @@ public class ContenedorTest {
 		Puerto destino=new Puerto("ES-MAD");
 		GPSCoordinate coordenadaMuelle=new GPSCoordinate(40.5,40.5);
 		Muelle destinoMuelle=new Muelle(12,coordenadaMuelle,'O',50);
-		destino.añadirMuelle(destinoMuelle);
+		destino.addMuelle(destinoMuelle);
 		
 		pruebaContenedor.hacerTrayecto(destino);
 		Puerto puertoOrigen=new Puerto("ES-VAL");
 		GPSCoordinate coordenada=new GPSCoordinate(40.0,40.0);
 		Muelle añadirOrigen=new Muelle(20,coordenada,'F',5);
 		añadirOrigen.asignarPlaza(pruebaContenedor, 2);
-		puertoOrigen.añadirMuelle(añadirOrigen);
+		puertoOrigen.addMuelle(añadirOrigen);
 		
 
 		pruebaContenedor.hacerViajes(pruebaContenedor, puertoOrigen, destino, destinoMuelle, "2020-11-19", "2020-12-31");
@@ -350,14 +350,14 @@ public class ContenedorTest {
 		Puerto destino=new Puerto("ES-MAD");
 		GPSCoordinate coordenadaMuelle=new GPSCoordinate(40.5,40.5);
 		Muelle destinoMuelle=new Muelle(12,coordenadaMuelle,'O',50);
-		destino.añadirMuelle(destinoMuelle);
+		destino.addMuelle(destinoMuelle);
 		
 		pruebaContenedor.hacerTrayecto(destino);
 		Puerto puertoOrigen=new Puerto("ES-VAL");
 		GPSCoordinate coordenada=new GPSCoordinate(40.0,40.0);
 		Muelle añadirOrigen=new Muelle(20,coordenada,'F',5);
 		añadirOrigen.asignarPlaza(pruebaContenedor, 2);
-		puertoOrigen.añadirMuelle(añadirOrigen);
+		puertoOrigen.addMuelle(añadirOrigen);
 		
 
 		pruebaContenedor.hacerViajes(pruebaContenedor, puertoOrigen, destino, destinoMuelle, "2020-11-19", "2020-12-31");
@@ -369,14 +369,14 @@ public class ContenedorTest {
 		Puerto destino=new Puerto("ES-MAD");
 		GPSCoordinate coordenadaMuelle=new GPSCoordinate(40.5,40.5);
 		Muelle destinoMuelle=new Muelle(12,coordenadaMuelle,'O',50);
-		destino.añadirMuelle(destinoMuelle);
+		destino.addMuelle(destinoMuelle);
 		
 		pruebaContenedor.hacerTrayecto(destino);
 		Puerto puertoOrigen=new Puerto("ES-VAL");
 		GPSCoordinate coordenada=new GPSCoordinate(40.0,40.0);
 		Muelle añadirOrigen=new Muelle(20,coordenada,'F',5);
 		añadirOrigen.asignarPlaza(pruebaContenedor, 2);
-		puertoOrigen.añadirMuelle(añadirOrigen);
+		puertoOrigen.addMuelle(añadirOrigen);
 		
 
 		pruebaContenedor.hacerViajes(pruebaContenedor, puertoOrigen, destino, destinoMuelle, "2020-11-19", "2020-12-31");

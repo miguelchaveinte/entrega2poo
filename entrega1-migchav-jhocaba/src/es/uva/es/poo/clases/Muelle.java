@@ -37,12 +37,12 @@ public class Muelle {
 
 	
 	/**
-	 * 
-	 * @param identificador
-	 * @param coordenada
-	 * @param estado
-	 * @param numPlazas
-	 * @throws IllegalArgumentException
+	 * Inicializador con parametros
+	 * @param identificador- numero de dos digitos que identifica al Muelle
+	 * @param coordenada - coordenada GPS del muelle
+	 * @param estado- estado operativo o fuera de servicio ('O'=>OPERATIVO,'F'=>fuera de servicio)
+	 * @param numPlazas - numero de plazas del muelle
+	 * @throws IllegalArgumentException-si {@param coordena=null}
 	 */
 	public Muelle(int identificador,GPSCoordinate coordenada,char estado,int numPlazas) {
 		if(Integer.toString(identificador).length()!=2 )throw new IllegalArgumentException("El identificador de muelle debe ser un número de 2 digitos");
@@ -55,9 +55,9 @@ public class Muelle {
 	}
 
 	/**
-	 * 
-	 * @param estado
-	 * @throws IllegalArgumentException
+	 * Setea el estado del muelle a true si esta operativo o a false si esta a false
+	 * @param estado- estado operativo o fuera de servicio ('O'=>OPERATIVO,'F'=>fuera de servicio)
+	 * @throws IllegalArgumentException-si {@param estado}!='O' && {@param estado}!='F'
 	 */
 	public void setEstado(char estado) {
 		if (estado!='O' && estado!='F') throw new IllegalArgumentException("Estado no valido");
@@ -68,27 +68,47 @@ public class Muelle {
 			this.estado=false;
 		}
 	}
+	/**
+	 * Retorna el identificador del muelle
+	 * @return Identificador del muelle
+	 */
 	public int getIdMuelle() {
 		return identificador;
 	}
+	/**
+	 * Retorna true si el muelle esta operativo o false si esta fuera de servicio
+	 * @return estado del muelle
+	 */
 	public boolean getEstado() {
 		return estado;
 	}
-	
+	/**
+	 * Retorn el numero de plazas
+	 * @return el int de plazas del muelle
+	 */
 	public int getNumPlazas() {
 		return numPlazas;
 	}
-
+	/**
+	 *Retorna Lista de todas las plazas con sus niveles y su estado (vacia,semillena o llena)
+	 * 
+	 * @return lista de las plazas
+	 */
 	public List<Muelle> getListPlazas(){
 		return plazas;
 	}
+	/**
+	 * Retorna el string del estado de la plaza
+	 * @return "vacia" si la plaza no tiene contenedores,"semillena" si tiene contenedores
+	 * y espacio o llena  si no admite mas espacio
+	 */
 	public String getEstadoPlaza() {
 		return estadoPlaza;
 	}
 	/**
-	 * Guardamos un arraylist de las plazas
-	 * @param numPlazas
-	 * @throws IllegalArgumentException
+	 * Guardamos un arraylist de las plazas inicializado a vacio
+	 * @param numPlazas- numero dde plaza a creal
+	 * @throws IllegalArgumentException-si el numPlazas<=0
 	 */
 	public void setPlazas(int numPlazas) {
 		if(numPlazas<=0) {
@@ -105,50 +125,103 @@ public class Muelle {
 			plazas.add(descripcionPlazas);
 		}
 	}
-	
+	/**
+	 * Retorna coordenada gps del muelle
+	 * @return coordenada gps
+	 */
 	public GPSCoordinate getCoordenada() {
 		return coordenada;
 	}
-	//TODO:PARA CADA TIPO DE ESTADO UN METODOXXX
+	/**
+	 * Setea el estado de la plaza a vacia
+	 */
 	public void setEstPlazaVacia() {
 		estadoPlaza="vacia";
 	}
+	/**
+	 * Setea el estado de la plaza a semillena 
+	 */
 	public void setEstPlazaSemi() {
 		estadoPlaza="semillena";
 	}
+	/**
+	 * Setea el estado de la plaza a llena
+	 */
 	public void setEstPlazaLlena() {
 		estadoPlaza="llena";
 	}
+	/**
+	 * Almacena en nivel uno de la plaza que lo llama el contenedor de parametro
+	 * @param contenedor - no debe ser nulo
+	 * @throws IllegalArgumentException si el {@param contenedor} es null
+	 */
 	public void setNivelUno(Contenedor contenedor){
 		if(contenedor==null) throw new IllegalArgumentException("El contenedor no puede ser null");
 		nivelUno=contenedor;
 	}
+	/**
+	 * Almacena en nivel dos de la plaza que lo llama el contenedor de parametro
+	 * @param contenedor - no debe ser nulo
+	 * @throws IllegalArgumentException si el {@param contenedor} es null
+	 */
 	public void setNivelDos(Contenedor contenedor){
 		if(contenedor==null) throw new IllegalArgumentException("El contenedor no puede ser null");
 		nivelDos=contenedor;
 	}
+	/**
+	 * Almacena en nivel tres de la plaza que lo llama el contenedor de parametro
+	 * @param contenedor - no debe ser nulo
+	 * @throws IllegalArgumentException si el {@param contenedor} es null
+	 */
 	public void setNivelTres(Contenedor contenedor){
 		if(contenedor==null) throw new IllegalArgumentException("El contenedor no puede ser null");
 		nivelTres=contenedor;
 	}
+	/**
+	 * Almacena en nivel cuatro de la plaza que lo llama el contenedor de parametro
+	 * @param contenedor - no debe ser nulo
+	 * @throws IllegalArgumentException si el {@param contenedor} es null
+	 */
 	public void setNivelCuatro(Contenedor contenedor){
 		if(contenedor==null) throw new IllegalArgumentException("El contenedor no puede ser null");
 		nivelCuatro=contenedor;
 	}
-	
+	/**
+	 * Retorna el contenedor que se encuentra en el nivel uno de la plaza que lo llama
+	 * @return contenedor nivelUno
+	 */
 	public Contenedor getNivelUno() {
 		return nivelUno;
 	}
+	/**
+	 * Retorna el contenedor que se encuentra en el nivel dos de la plaza que lo llama
+	 * @return contenedor nivelDos
+	 */
 	public Contenedor getNivelDos() {
 		return nivelDos;
 	}
+	/**
+	 * Retorna el contenedor que se encuentra en el nivel tres de la plaza que lo llama
+	 * @return contenedor nivelTres
+	 */
 	public Contenedor getNivelTres() {
 		return nivelTres;
 	}
+	/**
+	 * Retorna el contenedor que se encuentra en el nivel cuatro de la plaza que lo llama
+	 * @return contenedor nivelCuatro
+	 */
 	public Contenedor getNivelCuatro() {
 		return nivelCuatro;
 	}
-	
+	/**
+	 * Mete el contenedor dado en la plaza indicada con preferencia a 
+	 * las plazas semillenas 
+	 * @param contenedor- que se va a meter en la plaza
+	 * @param plaza-plaza en el cual se va a incluir
+	 * @throws IllegalArgumentException - contenedor nulo
+	 * @throws IllegalArgumentException - plaza<0
+	 */
 	public void asignarPlaza(Contenedor contenedor,int plaza) {
 		if(contenedor==null || contenedor.getIdentificador()==null) throw new IllegalArgumentException("El contenedor no puede ser nulo");
 		if(plaza<0) throw new IllegalArgumentException("La plaza no debe ser <0");
@@ -195,9 +268,10 @@ public class Muelle {
 	 * Sacamos un contenedor dado su identificador.
 	 * Primero le buscamos  en que plaza se encuentra y posteriormente
 	 * analizamos el nivel de dicha plaza y obtenemos el objeto contenedor que nos pedian.
-	 * @param identificador
-	 * @return
-	 * @throws IllegalArgumentException
+	 * @param identificador-identificador del contenedor 
+	 * @return el contenedor extraido
+	 * @throws IllegalArgumentException -identificador no valido
+	 * @throws IllegalArgumentException -contenedor no encontrado
 	 */
 	public Contenedor sacarContenedor(String identificador)  {
 		//TODO: ELSE IF -> Y SI NO COINCIDE CON NINGUNO ELSE Y RETURN new Contenedor() o return null??;
@@ -315,8 +389,12 @@ public class Muelle {
 		else 
 			return new Contenedor();		
 	}
+	/**
+	 * Retorna en un string del tipo: numeroplazasvacias/numeroplazassemillenas/numeroplazasllenas
+	 * asociado al muelle sus numero de plazas segun tippo
+	 * @return numeroplazasvacias/numeroplazassemillenas/numeroplazasllenas de ese muelle
+	 */
 	public String estadoPlazas() {
-		//TODO:RETURN EN FORMA DE STRING O MEJOR EN INT PARA OTRAS COSAS!!!!!!!!!!
 		Iterator<Muelle> itrPlazas=plazas.iterator();
 		int vacias=0;
 		int semi=0;
@@ -337,10 +415,10 @@ public class Muelle {
 	
 	
 	/**
-	 * 
-	 * @param identificador
-	 * @return
-	 * @throws IllegalArgumentException
+	 * Indice de la plaza donde hemos encontrado el contenedor(index empieza desde 0)
+	 * @param identificadoridentificador del contenedor 
+	 * @return index de la plaza en la que se encuentra el contenedor
+	 * @throws IllegalArgumentException-si el identificador del contenedor no es valido
 	 */
 	public int getPlaza(String identificador)  {
 		Contenedor identificadorCorrecto=new Contenedor(identificador,"500-Kg",200.0,"100-m3",true);
@@ -369,14 +447,13 @@ public class Muelle {
 
 	
 	/**
-	 * 
-	 * @param identificador
-	 * @return
-	 * 
-	 * @throws IllegalArgumentException
+	 * Retorna un string que nos dice la plaza y el nivel de esta de un contenedor dado
+	 * @param identificador-identificador del contenedor 
+	 * @return string que nos especifica en la plaza y el nivel donde se ha encontrado el contenedor
+	 * @throws IllegalArgumentException-si el contenedor no se ha encontrado
+	 * @throws IllegalArgumentException-identificador contenedor no valido
 	 */
 	public String getNivelPlaza(String identificador)  {
-		//TODO:MEJORA Y NO RETORNAR TEXTO .../...
 		int indexPlaza=getPlaza(identificador);
 		String nivel;
 		if (indexPlaza==-1){

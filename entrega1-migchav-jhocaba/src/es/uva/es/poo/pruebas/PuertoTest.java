@@ -112,6 +112,17 @@ public class PuertoTest {
 		prueba.addMuelle(añadir);
 		prueba.eliminarMuelle(100);
 	}
+	@Test(expected=IllegalArgumentException.class) 
+	public void testEliminarMuelleNoVacio()  {
+		String identidad="ES-MAD";
+		Puerto prueba=new Puerto(identidad);
+		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
+		Muelle añadir=new Muelle(12,coordenada,'O',50);
+		Contenedor contenedorToAdd=new Contenedor("CSQU3054383","500-Kg",200.0,"100-m3",false);
+		añadir.asignarPlaza(contenedorToAdd, 5);
+		prueba.addMuelle(añadir);
+		prueba.eliminarMuelle(12);
+	}
 	@Test
 	public void testGetCompleto() {
 		String identidad="ES-MAD";

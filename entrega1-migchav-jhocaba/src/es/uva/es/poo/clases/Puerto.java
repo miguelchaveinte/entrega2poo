@@ -83,32 +83,39 @@ public class Puerto {
 	}
 	
 	/**
-	 * 
-	 * @param IdMuelleToEliminar
-	 * @throws IllegalArgumentException-si 
+	 * Elimina un muelle del puerto pero solo si este no contiene contenedores
+	 * @param IdMuelleToEliminar-un int de dos digitos
+	 * @throws IllegalArgumentException-si IdMuelleToEliminar no es de dos digitos
+	 * @throws IllegalArgumentException-si IdMuelleToEliminar no esta en el puerto
+	 * @throws IllegalArgumentException -si el muelle no esta vacio
 	 */
 	public void eliminarMuelle(int IdMuelleToEliminar) {
 		if(Integer.toString(IdMuelleToEliminar).length()!=2) throw new IllegalArgumentException("El identificador de muelle debe ser un número de 2 digitos");
 		boolean eliminado=false;
 		for (int i=0;i<muelles.size();i++) {
-			if((muelles.get(i).getIdMuelle())==IdMuelleToEliminar){
-				muelles.remove(i);
-				eliminado=true;
-				break;
+			if((muelles.get(i).getIdMuelle())==IdMuelleToEliminar){	
+				if(muelles.get(i).estadoPlazas().equals(String.valueOf(muelles.get(i).getNumPlazas())+"/0/0")) {
+					muelles.remove(i);
+					eliminado=true;
+					break;
+				}
+				else throw new IllegalArgumentException("El muelle no esta vacio-tiene contenedores");
 			}
 		}
 		if (eliminado!=true) throw new IllegalArgumentException("El muelle no se ha eliminado porque no se ha encontrado");
 	}
 	/***
-	 * 
-	 * @return boolean completo=false... analizando todos los muelles del puerto esten o no operativos
+	 * Devuelve un boolean que nos indica si el puerto no tienes mas 
+	 * capacidad de almacenar muelles
+	 * @return boolean completo=> false -si una vez analizado todos los muelles
+	 * del puerton(tanto operativos como no operativos). Sino es que esta
+	 * completo y retorna true
 	 */
 	public boolean getCompleto() {
 		boolean completo=false;
 		Iterator<Muelle> itrMuelles=muelles.iterator();
 		while(itrMuelles.hasNext()) {
 			Muelle analisis=itrMuelles.next();
-			//llama a string estado plaza???????????????
 			String estado = analisis.estadoPlazas();
 			String [] array = estado.split("/");
 			if(array[0]!="0") {
@@ -124,7 +131,11 @@ public class Puerto {
 		completo=true;
 		return completo;
 	}
-	
+	/**
+	 * Analiza todos los muelles que estan en el puerto y si estan 
+	 * operativos los introduce una lista que es la que nos devuelve
+	 * @return lista de Muelles operativos
+	 */
 	public List<Muelle> muellesOperativos() {
 		List<Muelle> lista=new ArrayList<Muelle>();
 		Iterator<Muelle> itrMuelles=muelles.iterator();
@@ -137,8 +148,10 @@ public class Puerto {
 		return lista;
 	}
 	/**
-	 * 
-	 * @return lista muelles con espacio esten o no esten operativos
+	 * Analiza todos los muelles que estan en el puerto y si estan
+	 * con espacio disponible para almacenar algun contenedor mas
+	 * los introduce en una lista que es la que nos devuelve.
+	 * @return lista de muelles con espacio esten o no esten operativos
 	 */
 	public List<Muelle> muellesEspacio(){
 		List<Muelle> lista=new ArrayList<Muelle>();
@@ -159,16 +172,24 @@ public class Puerto {
 		}
 		return lista;
 	}
-	
-	public List<Muelle> muellesCerca(GPSCoordinate punto,double distancia){
-		if(punto==null) throw new IllegalArgumentException("La coordenada no puede ser null ");
+	/**
+	 * Devuelve una lista de los muelles esten o no operativos que se encuentran
+	 * a una distancia menor de una cierta coordenada GPS
+	 * @param puntoGps - coordenada GPS desde la cual observaremos la distancia a medir
+	 * @param distancia - double de la distancia de la cual la distancia de los 
+	 * muelles debe ser menor.
+	 * @return lista de los muelles a una distancia menor del {@param distancia}
+	 * del punto GPS {@param puntoGps}
+	 */
+	public List<Muelle> muellesCerca(GPSCoordinate puntoGps,double distancia){
+		if(puntoGps==null) throw new IllegalArgumentException("La coordenada no puede ser null ");
 		if(distancia<0) throw new IllegalArgumentException("La distacia no puede ser <0");
 		List<Muelle> lista=new ArrayList<Muelle>();
 		Iterator<Muelle> itrMuelles=muelles.iterator();
 		while(itrMuelles.hasNext()) {
 			Muelle analisis=itrMuelles.next();
 			GPSCoordinate localizacion=analisis.getCoordenada();
-			if (localizacion.getDistanceTo(punto)<distancia) {
+			if (localizacion.getDistanceTo(puntoGps)<distancia) {
 				lista.add(analisis);
 			}
 		}
