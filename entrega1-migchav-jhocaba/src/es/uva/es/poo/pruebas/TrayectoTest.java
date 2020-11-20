@@ -103,6 +103,14 @@ public class TrayectoTest {
 		Puerto destinopuerto = new Puerto();
 		Trayecto nuevo = new Trayecto(origenmuelle, origenpuerto,"", destinomuelle, destinopuerto,"");
 	}
+	@Test(expected=DateTimeParseException.class)
+	public void testFechaInvalida()   {
+		Muelle origenmuelle = new Muelle();
+		Muelle destinomuelle = new Muelle();
+		Puerto origenpuerto = new Puerto();
+		Puerto destinopuerto = new Puerto();
+		Trayecto nuevo = new Trayecto(origenmuelle, origenpuerto,"2001-31-12", destinomuelle, destinopuerto,"");
+	}
 	
 	@Test
 	public void testGetMuelleOrigen()  {
@@ -216,9 +224,9 @@ public class TrayectoTest {
 		Muelle destinomuelle =new Muelle(20,coordenadadestino,'F',5);
 		Puerto origenpuerto = new Puerto();
 		Puerto destinopuerto = new Puerto();
-		Trayecto nuevo = new Trayecto(origenmuelle, origenpuerto, "2020-11-19", destinomuelle, destinopuerto,"2020-12-31");
+		Trayecto nuevo = new Trayecto(origenmuelle, origenpuerto, "2020-11-18", destinomuelle, destinopuerto,"2020-11-30");
 		double coste=nuevo.costeTrayecto(100, 100);
-		assertEquals(coste, 1.2469020804370132E8 ,0.0);
+		assertEquals(coste, 3.56257737267718E7 ,0.0);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)

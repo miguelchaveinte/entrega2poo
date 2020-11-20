@@ -94,6 +94,7 @@ public class Contenedor {
      * @return digito de control
      */
     public int obtenerDigitoControl(String identificador) {
+    	comprobarIdentificador(identificador);
         //utilizo un mapa para guardar las letra con sus correspondientes valor
         Map<String, Integer> tabla = new HashMap<String, Integer>();
         tabla.put("A", 10);tabla.put("B", 12);tabla.put("C", 13);tabla.put("D", 14);tabla.put("E", 15);tabla.put("F", 16);tabla.put("G", 17);tabla.put("H", 18);tabla.put("I", 19);tabla.put("J", 20);tabla.put("K", 21);tabla.put("L", 23);tabla.put("M", 24);tabla.put("N", 25);tabla.put("O", 26);tabla.put("P", 27);tabla.put("Q", 28);tabla.put("R", 29);tabla.put("S", 30);tabla.put("T", 31);tabla.put("U", 32);tabla.put("V", 34);tabla.put("W", 35);tabla.put("X", 36);tabla.put("Y", 37);tabla.put("Z", 38);
@@ -196,12 +197,14 @@ public class Contenedor {
 		if(volumen<0) throw new IllegalArgumentException("Volumen no puede ser negativo");
 		this.volumen = volumen;
 	}
-    
-	public String getIdentificador(Contenedor contenedor) {
-		if (contenedor==null) {
-			throw new IllegalArgumentException("El contenedor no puede ser vacio ni la plaza<0");
-		}
-		return contenedor.identificador;
+    /**
+     * 
+     * @param contenedor
+     * @return
+     * @throws IllegalArgumentException
+     */
+	public String getIdentificador() {
+		return identificador;
 	}
 
 	
@@ -219,6 +222,9 @@ public class Contenedor {
 		estado = false;
 	}
 	
+	public boolean getEstado() {
+		return estado;
+	}
 	/**
 	 * Cambiar a contenedor tiene techo
 	 */
@@ -234,11 +240,8 @@ public class Contenedor {
 		techo = false;
 	}
 	
-	public boolean getTecho(Contenedor contenedor) {
-		if (contenedor==null) {
-			throw new IllegalArgumentException("El contenedor no puede ser vacio ni la plaza<0");
-		}
-		return contenedor.techo;
+	public boolean getTecho() {
+		return techo;
 	}
 	
 	/**
@@ -300,11 +303,15 @@ public class Contenedor {
 		setPesoKilo(nuevoPeso);
 	}
 	*/
-	
+	/**
+	 * 
+	 * @param destino
+	 * @throws IllegalArgumentException
+	 */
 	public void hacerTrayecto(Puerto destino) 
 	{
-		//TODO??: OBTENER MUELLE ORIGEN Y ESO , MIRAR TODOIST
-		//estado en trayecto
+		if(destino==null) throw new IllegalArgumentException("El puert destino no debe ser nulo");
+		if(destino.getLocalidad()==null || destino.getPais()==null)throw new IllegalArgumentException("El puert destino no debe ser nulo");
 		Trayecto destinoFinal=new Trayecto();
 		destinoFinal.setPuertoFinal(destino);
 		trayectos.add(destinoFinal);
@@ -320,12 +327,16 @@ public class Contenedor {
 	 * @throws IllegalArgumentException
 	 */
 	public void hacerViajes(Contenedor contenedor,Puerto puertoOrigen,Puerto puertoDestino,Muelle muelleDestino,String fechaInicio,String fechaFin)  {
+		if(contenedor==null)throw new IllegalArgumentException("contenedor nulo");
+		if(puertoOrigen==null)throw new IllegalArgumentException("puertoOrigen nulo");
+		if(puertoDestino==null)throw new IllegalArgumentException("puerto destino nulo");
+		if(muelleDestino==null)throw new IllegalArgumentException("muelle destino nulo");
 		List<Muelle> listaMuelles=puertoOrigen.getListaMuelles();
 		int posicionMuelle=-1;
 		int i;
 		for (i=0;i<listaMuelles.size();i++) {
 			Muelle analisis=listaMuelles.get(i);
-			int plaza=analisis.getPlaza(contenedor.getIdentificador(contenedor));
+			int plaza=analisis.getPlaza(contenedor.getIdentificador());
 			if(plaza==-1) continue;
 			posicionMuelle=i;
 			break;
@@ -348,13 +359,17 @@ public class Contenedor {
 	
 	//TODO:NO MIRAR EL PRIMER TRAYECTO
 	public double Precio(int precioMilla,int precioDia) {
-		if(precioMilla<=0 || precioDia<=0)
-			throw new IllegalArgumentException("Los precios no pueden ser<=0");
-		double sumaTrayectos=0;
+		if(precioMilla<=0)throw new IllegalArgumentException("El precio milla no pueden ser<=0");
+		if(precioDia<=0)throw new IllegalArgumentException("El precio dia no pueden ser<=0");
+		double sumaTrayectos=0.0;
 		Iterator<Trayecto> itrTrayectos=trayectos.iterator();
+		int contador=0;
 		while(itrTrayectos.hasNext()) {
 			Trayecto analisis=itrTrayectos.next();
-			if(analisis.getMuelleOrigen()==null) continue;
+			if(analisis.getMuelleOrigen()==null) {
+				contador+=1;
+				continue;
+			}
 			double precio = analisis.costeTrayecto(precioMilla, precioDia);
 			sumaTrayectos+=precio;
 		}
