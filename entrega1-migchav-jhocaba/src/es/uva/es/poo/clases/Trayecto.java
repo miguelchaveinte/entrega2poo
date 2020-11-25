@@ -35,14 +35,17 @@ public class Trayecto {
 	}
 	
 	/**
-	 * Inicialización a partir de los arguementos
-	 * Almacena todas las instancias necesarias
-	 * @param muelleOrigen
-	 * @param puertoOrigen
-	 * @param fechaIni en formato aaaa-mm-dd
-	 * @param muelleDestino
-	 * @param puertoDestino
-	 * @param fechaFin en formato aaaa-mm-dd
+	 * Inicialización a partir de los argumentos, almacenando todas las instancias necesarias.
+	 * @param muelleOrigen - Muelle de origen
+	 * @param puertoOrigen - Puerto de origen
+	 * @param fechaIni - Fecha de inicio de trayecto (Formato: aaaa-mm-dd)
+	 * @param muelleDestino - Muelle de destino
+	 * @param puertoDestino - Puerto de destino
+	 * @param fechaFinFecha de fin de trayecto (Formato: aaaa-mm-dd)	
+	 * @throws IllegalArgumentException-si muelleOrigen==null
+	 * @throws IllegalArgumentException-si muelleDestino==null
+	 * @throws IllegalArgumentException-si puertoOrigen==null
+	 * @throws IllegalArgumentException-si puertoDestino==null
 	 */
 	public Trayecto(Muelle muelleOrigen,Puerto puertoOrigen,String fechaIni,Muelle muelleDestino,Puerto puertoDestino,String fechaFin) {
 		if(muelleOrigen==null) throw new IllegalArgumentException("El muelle no debe ser  nulo ");
@@ -57,15 +60,19 @@ public class Trayecto {
 		this.fechaFin = LocalDate.parse(fechaFin);
 	}
 	/**
-	 * 
-	 * @param destino
-	 * @throws IllegalArgumentException 
+	 * Guarda el puerto destino del trayecto
+	 * @param destino - Puerto destino del trayecto
+	 * @throws IllegalArgumentException en el caso de que el puerto final de destino sea nulo
+	 * @return el nombre del puerto destino final
 	 */
 	public void setPuertoFinal(Puerto destino) {
 		if(destino==null)  throw new IllegalArgumentException("Puerto destino final de trayecto no puede ser null");
 		puertoFinal=destino;
 	}
-	
+	/**
+	 * Obtener el puerto final de un trayecto
+	 * @return El nombre del puerto 
+	 */
 	public Puerto getPuertoFinal() {
 		return puertoFinal;
 	}
@@ -116,13 +123,11 @@ public class Trayecto {
 
 	
 	/**
-	 * Conocer si la fecha de fin es superior a una dada
-	 * Si es mayor, la funcion devolverá true
-	 *  
-	 * @param fecha 
-	 * @throws Cualquier excepcion es lanzada por la clase LocalDate, asi como fechas nulas 
-	 * o fechas incorrectas debido a un año bisiesto.
-	 * 
+	 * Conocer si la fecha de fin de trayecto es superior a una dada
+	 * Si es superior, la funcion devolverá true
+	 * @param fecha - Fecha 
+	 * @throws DateTimeParseException - Cualquier excepcion será lanzada por la clase LocalDate 
+	 * o fechas incorrectas debido a un año bisiesto. 
 	 * @return resultado 
 	 */
 	public boolean fechaCorrecta(LocalDate fecha) {
@@ -139,19 +144,12 @@ public class Trayecto {
 	
 	
 	/**
-	 * Calcula la distancia de un viaje en millas marinas
-	 * 
-	 * @throws IllegalArgumentException si recibe una coordenada nula
+	 * Calcular distancia de un viaje en millas marinas a partir del metodo getDistanceTo de la clase GPSCoordinate
+	 * @throws IllegalArgumentException - Cualquier excepcion sera lanzada por la clase GPSCoordinate
 	 * @return distancia en km entre coordenadas
 	 */
 	
 	public double getDistancia() {
-		//Implementar bien la coordenada origen
-		//TODO:COORDENADAS????????????????
-		//if (destino == null) {	//no hace falta no? ya en getDistanceTo
-		//	throw new IllegalArgumentException("La coordenada no puede ser nula");
-		//}
-		
 		double distancia;	
 		GPSCoordinate coordenadaOrigen = getMuelleOrigen().getCoordenada();
 		GPSCoordinate coordenadaDestino=getMuelleDestino().getCoordenada();
@@ -159,12 +157,13 @@ public class Trayecto {
 		return (distancia/1.852);//para pasarlo a millas marinas
 	}
 	/**
-	 * Agrupa en una cadena la información relativa a la localidad,pais y fecha tanto
-	 * del origen como del destino
+	 * Agrupa en una cadena la informacion relativa a la localidad, pais y fecha tanto
+	 * del origen como del destino. 
+	 * Uso del metodo "format" de la clase DateTimeFormatter para formatear las fechas de acuerdo con la configuración
+	 * establecida (dd/MM/YYYY)
 	 * @return cadena que agrupa de forma legible dicha informacion
 	 */
 	public String infoTrayecto() {
-		//localidad y pais en clase puerto
 
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YYYY"); 
 		String inicio=(formatter.format(getFechaIni())); 
@@ -176,17 +175,17 @@ public class Trayecto {
 	}
 	
 	/**
-	 * Calcula el coste en euros para un determinado trayecto. El coste viene dado
-	 * por el precio de la milla y precio por dia del trayecto que es dado 
+	 * Calcula el coste en euros para un determinado trayecto. 
+	 * El coste viene dado por el precio de la milla y precio por dia del trayecto, ambos deben ser >0, 
 	 * y la distancia entre los puntos origen y destino.
 	 * @param precioMilla - Coste en euros de 1 unidad de distancia marina.
 	 * @param precioDia - Coste en euros de 1 dia de trayecto.
+	 * @throws IllegalArgumentException si se reciben precios negativos
 	 * @return el coste en euros total del trayecto.
 	 */
 	public double costeTrayecto(int precioMilla,int precioDia) {
 		if(precioMilla<=0 || precioDia<=0)
 			throw new IllegalArgumentException("Los precios no pueden ser<=0");
-		//TODO: precio negativo y origen,destino???????
 		GPSCoordinate coordenadaOrigen = getMuelleOrigen().getCoordenada();
 		GPSCoordinate coordenadaDestino=getMuelleDestino().getCoordenada();
 		//Uso de ChronoUnit.DAYS para obtener el numero de dias entre las fechas indicadas

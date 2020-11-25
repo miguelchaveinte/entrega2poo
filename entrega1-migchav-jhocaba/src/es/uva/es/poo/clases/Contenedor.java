@@ -36,9 +36,10 @@ public class Contenedor {
 	}
 	
 	/**
-	 * Inicialización a partir de argumentos
+	 * Inicialización a partir de argumentos, almacenando todas las instancias necesarias.
 	 * @param identificador - Cadena con el que se identifica cada contenedor
-	 * @throws IllegalArgumentException
+	 * @throws IllegalArgumentException en el caso de que el digito de control del identificador sea diferente del obtenido
+	 * @throws IllegalArgumentException si la carga es negativa
 	 */
 	public Contenedor(String identificador,String peso,double carga,String volumen,boolean techo)  {	
 		comprobarIdentificador(identificador);
@@ -59,9 +60,13 @@ public class Contenedor {
 		trayectos=new ArrayList<Trayecto>();
 	}
 	/**
-	 * 
-	 * @param identificador
-	 * @throws IllegalArgumentException
+	 * Comprobar que el identificador sea correcto.
+	 * Uso de StringBuilder para modificar el tamaño de las cadenas de caracteres al ir añadiendo caracteres, 
+	 * y la correspondiente asignacion de los atributos en el caso de que se cumplan todas las condiciones. 
+	 * @param identificador - Identificador del contenedor
+	 * @throws IllegalArgumentException si el identificador no tiene la longitud correcta
+	 * @throws IllegalArgumentException si alguna de las tres letras iniciales no son mayusculas, o si la cuarta letra no se corresponde 
+	 * con los caracteres - 'U', 'J', 'Z' o si la longitud de la serie es distinta de 6.
 	 */
 	public void comprobarIdentificador(String identificador) {
 		if(identificador.length()!=11)throw new IllegalArgumentException("Identificador no valido");
@@ -90,7 +95,10 @@ public class Contenedor {
 	}
 	
 	/**
-     * Obtener el digito de control del contenedor
+     * Obtener el digito de control del contenedor a partir del identificador.
+     * Uso de mapa para guardar cada letra con su correspondiente valor, además de un vector en el que se 
+     * van almacenando los respectivos valores y con los que se calculará la suma necesaria. 
+     * @param identificador - Identificador del contenedor
      * @return digito de control
      */
     public int obtenerDigitoControl(String identificador) {
@@ -123,8 +131,12 @@ public class Contenedor {
 	
     
     /**
-	 * Para almacenar el peso, utilizamos un String y el metodo split para detectar si se tratan de Kg o de lb (Ej: 3000-kg || 500-lb)
-	 * @param Peso del contenedor
+	 * Para almacenar el peso, utilizamos un String y el metodo split para detectar si se trata de kilogramos o de libras. 
+	 * Modelo de uso correcto de la entrada peso-(3000-kg || 500-lb)
+	 *
+	 * @param Peso - Peso del contenedor 
+	 * @return IllegalArgumentException si el {@param peso} esta vacio
+	 * @return IllegalArgumentException si las unidades del {@param peso} no son Kg o lb
 	 */
 	public void comprobarUnidadesPeso(String peso) { //3000-Kg 400lb
 		String [] array = peso.split("-");
@@ -141,8 +153,8 @@ public class Contenedor {
 	
 	/**
 	 * Cambiar el peso de libras a kilogramos
-	 * @param pesocontenedor
-	 * @throws IllegalArgumentException
+	 * @param pesocontenedor - Peso del contenedor en libras
+	 * @throws IllegalArgumentException en el caso de que peso sea negativo
 	 */
 	public void conviertePesoKilo(double pesoContenedor) {
 		if(pesoContenedor<0) throw new IllegalArgumentException("Peso no puede ser negativo");
@@ -151,9 +163,9 @@ public class Contenedor {
 	}
 	
 	/**
-	 * Guardar peso
-	 * @param peso
-	 * @throws IllegalArgumentException
+	 * Guardar peso 
+	 * @param peso - Peso del contenedor ya en Kilos
+	 * @throws IllegalArgumentException en el caso de que peso sea negativo
 	 */
 	public void setPesoKilo(double peso) {
 		if(peso<0) throw new IllegalArgumentException("Peso no puede ser negativo");
@@ -161,10 +173,13 @@ public class Contenedor {
 	}
 	
 	/**
-	* Para almacenar el volumen, utilizamos un String y el metodo split para detectar si se tratan de m3 o de ft3 (Ej: 30-m3 || 40-ft3)
-	* @param Peso del contenedor
-	* @throws IllegalArgumentException
-	*/
+	 * Para almacenar el volumen, utilizamos el mismo metodo que para almacenar el peso para detectar si se trata de 
+	 * metros cubicos o de pies cubicos. 
+	 * Modelo de uso correcto de la entrada peso-(3000-m3 || 500-ft3)
+	 * @param Volumen - Volumen del contenedor 
+	 * @return IllegalArgumentException si el {@param volumen} esta vacio
+	 * @return IllegalArgumentException si las unidades del {@param volumen} no son m3 o ft3
+	 */
 	public void comprobarUnidadesVolumen(String volumen) { //30-m3 40ft3
 		String [] array = volumen.split("-");
 		double volumenContenedor = (double) Integer.parseInt(array[0]);
@@ -179,8 +194,9 @@ public class Contenedor {
 	}
 	
 	/**
-	 * Cambiar el volumen de pies cúbicos a metros cúbicos
-	 * @param volumencontenedor
+	 * Cambiar el volumen de pies cubicos a metros cubicos
+	 * @param volumenContenedor - Volumen del contenedor en pies cubicos
+	 * @throws IllegalArgumentException en el caso de que el volumen sea negativo
 	 */
 	public void convierteVolumenMetros(double volumenContenedor) {
 		if(volumenContenedor<0) throw new IllegalArgumentException("Volumen no puede ser negativo");
@@ -190,19 +206,54 @@ public class Contenedor {
 		
 	/**
 	 * Guardar volumen
-	 * @param volumen en metros cúbicos
-	 * @throws IllegalArgumentException
+	 * @param volumen - Volumen del contenedor en metros cúbicos
+	 * @throws IllegalArgumentException en el caso de que el volumen sea negativo
 	 */
 	public void setVolumenMetros(double volumen) {
 		if(volumen<0) throw new IllegalArgumentException("Volumen no puede ser negativo");
 		this.volumen = volumen;
 	}
-    /**
-     * 
-     * @param contenedor
-     * @return
-     * @throws IllegalArgumentException
-     */
+	/**
+	 * Obtener el volumen del contenedor en metros cúbicos
+	 * @return volumen en metros cuadrados
+	 */
+	public double getVolumenMetros() {
+		return volumen;
+	}
+	
+	/**
+	 * Obtener el volumen del contenedor en pies cúbicos
+	 * @return volumen en pies cúbicos
+	 */
+	public double getVolumenPies() {
+		double piescubicos = getVolumenMetros() * (353147/10000);
+		return piescubicos;
+	}
+	
+
+	/**
+	 * Obtener el peso del contenedor en Kilogramos
+	 * @return peso en Kilogramos
+	 */
+	public double getPesoKilo() {
+		return this.peso;
+	}
+	
+	/**
+	 * Obtener el peso en libras
+	 * @return peso en libras
+	 */
+	public double getPesoLibra() {
+		double libras = getPesoKilo() * (110231/50000);
+		return libras;
+	}
+	
+	/**
+	 * Obtener el identificador del contenedor	
+	 * @param contenedor - Contenedor inicializado
+	 * @throws IllegalArgumentException si el contenedor esta vacio o si la plaza es negativa
+	 * @return identificador del contenedor
+	 */
 	public String getIdentificador() {
 		return identificador;
 	}
@@ -221,12 +272,16 @@ public class Contenedor {
 	public void setTransito() {
 		estado = false;
 	}
-	
+	/**
+	 * Retorna el estado(transito o en recogida) del contenedor
+	 * @return
+	 */
 	public boolean getEstado() {
 		return estado;
 	}
+	
 	/**
-	 * Cambiar a contenedor tiene techo
+	 * Cambiar el contenedor para reflejar que tiene techo
 	 */
 	
 	public void setTecho() {
@@ -240,73 +295,21 @@ public class Contenedor {
 		techo = false;
 	}
 	
+	/**
+	 * Obtener si el contenedor tiene techo o no
+	 * Devuelve true si tiene y false en caso contrario
+	 * @param contenedor - Contenedor inicializado
+	 * @throws IllegalArgumentException si el contenedor esta vacio o si la plaza es negativa
+	 * @return techo o no techo
+	 */
 	public boolean getTecho() {
 		return techo;
 	}
 	
 	/**
-	 * Obtener el volumen del contenedor en metros cúbicos
-	 * @return volumen en metros cuadrados
-	 */
-	public double getVolumenMetros() {
-		return volumen;
-	}
-	
-
-
-	
-	/**
-	 * Obtener el volumen del contenedor en pies cúbicos
-	 * @return volumen en pies cúbicos
-	 */
-	public double getVolumenPies() {
-		double piescubicos = getVolumenMetros() * (353147/10000);
-		return piescubicos;
-	}
-	
-	/**
-	 * Cambiar el volumen a partir del valor del volumen en pies cubicos
-	 * @param volumen
-	 */
-	/**
-	 * 
-	public void setVolumenPies(double volumen) {
-		double nuevoVolumen = volumen * (10000/353147);
-		setVolumenMetros(nuevoVolumen);
-	}
-	*/
-	
-	/**
-	 * Obtener el peso del contenedor en Kilogramos
-	 * @return peso en Kilogramos
-	 */
-	public double getPesoKilo() {
-		return this.peso;
-	}
-	 
-
-	
-	/**
-	 * Obtener el peso en libras
-	 * @return peso en libras
-	 */
-	public double getPesoLibra() {
-		double libras = getPesoKilo() * (110231/50000);
-		return libras;
-	}
-	
-	/**
-	 * Cambiar el peso a partir del valor del peso en libras
-	 * @param peso 
-	public void setPesoLibra(double peso) {
-		double nuevoPeso = getPesoKilo() * (50000/110231);
-		setPesoKilo(nuevoPeso);
-	}
-	*/
-	/**
-	 * 
-	 * @param destino
-	 * @throws IllegalArgumentException
+	 * Establecer el puerto destino del trayecto global
+	 * @param destino - Puerto destino del trayecto
+	 * @throws IllegalArgumentException-Puerto destino del trayecto global ==null
 	 */
 	public void hacerTrayecto(Puerto destino) 
 	{
@@ -316,15 +319,18 @@ public class Contenedor {
 		destinoFinal.setPuertoFinal(destino);
 		trayectos.add(destinoFinal);
 	}
-	/***
+	/**
+	 * diferentes viajes que son reliu por cont hatsa llagr desti finsl del try glbl
+	 * @param contenedor - Contenedor inicializado
+	 * @param puertoOrigen - Puerto origen del trayecto
+	 * @param puertoFin - Puerto del fin de trayecto
+	 * @param muelleFin - Muelle del fin de trayecto
+	 * @param fechaInicio - Fecha de inicio del trayecto
+	 * @param fechaFin - Fecha de fin de trayecto
+	 * @throws IllegalArgumentException en el caso de que el contenedor no se encuentre en el puerto
+	 * @throws IllegalArgumentException si coinciden el puerto destino coincide con el puerto fin del trayecto global.
+	 * Se deberia haber realizado un nuevo trayecto global
 	 * 
-	 * @param contenedor
-	 * @param inicio
-	 * @param puertoFin
-	 * @param muelleFin
-	 * @param fechaInicio
-	 * @param fechaFin
-	 * @throws IllegalArgumentException
 	 */
 	public void hacerViajes(Contenedor contenedor,Puerto puertoOrigen,Puerto puertoDestino,Muelle muelleDestino,String fechaInicio,String fechaFin)  {
 		if(contenedor==null)throw new IllegalArgumentException("contenedor nulo");
@@ -350,24 +356,21 @@ public class Contenedor {
 	
 
 	/**
-	 * 
-	 * @param precioMilla
-	 * @param precioDia
-	 * @return
-	 * @throws IllegalArgumentException
+	 * Calcular el precio total del trayecto global, es decir, la suma de costes de cada viaje.
+	 * @param precioMilla - Coste en euros de 1 unidad de distancia marina. 
+	 * @param precioDia - Coste en euros de 1 dia de trayecto.
+	 * @throws IllegalArgumentException si el precio de milla o el precio por dia son negativos
+	 * @return 
 	 */
 	
-	//TODO:NO MIRAR EL PRIMER TRAYECTO
 	public double Precio(int precioMilla,int precioDia) {
 		if(precioMilla<=0)throw new IllegalArgumentException("El precio milla no pueden ser<=0");
 		if(precioDia<=0)throw new IllegalArgumentException("El precio dia no pueden ser<=0");
 		double sumaTrayectos=0.0;
 		Iterator<Trayecto> itrTrayectos=trayectos.iterator();
-		int contador=0;
 		while(itrTrayectos.hasNext()) {
 			Trayecto analisis=itrTrayectos.next();
 			if(analisis.getMuelleOrigen()==null) {
-				contador+=1;
 				continue;
 			}
 			double precio = analisis.costeTrayecto(precioMilla, precioDia);
