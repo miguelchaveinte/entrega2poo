@@ -57,6 +57,7 @@ public class Muelle   {
 		String codigoInfra=String.valueOf(infraestructura);
 		this.infraestructura=new int[3];
 		for(int i=0; i<3; i++){
+			// TODO:COMPROBAR QUE SEA 1 Y 0 NADA MAS
 			this.infraestructura[i] = Character.getNumericValue(codigoInfra.charAt(i));
 		}
 		setPlazas(numPlazas);
@@ -76,7 +77,7 @@ public class Muelle   {
 			this.estado=false;
 		}
 	}
-	
+	//TODO:GET INFRAESTRUCTURA???????????? no hace falta
 	//TODO: TEST DE ESTAS DOS DE ABAJO!!!!!!!!!!!!!
 	
 	/**
@@ -175,7 +176,51 @@ public class Muelle   {
 	 */
 	public void asignarPlaza(Contenedor contenedor,int plaza) {
 		if(contenedor==null || contenedor.getIdentificador()==null) throw new IllegalArgumentException("El contenedor no puede ser nulo");
-		if(plaza<0) throw new IllegalArgumentException("La plaza no debe ser <0");
+		if(plaza<0) throw new IllegalArgumentException("La plaza no debe ser <0");	
+		correctoInfraestructura(contenedor);
+		
+		int statePlaza=getEstadoPlaza(plaza);
+		//Comprobar que si quiere dos plazas la de al lado tb esta libre
+		int contenedorDosPlazas=0;
+		int plazaNueva=plaza;
+		String comprobacion="";
+		if(contenedor.getEspacio()==2) {
+			comprobacion=comprobarFlatRack(plaza);
+			String[] argumentosFlat =comprobacion.split("/");
+			plazaNueva=Integer.parseInt(argumentosFlat[0]);
+			contenedorDosPlazas=Integer.parseInt(argumentosFlat[1]);
+		}
+		if(plazaNueva!=plaza) asignarPlaza(contenedor,plazaNueva);
+		else {
+			actualizarPlaza(contenedor,plaza,statePlaza,contenedorDosPlazas);
+
+		}
+	}
+	
+	//TODO:JAVADOCS DE LOS PRIVATE ESTOS DE AQUI->
+	
+	private void actualizarPlaza(Contenedor contenedor,int plaza,int statePlaza,int contenedorDosPlazas) {
+		int plazaNueva;
+		if(statePlaza==1) {
+			plazaNueva=buscaEspacio(1);
+			asignarPlaza(contenedor,plazaNueva);
+		}
+		else {
+			if(contenedor.getEspacio()==1) {
+				plazas.get(plaza).add(contenedor);
+				if(plazas.get(plaza).size()==4) setLlena(plaza);
+			}
+			else {
+				plazas.get(plaza).add(contenedor);
+				plazas.get(plaza+contenedorDosPlazas).add(contenedor);
+				setLlena(plaza);
+				setLlena(plaza+contenedorDosPlazas);
+			}
+		}
+	}
+	
+	
+	private void correctoInfraestructura(Contenedor contenedor) {
 		boolean esPosibleTrans=false;
 		int i=0;
 		while(!esPosibleTrans && i<3) {
@@ -185,55 +230,36 @@ public class Muelle   {
 			i++;
 		}
 		if(!esPosibleTrans) throw new IllegalArgumentException("No es posible asignar ese contenedor ya que el muelle no puede realizar el transporte");
-		int statePlaza=getEstadoPlaza(plaza);
-		//Comprobar que si quiere dos plazas la de al lado tb esta libre
-		int contenedorDosPlazas=0;
-		int plazaNueva=plaza;
-		if(contenedor.getEspacio()==2) {
-			if(plaza==0) {
-				int estadoPlazaSigui=getEstadoPlaza(plaza+1);
-				if((estadoPlazaSigui!=0 || statePlaza!=0 || !plazas.get(plaza).isEmpty()|| !plazas.get(plaza+1).isEmpty())) {
-					plazaNueva=buscaEspacio(2);
-				}
-				contenedorDosPlazas=1;
-			}
-			else if(plaza==numPlazas-2) {
-				int estadoPlazaAnte=getEstadoPlaza(plaza-1);
-				if((estadoPlazaAnte!=0 || statePlaza!=0 || !plazas.get(plaza).isEmpty()|| !plazas.get(plaza-1).isEmpty())) {
-					plazaNueva=buscaEspacio(2);
-				}
-				contenedorDosPlazas=-1;
-			}
-			else {
-				int estadoPlazaSigui=getEstadoPlaza(plaza+1);
-				int estadoPlazaAnte=getEstadoPlaza(plaza-1);
-				if((estadoPlazaSigui!=0 || statePlaza!=0 || !plazas.get(plaza).isEmpty()|| !plazas.get(plaza+1).isEmpty()) && (estadoPlazaAnte!=0 || statePlaza!=0|| !plazas.get(plaza).isEmpty()|| !plazas.get(plaza-1).isEmpty())) {
-					plazaNueva=buscaEspacio(2);
-				}
-				if(estadoPlazaSigui==0 && plazas.get(plaza+1).isEmpty()) contenedorDosPlazas=1;
-				else contenedorDosPlazas=-1;
-			}
-		}
-		if(plazaNueva!=plaza) asignarPlaza(contenedor,plazaNueva);
-		else {
-			if( statePlaza==1) {
-				plazaNueva=buscaEspacio(1);
-				asignarPlaza(contenedor,plazaNueva);
-			}
-			else {
-				if(contenedor.getEspacio()==1) {
-					plazas.get(plaza).add(contenedor);
-					if(plazas.get(plaza).size()==4) setLlena(plaza);
-				}
-				else {
-					plazas.get(plaza).add(contenedor);
-					plazas.get(plaza+contenedorDosPlazas).add(contenedor);
-					setLlena(plaza);
-					setLlena(plaza+contenedorDosPlazas);
-				}
-			}
-		}
 	}
+	
+	
+	private String comprobarFlatRack(int plaza) {
+		int plazaModificada=plaza;
+		int contenedorDosPlazas=0;
+		if(plaza==0) {
+			if((!plazas.get(plaza).isEmpty()|| !plazas.get(plaza+1).isEmpty())) {
+				 plazaModificada=buscaEspacio(2);
+			}
+			contenedorDosPlazas=1;
+		}
+		else if(plaza==numPlazas-1) {
+			if((!plazas.get(plaza).isEmpty()|| !plazas.get(plaza-1).isEmpty())) {
+				 plazaModificada=buscaEspacio(2);
+			}
+			contenedorDosPlazas=-1;
+		}
+		else {
+			if(!plazas.get(plaza).isEmpty() &&(!plazas.get(plaza+1).isEmpty() || !plazas.get(plaza-1).isEmpty())) {
+				 plazaModificada=buscaEspacio(2);
+			}
+			if(plazas.get(plaza+1).isEmpty()) contenedorDosPlazas=1;
+			else contenedorDosPlazas=-1;
+		}
+		return plazaModificada+"/"+contenedorDosPlazas;
+	}
+	
+	
+	
 	//TODO:JAVADOC!!!!!!!!!!!!!!!!
 	/**
 	 * Nos busca una ...
@@ -248,9 +274,9 @@ public class Muelle   {
 		if(espacio==1) {
 			for(int i=0;i<numPlazas;i++) {
 				if(estadoPlaza[i]==0 && !plazas.get(i).isEmpty()) semi=i;
-				else if(estadoPlaza[i]==0 && plazas.get(i).isEmpty()) {
+				else if(plazas.get(i).isEmpty()) {
 					retorno=i;
-					if(posibleAnterior && (estadoPlaza[i-1]==1 || (!plazas.get(i-1).isEmpty() && plazas.get(i-1).size()<3))) vaciaPrefe=i;
+					if(posibleAnterior && !plazas.get(i-1).isEmpty()) vaciaPrefe=i;
 				}
 				posibleAnterior=true;
 			}
@@ -258,7 +284,7 @@ public class Muelle   {
 		}
 		else {
 			for(int i=0;i<numPlazas-1 && retorno==-1;i++) {
-				if(estadoPlaza[i]==0 && plazas.get(i).isEmpty() && estadoPlaza[i+1]==0 && plazas.get(i+1).isEmpty()) {
+				if( plazas.get(i).isEmpty() && plazas.get(i+1).isEmpty()) {
 					retorno=i;	
 				}
 			}
@@ -288,28 +314,9 @@ public class Muelle   {
 			setVaciaYSemi(plaza);
 		}
 		else {
-			if(plaza==0) {
-				plazas.get(plaza+1).remove(0);
-				setVaciaYSemi(plaza);
-				setVaciaYSemi(plaza+1);			
-			}
-			else if(plaza==numPlazas-1) {
-				plazas.get(plaza-1).remove(0);
-				setVaciaYSemi(plaza);
-				setVaciaYSemi(plaza-1);
-			}
-			else {
-				if(plazas.get(plaza+1).get(0).equals(extraido)) {
-					plazas.get(plaza+1).remove(0);
-					setVaciaYSemi(plaza);
-					setVaciaYSemi(plaza+1);	
-				}
-				else {
-					plazas.get(plaza-1).remove(0);
-					setVaciaYSemi(plaza);
-					setVaciaYSemi(plaza-1);
-				}
-			}
+			plazas.get(plaza+1).remove(0);
+			setVaciaYSemi(plaza);
+			setVaciaYSemi(plaza+1);	
 		}
 		return extraido;
 	}
@@ -375,7 +382,7 @@ public class Muelle   {
 		}
 		int i=0;
 		while(i<plazas.get(indexPlaza).size() && nivel.equals("")) {
-			if(plazas.get(indexPlaza).get(i).getIdentificador().equals(identificador)) nivel=String.valueOf(indexPlaza)+"/"+String.valueOf(i);
+			if(plazas.get(indexPlaza).get(i).getIdentificador().equals(identificador)) nivel=indexPlaza+"/"+i;
 			i++;
 		}
 		return nivel;

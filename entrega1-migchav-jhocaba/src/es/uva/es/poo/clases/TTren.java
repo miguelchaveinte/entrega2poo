@@ -4,6 +4,8 @@ import com.rits.cloning.Cloner;
 import es.uva.inf.poo.maps.GPSCoordinate;
 
 public class TTren extends Simple{
+	static final int COSTE_FIJO=20;
+	static final double COSTE_KM=12.5;
 		private int [] tipoPack;
 		private int codigoSimple;
 		private String inicioFechString;
@@ -36,6 +38,6 @@ public class TTren extends Simple{
 		public double costeTrayecto() {
 			GPSCoordinate coordenadaOrigen = getMuelleOrigen().getCoordenada();
 			GPSCoordinate coordenadaDestino=getMuelleDestino().getCoordenada();
-			return 20+12.5*coordenadaOrigen.getDistanceTo(coordenadaDestino);
+			return COSTE_FIJO+COSTE_KM*coordenadaOrigen.getDistanceTo(coordenadaDestino);
 		}
 }

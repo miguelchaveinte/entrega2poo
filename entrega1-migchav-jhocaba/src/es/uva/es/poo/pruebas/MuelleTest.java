@@ -197,12 +197,12 @@ public class MuelleTest {
 	@Test
 	public void testSacarContenedor()  {
 		GPSCoordinate coordenada=new GPSCoordinate(40.5,40.5);
-		Muelle add=new Muelle(111,20,coordenada,'F',20);
+		Muelle add=new Muelle(111,20,coordenada,'F',6);
 		Contenedor prueba1=new Estandar("CUQU3054387",500,"Kg",200.0,100,"m3");
 		Contenedor prueba=new Estandar("CSQU3054383",500,"Kg",200.0,100,"m3");
 		Contenedor prueba2=new Estandar("CUQU3054345",500,"Kg",200.0,100,"m3");
-		Contenedor prueba3=new Estandar("CUQU3054330",500,"Kg",200.0,100,"m3");
-		//Contenedor prueba4=new FlatRack ("CUQU3054330","400-Kg",200.0,"100-m3");
+		Contenedor prueba3=new Estandar("CUQU3054345",500,"Kg",200.0,100,"m3");
+		Contenedor prueba4=new FlatRack ("CUQU3054330",500,"Kg",200.0,100,"m3");
 		add.asignarPlaza(prueba, 2);
 		add.asignarPlaza(prueba1, 2);
 		add.asignarPlaza(prueba2, 2);
@@ -210,15 +210,14 @@ public class MuelleTest {
 		add.asignarPlaza(prueba3, 2);
 		add.asignarPlaza(prueba2, 2);
 		System.out.println(add.getListPlazas());
-		//add.asignarPlaza(prueba4, 3);
+		add.asignarPlaza(prueba4, 3);
 		System.out.println(add.getListPlazas());
 		for(int i=0;i<4;i++) {
 		System.out.println(add.getListPlazas().get(2).get(i).getIdentificador());
 		}
 		Contenedor salida=add.sacarContenedor("CSQU3054383");
-		for(int i=0;i<add.getListPlazas().get(2).size();i++) {
-		System.out.println(add.getListPlazas().get(2).get(i).getIdentificador()+"/"+i);
-		}
+		add.sacarContenedor("CUQU3054330");
+		System.out.println(add.getListPlazas());
 		assertEquals(salida,prueba);
 	}
 	@Test(expected=IllegalArgumentException.class) 

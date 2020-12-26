@@ -4,12 +4,14 @@ import es.uva.inf.poo.maps.GPSCoordinate;
 import com.rits.cloning.Cloner;
 
 public class PackCamionTren extends Compuesto{
+	static final int PRECIO_KM =10;
 	private String inicioFechString;
 	private String finFechString;
 	private int[] tipoPack ;
 	private int codigoSimple;
 	public PackCamionTren(int tipoTrayecto,Muelle muelleOrigen,Puerto puertoOrigen,String fechaIni,Muelle muelleDestino,Puerto puertoDestino,String fechaFin) {
-		super(tipoTrayecto,muelleOrigen, puertoOrigen, fechaIni, muelleDestino,puertoDestino,fechaFin);
+		super(muelleOrigen, puertoOrigen, fechaIni, muelleDestino,puertoDestino,fechaFin);
+		if(tipoTrayecto!=2 && tipoTrayecto!=1 &&tipoTrayecto!=0) throw new IllegalArgumentException("El tipo trayecto no es ni 0, ni 1,ni 2, es decir ni barco ni tren ni camion");
 		inicioFechString=fechaIni;
 		finFechString=fechaFin;
 		tipoPack= new int []{0,1,1};
@@ -35,6 +37,6 @@ public class PackCamionTren extends Compuesto{
 	public double costeTrayecto() {
 			GPSCoordinate coordenadaOrigen = getMuelleOrigen().getCoordenada();
 			GPSCoordinate coordenadaDestino=getMuelleDestino().getCoordenada();
-			return coordenadaOrigen.getDistanceTo(coordenadaDestino)*10;			
+			return coordenadaOrigen.getDistanceTo(coordenadaDestino)* PRECIO_KM;			
 	}
 }

@@ -23,7 +23,7 @@ public abstract class Contenedor {
 	private boolean estado;		//Transito = False -- Recogida = True
 	private boolean techo;
 	private List<Trayecto> trayectos;
-	private int [] packActivado;
+	private int [] packActivado; //PackCamionTren - 011  y PackCamionBarco - 101 
 	private Puerto destinoFinal;
 
 
@@ -36,9 +36,8 @@ public abstract class Contenedor {
 	 * @throws IllegalArgumentException si la carga es negativa
 	 */
 	public Contenedor(String identificador,double peso,String unidPeso,double carga,double volumen,String uniVol,boolean techo)  {	
-		if(comprobarIdentificador(identificador)) {
-			this.identificador=identificador;
-		}
+		comprobarIdentificador(identificador);
+		this.identificador=identificador;
 		int codigoControlBueno=obtenerDigitoControl(identificador);
 
 		int codigoArgumento =Character.getNumericValue(identificador.charAt(identificador.length()- 1));
@@ -56,7 +55,7 @@ public abstract class Contenedor {
 		packActivado= new int []{0,0,0};
 	}
 
-	//TODO:PONER ESTO BIEN Y JAVADOC????????????!!!!!
+	//TODO:PONER ESTO BIEN(arrriba) Y JAVADOC????????????!!!!!
 	public abstract int getEspacio();
 	public abstract int[] getCodigoTransporte();
 	
@@ -69,8 +68,7 @@ public abstract class Contenedor {
 	 * @throws IllegalArgumentException si alguna de las tres letras iniciales no son mayusculas, o si la cuarta letra no se corresponde 
 	 * con los caracteres - 'U', 'J', 'Z' o si la longitud de la serie es distinta de 6.
 	 */
-	public boolean comprobarIdentificador(String identificador) {
-		boolean correcto;
+	private void comprobarIdentificador(String identificador) {
 		if(identificador.length()!=11)throw new IllegalArgumentException("Identificador no valido");
 		StringBuilder codigoString=new StringBuilder();
 		for (int i= 0; i<3; i++) {
@@ -85,13 +83,9 @@ public abstract class Contenedor {
 		}
 		String serie=serieString.toString();
 	
-		if (codigo.equals(codigo.toUpperCase()) && (equipamiento=='U'||equipamiento=='J'||equipamiento=='Z') && serie.length()==6) {
-			correcto=true;
-		}
-		else {
+		if (!(codigo.equals(codigo.toUpperCase()) && (equipamiento=='U'||equipamiento=='J'||equipamiento=='Z') && serie.length()==6)) {
 			throw new IllegalArgumentException("Identificador no valido");
 		}
-		return correcto;
 	}
 	
 	/**
@@ -152,10 +146,11 @@ public abstract class Contenedor {
 	 * @return IllegalArgumentException si las unidades del {@param peso} no son Kg o lb
 	 */
 	public void comprobarUnidadesPeso(double peso, String unidPeso) {
-		if (unidPeso == "Kg") {
+		//TODO COMPROBAR QUE HE CAMBIADO A EQUALS
+		if (unidPeso.equals("Kg")) {
     		setPesoKilo(peso);
     	}
-    	else if(unidPeso == "lb") {
+    	else if(unidPeso.equals("lb")) {
     		conviertePesoKilo(peso);	
     	}
     	else { throw new IllegalArgumentException("String Peso no correcto unidades");
@@ -192,10 +187,10 @@ public abstract class Contenedor {
 	 * @return IllegalArgumentException si las unidades del {@param volumen} no son m3 o ft3
 	 */
 	public void comprobarUnidadesVolumen(double volumen, String unidVol) { 
-		if (unidVol == "m3") {
+		if (unidVol.equals("m3")) {
 			setVolumenMetros(volumen);
 		}
-		else if(unidVol == "ft3") {
+		else if(unidVol.equals("ft3")) {
 			convierteVolumenMetros(volumen);	
 		}
 		else { throw new IllegalArgumentException("String Volumen no correcto unidades o <0");
@@ -344,7 +339,7 @@ public abstract class Contenedor {
 	public void hacerViajes(Trayecto trayecto) {
 		if(trayecto==null)throw new IllegalArgumentException("trayecto nulo");
 		//comprobar que el primero ya tiene el puerto destino
-		if(getDestinoFinal()==null)throw new IllegalArgumentException("debe inicializar el destino final global del contenedor");
+		//if(getDestinoFinal()==null)throw new IllegalArgumentException("debe inicializar el destino final global del contenedor");
 		//comprobar que el puerto origen no es el destino
 		if(trayecto.getPuertoOrigen().equals(getDestinoFinal()))throw new IllegalArgumentException("Ya se había llegado al puerto destino del trayecto.Inicie un nuevo trayecto global");
 		//que el contenedor este en ese muelle/puerto
@@ -352,6 +347,7 @@ public abstract class Contenedor {
 		List<Muelle> listaMuelles=trayecto.getPuertoOrigen().getListaMuelles();
 		int posicionMuelle=-1;
 		int i=0;
+
 		while(posicionMuelle==-1 && i<listaMuelles.size()) {
 			Muelle analisis=listaMuelles.get(i);
 			int plaza=analisis.getPlaza(this.getIdentificador());
@@ -378,7 +374,7 @@ public abstract class Contenedor {
 			}
 			else {
 				trayectos.add(trayecto);
-				packActivado=trayecto.getTipoPack();
+				packActivado=trayecto.getTipoPack(); 
 			}
 		}
 	}

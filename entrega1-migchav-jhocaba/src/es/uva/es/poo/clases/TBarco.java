@@ -5,6 +5,7 @@ import java.time.temporal.ChronoUnit;
 import com.rits.cloning.Cloner;
 
 public class TBarco extends Simple {
+	static final int COSTE_DIA=4000;
 	private int codigoSimple;
 	private int [] tipoPack;
 	private String inicioFechString;
@@ -35,6 +36,6 @@ public class TBarco extends Simple {
 	}
 	@Override
 	public double costeTrayecto() {
-		return (double)ChronoUnit.DAYS.between(getFechaIni(),getFechaFin())*4000;
+		return (double)ChronoUnit.DAYS.between(getFechaIni(),getFechaFin())*COSTE_DIA;
 	}
 }

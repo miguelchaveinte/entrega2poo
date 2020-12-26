@@ -5,6 +5,8 @@ import com.rits.cloning.Cloner;
 import es.uva.inf.poo.maps.GPSCoordinate;
 
 public class TCamion extends Simple{
+	static final int COSTE_FIJO=200;
+	static final double COSTE_KM=4;
 	private int [] tipoPack;
 	private int codigoSimple;
 	private String inicioFechString;
@@ -37,7 +39,7 @@ public class TCamion extends Simple{
 	public double costeTrayecto() {
 		GPSCoordinate coordenadaOrigen = getMuelleOrigen().getCoordenada();
 		GPSCoordinate coordenadaDestino=getMuelleDestino().getCoordenada();
-		return 200+4.5*coordenadaOrigen.getDistanceTo(coordenadaDestino);
+		return COSTE_FIJO+COSTE_KM*coordenadaOrigen.getDistanceTo(coordenadaDestino);
 	}
 	
 }
