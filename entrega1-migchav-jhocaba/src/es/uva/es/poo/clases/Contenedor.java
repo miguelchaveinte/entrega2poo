@@ -1,7 +1,5 @@
 package es.uva.es.poo.clases;
-import es.uva.inf.poo.maps.GPSCoordinate;
 import java. util. *;
-import es.uva.es.poo.clases.*;
 /**
  * Clase relativa a los contenedores
  * 
@@ -12,10 +10,10 @@ import es.uva.es.poo.clases.*;
 
 public abstract class Contenedor {
 	//Constantes
-	static final double PESOLIBRA = 110231/50000;
-	static final double PESOKILO = 50000/110231;
-	static final double VOLUMENPIES = 353147/10000;
-	static final double VOLUMENMETROS = 10000/353147;
+	static final double PESOLIBRA = (double)110231/50000;
+	static final double PESOKILO = (double)50000/110231;
+	static final double VOLUMENPIES = (double)353147/10000;
+	static final double VOLUMENMETROS = (double)10000/353147;
 	
 	//Atributos
 	private String identificador;
@@ -88,7 +86,6 @@ public abstract class Contenedor {
 		String serie=serieString.toString();
 	
 		if (codigo.equals(codigo.toUpperCase()) && (equipamiento=='U'||equipamiento=='J'||equipamiento=='Z') && serie.length()==6) {
-			//TODO:NO SE PUEDE INICIALIZAR DONDE ESTAMOS COMPROBANDO
 			correcto=true;
 		}
 		else {
@@ -107,10 +104,10 @@ public abstract class Contenedor {
     private int obtenerDigitoControl(String identificador) {
     	comprobarIdentificador(identificador);
         //utilizo un mapa para guardar las letra con sus correspondientes valor
-        Map<String, Integer> tabla = new HashMap<String, Integer>();
+        Map<String, Integer> tabla = new HashMap<>();
         tabla.put("A", 10);tabla.put("B", 12);tabla.put("C", 13);tabla.put("D", 14);tabla.put("E", 15);tabla.put("F", 16);tabla.put("G", 17);tabla.put("H", 18);tabla.put("I", 19);tabla.put("J", 20);tabla.put("K", 21);tabla.put("L", 23);tabla.put("M", 24);tabla.put("N", 25);tabla.put("O", 26);tabla.put("P", 27);tabla.put("Q", 28);tabla.put("R", 29);tabla.put("S", 30);tabla.put("T", 31);tabla.put("U", 32);tabla.put("V", 34);tabla.put("W", 35);tabla.put("X", 36);tabla.put("Y", 37);tabla.put("Z", 38);
         //En este vector guardo los valores de cada caracter y la serie de numeros
-        int vector[] = new int[10];
+        int[] vector = new int[10];
         for (int i =0; i<identificador.length()-1; i++) {
             if (i < 4) {
                 vector[i] = tabla.get(Character.toString(identificador.charAt(i))); //Obtengo el valor del String correspondiente y lo almaceno en el vector
@@ -124,7 +121,7 @@ public abstract class Contenedor {
         for (int i=0; i<vector.length; i++) {
             suma += vector[i] * Math.pow(2, i);
         }
-        double resultado =(int) suma/11;
+        int resultado =(int) suma/11;
         resultado = resultado * 11;
         int codigoControl=(int)(suma - resultado);
         if(codigoControl==10) return 0;
@@ -400,7 +397,7 @@ public abstract class Contenedor {
 	 * @return 
 	 */
 	
-	public double Precio() {
+	public double precio() {
 		double sumaTrayectos=0.0;
 		Iterator<Trayecto> itrTrayectos=trayectos.iterator();
 		while(itrTrayectos.hasNext()) {
