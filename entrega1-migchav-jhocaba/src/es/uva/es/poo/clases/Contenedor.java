@@ -10,55 +10,58 @@ import es.uva.es.poo.clases.*;
  *
  */
 
-public class Contenedor {
+public abstract class Contenedor {
+	//Constantes
+	static final double PESOLIBRA = 110231/50000;
+	static final double PESOKILO = 50000/110231;
+	static final double VOLUMENPIES = 353147/10000;
+	static final double VOLUMENMETROS = 10000/353147;
+	
 	//Atributos
-	
 	private String identificador;
-	private String codigo;
-	private char equipamiento;
-	private int serie;
-	private int code;
-	
 	private double peso;
-	private double carga;			//Por defecto recibimos Kilogramos
-	private double volumen; 	//Por defecto recibimos metros cúbicos
+	private double carga;		
+	private double volumen; 	
 	private boolean estado;		//Transito = False -- Recogida = True
 	private boolean techo;
 	private List<Trayecto> trayectos;
-	//private Object contenedor;
+	private int [] packActivado;
+	private Puerto destinoFinal;
+
+
 	
-	/**
-	 * Inicializacion sin argumentos
-	 */
-	
-	public Contenedor() {
-		
-	}
-	
+	//TODO:ACTUALIZAR JAVADOC!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	/**
 	 * Inicialización a partir de argumentos, almacenando todas las instancias necesarias.
 	 * @param identificador - Cadena con el que se identifica cada contenedor
 	 * @throws IllegalArgumentException en el caso de que el digito de control del identificador sea diferente del obtenido
 	 * @throws IllegalArgumentException si la carga es negativa
 	 */
-	public Contenedor(String identificador,String peso,double carga,String volumen,boolean techo)  {	
-		comprobarIdentificador(identificador);
+	public Contenedor(String identificador,double peso,String unidPeso,double carga,double volumen,String uniVol,boolean techo)  {	
+		if(comprobarIdentificador(identificador)) {
+			this.identificador=identificador;
+		}
 		int codigoControlBueno=obtenerDigitoControl(identificador);
 
 		int codigoArgumento =Character.getNumericValue(identificador.charAt(identificador.length()- 1));
 		if(codigoControlBueno!=codigoArgumento)throw new IllegalArgumentException("Identificador no valido(codigo control no valido)");
-		code=codigoControlBueno;
 		if(techo) {
 			setTecho();
 		}
 		else setNoTecho();
-		comprobarUnidadesPeso(peso);
+		comprobarUnidadesPeso(peso,unidPeso);
 		if (carga<0) throw new IllegalArgumentException("Carga no puede ser negativa");
 		this.carga=carga;
-		comprobarUnidadesVolumen(volumen);
+		comprobarUnidadesVolumen(volumen,uniVol);
 		setTransito();
 		trayectos=new ArrayList<Trayecto>();
+		packActivado= new int []{0,0,0};
 	}
+
+	//TODO:PONER ESTO BIEN Y JAVADOC????????????!!!!!
+	public abstract int getEspacio();
+	public abstract int[] getCodigoTransporte();
+	
 	/**
 	 * Comprobar que el identificador sea correcto.
 	 * Uso de StringBuilder para modificar el tamaño de las cadenas de caracteres al ir añadiendo caracteres, 
@@ -68,7 +71,8 @@ public class Contenedor {
 	 * @throws IllegalArgumentException si alguna de las tres letras iniciales no son mayusculas, o si la cuarta letra no se corresponde 
 	 * con los caracteres - 'U', 'J', 'Z' o si la longitud de la serie es distinta de 6.
 	 */
-	public void comprobarIdentificador(String identificador) {
+	public boolean comprobarIdentificador(String identificador) {
+		boolean correcto;
 		if(identificador.length()!=11)throw new IllegalArgumentException("Identificador no valido");
 		StringBuilder codigoString=new StringBuilder();
 		for (int i= 0; i<3; i++) {
@@ -84,14 +88,13 @@ public class Contenedor {
 		String serie=serieString.toString();
 	
 		if (codigo.equals(codigo.toUpperCase()) && (equipamiento=='U'||equipamiento=='J'||equipamiento=='Z') && serie.length()==6) {
-			this.identificador=identificador;
-			this.codigo=codigo;
-			this.equipamiento=equipamiento;
-			this.serie=Integer.parseInt(serie);
+			//TODO:NO SE PUEDE INICIALIZAR DONDE ESTAMOS COMPROBANDO
+			correcto=true;
 		}
 		else {
 			throw new IllegalArgumentException("Identificador no valido");
 		}
+		return correcto;
 	}
 	
 	/**
@@ -101,7 +104,7 @@ public class Contenedor {
      * @param identificador - Identificador del contenedor
      * @return digito de control
      */
-    public int obtenerDigitoControl(String identificador) {
+    private int obtenerDigitoControl(String identificador) {
     	comprobarIdentificador(identificador);
         //utilizo un mapa para guardar las letra con sus correspondientes valor
         Map<String, Integer> tabla = new HashMap<String, Integer>();
@@ -121,15 +124,28 @@ public class Contenedor {
         for (int i=0; i<vector.length; i++) {
             suma += vector[i] * Math.pow(2, i);
         }
-        double resultado = suma/11;
-        resultado = Math.round(resultado);
+        double resultado =(int) suma/11;
         resultado = resultado * 11;
         int codigoControl=(int)(suma - resultado);
         if(codigoControl==10) return 0;
         return codigoControl;
     }
-	
+	/**
+	 * Setea el Puerto destino del trayecto global que realizará el contenedor
+	 * @param puerto - puerto destino del trayecto global(conjunto)
+	 */
+    public void setDestinoFinal(Puerto puerto) {
+    	destinoFinal=puerto;
+    }
+	/**
+	 * Obtiene el Puerto destino del trayecto global que realiza el contenedor
+	 * @return puerto - puerto destino del trayecto global(conjunto)
+	 */
+    public Puerto getDestinoFinal() {
+    	return destinoFinal;
+    }
     
+    //TODO:CAMBIAR JAVADOC!!!!!!!!!!!!!!!
     /**
 	 * Para almacenar el peso, utilizamos un String y el metodo split para detectar si se trata de kilogramos o de libras. 
 	 * Modelo de uso correcto de la entrada peso-(3000-kg || 500-lb)
@@ -138,17 +154,15 @@ public class Contenedor {
 	 * @return IllegalArgumentException si el {@param peso} esta vacio
 	 * @return IllegalArgumentException si las unidades del {@param peso} no son Kg o lb
 	 */
-	public void comprobarUnidadesPeso(String peso) { //3000-Kg 400lb
-		String [] array = peso.split("-");
-		double pesoContenedor = (double) Integer.parseInt(array[0]);
-		if( array[1].equals("Kg")){
-			setPesoKilo(pesoContenedor);
-		}
-		else if(array[1].equals("lb")){
-			conviertePesoKilo(pesoContenedor);	
-		}
-		else { throw new IllegalArgumentException("String Peso no correcto unidades ");
-		}	
+	public void comprobarUnidadesPeso(double peso, String unidPeso) {
+		if (unidPeso == "Kg") {
+    		setPesoKilo(peso);
+    	}
+    	else if(unidPeso == "lb") {
+    		conviertePesoKilo(peso);	
+    	}
+    	else { throw new IllegalArgumentException("String Peso no correcto unidades");
+    	}
 	}
 	
 	/**
@@ -157,8 +171,8 @@ public class Contenedor {
 	 * @throws IllegalArgumentException en el caso de que peso sea negativo
 	 */
 	public void conviertePesoKilo(double pesoContenedor) {
-		if(pesoContenedor<0) throw new IllegalArgumentException("Peso no puede ser negativo");
-		double nuevoPeso = pesoContenedor * (50000/110231);
+		if(peso<0) throw new IllegalArgumentException("Peso no puede ser negativo");
+		double nuevoPeso = peso * PESOKILO;
 		setPesoKilo(nuevoPeso);
 	}
 	
@@ -171,7 +185,7 @@ public class Contenedor {
 		if(peso<0) throw new IllegalArgumentException("Peso no puede ser negativo");
 		this.peso = peso;
 	}
-	
+	//TODO:ACTUALIAZAR JAVADOC!!!!!!!!!!!!!!!!
 	/**
 	 * Para almacenar el volumen, utilizamos el mismo metodo que para almacenar el peso para detectar si se trata de 
 	 * metros cubicos o de pies cubicos. 
@@ -180,17 +194,15 @@ public class Contenedor {
 	 * @return IllegalArgumentException si el {@param volumen} esta vacio
 	 * @return IllegalArgumentException si las unidades del {@param volumen} no son m3 o ft3
 	 */
-	public void comprobarUnidadesVolumen(String volumen) { //30-m3 40ft3
-		String [] array = volumen.split("-");
-		double volumenContenedor = (double) Integer.parseInt(array[0]);
-		if(array[1].equals("m3")){
-			setVolumenMetros(volumenContenedor);
+	public void comprobarUnidadesVolumen(double volumen, String unidVol) { 
+		if (unidVol == "m3") {
+			setVolumenMetros(volumen);
 		}
-		else if(array[1].equals("ft3")){
-			convierteVolumenMetros(volumenContenedor);	
+		else if(unidVol == "ft3") {
+			convierteVolumenMetros(volumen);	
 		}
 		else { throw new IllegalArgumentException("String Volumen no correcto unidades o <0");
-		}	
+		}
 	}
 	
 	/**
@@ -199,9 +211,9 @@ public class Contenedor {
 	 * @throws IllegalArgumentException en el caso de que el volumen sea negativo
 	 */
 	public void convierteVolumenMetros(double volumenContenedor) {
-		if(volumenContenedor<0) throw new IllegalArgumentException("Volumen no puede ser negativo");
-		double nuevoVolumen = volumenContenedor * ((10000/353147));
-		setPesoKilo(nuevoVolumen);
+		if(volumen<0) throw new IllegalArgumentException("Volumen no puede ser negativo");
+		double nuevoVolumen = volumen * VOLUMENMETROS;
+		setVolumenMetros(nuevoVolumen);
 	}
 		
 	/**
@@ -226,8 +238,7 @@ public class Contenedor {
 	 * @return volumen en pies cúbicos
 	 */
 	public double getVolumenPies() {
-		double piescubicos = getVolumenMetros() * (353147/10000);
-		return piescubicos;
+		return getVolumenMetros() * VOLUMENPIES;
 	}
 	
 
@@ -244,9 +255,9 @@ public class Contenedor {
 	 * @return peso en libras
 	 */
 	public double getPesoLibra() {
-		double libras = getPesoKilo() * (110231/50000);
-		return libras;
+		return getPesoKilo() * PESOLIBRA;
 	}
+
 	
 	/**
 	 * Obtener el identificador del contenedor	
@@ -313,12 +324,12 @@ public class Contenedor {
 	 */
 	public void hacerTrayecto(Puerto destino) 
 	{
-		if(destino==null) throw new IllegalArgumentException("El puert destino no debe ser nulo");
-		if(destino.getLocalidad()==null || destino.getPais()==null)throw new IllegalArgumentException("El puert destino no debe ser nulo");
-		Trayecto destinoFinal=new Trayecto();
-		destinoFinal.setPuertoFinal(destino);
-		trayectos.add(destinoFinal);
+		if(destino==null) throw new IllegalArgumentException("El puerto destino no debe ser nulo");
+		setDestinoFinal(destino);
 	}
+	
+	
+	//TODO:ACTUALIZAR JAVADOC!!!!!!!!!!!!!!!!!!!
 	/**
 	 * diferentes viajes que son reliu por cont hatsa llagr desti finsl del try glbl
 	 * @param contenedor - Contenedor inicializado
@@ -332,29 +343,55 @@ public class Contenedor {
 	 * Se deberia haber realizado un nuevo trayecto global
 	 * 
 	 */
-	public void hacerViajes(Contenedor contenedor,Puerto puertoOrigen,Puerto puertoDestino,Muelle muelleDestino,String fechaInicio,String fechaFin)  {
-		if(contenedor==null)throw new IllegalArgumentException("contenedor nulo");
-		if(puertoOrigen==null)throw new IllegalArgumentException("puertoOrigen nulo");
-		if(puertoDestino==null)throw new IllegalArgumentException("puerto destino nulo");
-		if(muelleDestino==null)throw new IllegalArgumentException("muelle destino nulo");
-		List<Muelle> listaMuelles=puertoOrigen.getListaMuelles();
+
+	public void hacerViajes(Trayecto trayecto) {
+		if(trayecto==null)throw new IllegalArgumentException("trayecto nulo");
+		//comprobar que el primero ya tiene el puerto destino
+		if(getDestinoFinal()==null)throw new IllegalArgumentException("debe inicializar el destino final global del contenedor");
+		//comprobar que el puerto origen no es el destino
+		if(trayecto.getPuertoOrigen().equals(getDestinoFinal()))throw new IllegalArgumentException("Ya se había llegado al puerto destino del trayecto.Inicie un nuevo trayecto global");
+		//que el contenedor este en ese muelle/puerto
+		//esto en un metodo private?? ->
+		List<Muelle> listaMuelles=trayecto.getPuertoOrigen().getListaMuelles();
 		int posicionMuelle=-1;
-		int i;
-		for (i=0;i<listaMuelles.size();i++) {
+		int i=0;
+		while(posicionMuelle==-1 && i<listaMuelles.size()) {
 			Muelle analisis=listaMuelles.get(i);
-			int plaza=analisis.getPlaza(contenedor.getIdentificador());
-			if(plaza==-1) continue;
-			posicionMuelle=i;
-			break;
+			int plaza=analisis.getPlaza(this.getIdentificador());
+			if(plaza!=-1) posicionMuelle=i;
+			i++;
 		}
 		if (posicionMuelle==-1) throw new IllegalArgumentException("El contenedor no esta en ese puerto");
-		Muelle muelleOrigen=listaMuelles.get(posicionMuelle);
-		if(puertoOrigen.equals(trayectos.get(0).getPuertoFinal()))throw new IllegalArgumentException("Ya se había llegado al puerto destino del trayecto.Inicie un nuevo trayecto global");
-		trayectos.add(new Trayecto(muelleOrigen,puertoOrigen,fechaInicio,muelleDestino,puertoDestino,fechaFin));
-		if(puertoDestino.equals(trayectos.get(0).getPuertoFinal())) contenedor.setRecogida();
+		
+		if(trayecto instanceof Compuesto) {
+			trayectos.add(trayecto);
+			packActivado=trayecto.getTipoPack();
+		}
+		else {
+			int [] codigoCamionTren=new int []{0,1,1};
+			if(packActivado[trayecto.getCodigoSimple()]==1) {
+				if(packActivado.equals(codigoCamionTren)) {
+					PackCamionTren trayectoCasteado= new PackCamionTren(trayecto.getCodigoSimple(),trayecto.getMuelleOrigen(), trayecto.getPuertoOrigen(), trayecto.getInicioFech(), trayecto.getMuelleDestino(), trayecto.getPuertoDestino(),trayecto.getFinFech());
+					trayectos.add(trayectoCasteado);
+				}
+				else {
+					PackCamionBarco trayectoCasteado= new PackCamionBarco(trayecto.getCodigoSimple(),trayecto.getMuelleOrigen(), trayecto.getPuertoOrigen(), trayecto.getInicioFech(), trayecto.getMuelleDestino(), trayecto.getPuertoDestino(),trayecto.getFinFech());
+					trayectos.add(trayectoCasteado);
+				}
+			}
+			else {
+				trayectos.add(trayecto);
+				packActivado=trayecto.getTipoPack();
+			}
+		}
 	}
 	
-
+	//TODO:QUITAR LUEGO .SOLO PARA PRUEBAS
+	public List<Trayecto> getLista(){
+		return trayectos;
+	}
+	
+	//TODO:ACTUALIZAR JAVADOC???????????!!!!!!!!!!
 	/**
 	 * Calcular el precio total del trayecto global, es decir, la suma de costes de cada viaje.
 	 * @param precioMilla - Coste en euros de 1 unidad de distancia marina. 
@@ -363,21 +400,16 @@ public class Contenedor {
 	 * @return 
 	 */
 	
-	public double Precio(int precioMilla,int precioDia) {
-		if(precioMilla<=0)throw new IllegalArgumentException("El precio milla no pueden ser<=0");
-		if(precioDia<=0)throw new IllegalArgumentException("El precio dia no pueden ser<=0");
+	public double Precio() {
 		double sumaTrayectos=0.0;
 		Iterator<Trayecto> itrTrayectos=trayectos.iterator();
 		while(itrTrayectos.hasNext()) {
 			Trayecto analisis=itrTrayectos.next();
-			if(analisis.getMuelleOrigen()==null) {
-				continue;
-			}
-			double precio = analisis.costeTrayecto(precioMilla, precioDia);
-			sumaTrayectos+=precio;
+			sumaTrayectos+=analisis.costeTrayecto();
 		}
-		return sumaTrayectos;
+		return sumaTrayectos;	
 	}
+	
 }
 
 	

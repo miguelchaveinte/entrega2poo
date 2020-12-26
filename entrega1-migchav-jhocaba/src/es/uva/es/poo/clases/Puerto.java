@@ -1,9 +1,14 @@
 package es.uva.es.poo.clases;
 
-import es.uva.inf.poo.maps.GPSCoordinate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import com.rits.cloning.Cloner;
+
+import es.uva.inf.poo.maps.GPSCoordinate;
+
+
 
 /**
  * Clase que proporciona la gestión de un puerto de una localidad
@@ -11,21 +16,13 @@ import java.util.List;
  * @author migchav
  */
 
-public class Puerto {
+public class Puerto  {
 	//Atributos
 	
 	private String pais;
 	private String localidad;
 	private List<Muelle> muelles;
-	
-	/**
-	 * Inicializacion sin argumentos
-	 */
-	
-	public Puerto() {
 		
-	}
-	
 	/**
 	 * Inicializacion a partir de argumentos
 	 * @param identidad - Define el los atributos localidad 
@@ -35,14 +32,13 @@ public class Puerto {
 	 * @throws NullPointerException - cuando identidad==null
 	 */
 	public Puerto(String identidad) {
-		if (identidad==null) throw new NullPointerException ("Identidad no puede ser nula");
 		if(identidad.length()!=6)throw new IllegalArgumentException("Identidad no correcta");
 		if (identidad.charAt(2)=='-') {
 			String [] array = identidad.split("-");
 			if(array[0].equals(array[0].toUpperCase()) && array[1].equals(array[1].toUpperCase())){
 				this.pais = array[0];
 				this.localidad = array[1];
-				muelles=new ArrayList<Muelle>();
+				muelles=new ArrayList<>();
 			}
 			else
 				throw new IllegalArgumentException("La identidad del puerto(país y localidad) debe ser en mayusculas");
@@ -55,7 +51,9 @@ public class Puerto {
 	 * @return lista de Muelles del puerto
 	 */
 	public List<Muelle> getListaMuelles(){
-		return muelles;
+		Cloner cloner=new Cloner();
+		List<Muelle> listaClonada=cloner.deepClone(muelles);
+		return listaClonada;
 	}
 	/**
 	 * Devuelve el string correspondiente al codigo localidad 
@@ -89,46 +87,43 @@ public class Puerto {
 	 * @throws IllegalArgumentException-si IdMuelleToEliminar no esta en el puerto
 	 * @throws IllegalArgumentException -si el muelle no esta vacio
 	 */
-	public void eliminarMuelle(int IdMuelleToEliminar) {
-		if(Integer.toString(IdMuelleToEliminar).length()!=2) throw new IllegalArgumentException("El identificador de muelle debe ser un número de 2 digitos");
+	public void eliminarMuelle(int idMuelleToEliminar) {
+		if(Integer.toString(idMuelleToEliminar).length()!=2) throw new IllegalArgumentException("El identificador de muelle debe ser un número de 2 digitos");
 		boolean eliminado=false;
-		for (int i=0;i<muelles.size();i++) {
-			if((muelles.get(i).getIdMuelle())==IdMuelleToEliminar){	
+		int i=0;
+		while(i<muelles.size() && !eliminado) {
+			if((muelles.get(i).getIdMuelle())==idMuelleToEliminar){	
 				if(muelles.get(i).estadoPlazas().equals(String.valueOf(muelles.get(i).getNumPlazas())+"/0/0")) {
 					muelles.remove(i);
 					eliminado=true;
-					break;
 				}
 				else throw new IllegalArgumentException("El muelle no esta vacio-tiene contenedores");
 			}
+			i++;
 		}
-		if (eliminado!=true) throw new IllegalArgumentException("El muelle no se ha eliminado porque no se ha encontrado");
+		if (!eliminado) throw new IllegalArgumentException("El muelle no se ha eliminado porque no se ha encontrado");
 	}
 	/***
 	 * Devuelve un boolean que nos indica si el puerto no tienes mas 
 	 * capacidad de almacenar muelles
 	 * @return boolean completo=> false -si una vez analizado todos los muelles
-	 * del puerton(tanto operativos como no operativos). Sino es que esta
-	 * completo y retorna true
+	 * del puerton(tanto operativos como no operativos) sigue habiendo espacio. 
+	 * Sino es que esta completo y retorna true
 	 */
 	public boolean getCompleto() {
-		boolean completo=false;
+		boolean completo=true;
 		Iterator<Muelle> itrMuelles=muelles.iterator();
-		while(itrMuelles.hasNext()) {
+		while(itrMuelles.hasNext() && completo) {
 			Muelle analisis=itrMuelles.next();
 			String estado = analisis.estadoPlazas();
 			String [] array = estado.split("/");
 			if(array[0]!="0") {
-				return completo;
+				completo=false;
 			}
 			else if(array[1]!="0"){
-				return completo;
-			}
-			else {
-				continue;
+				completo=false;
 			}
 		}
-		completo=true;
 		return completo;
 	}
 	/**
@@ -137,13 +132,15 @@ public class Puerto {
 	 * @return lista de Muelles operativos
 	 */
 	public List<Muelle> muellesOperativos() {
-		List<Muelle> lista=new ArrayList<Muelle>();
+		List<Muelle> lista=new ArrayList<>();
 		Iterator<Muelle> itrMuelles=muelles.iterator();
 		while(itrMuelles.hasNext()) {
+			Cloner cloner=new Cloner();
 			Muelle analisis=itrMuelles.next();
+			Muelle copia=cloner.deepClone(analisis);
 			boolean estado=analisis.getEstado();
 			if (estado)
-				lista.add(analisis);
+				lista.add(copia);
 		}
 		return lista;
 	}
@@ -154,20 +151,19 @@ public class Puerto {
 	 * @return lista de muelles con espacio esten o no esten operativos
 	 */
 	public List<Muelle> muellesEspacio(){
-		List<Muelle> lista=new ArrayList<Muelle>();
+		Cloner cloner=new Cloner();
+		List<Muelle> lista=new ArrayList<>();
 		Iterator<Muelle> itrMuelles=muelles.iterator();
 		while(itrMuelles.hasNext()) {
 			Muelle analisis=itrMuelles.next();
+			Muelle copia=cloner.deepClone(analisis);
 			String estado = analisis.estadoPlazas();
 			String [] array = estado.split("/");
 			if(array[0]!="0") {
-				lista.add(analisis);
+				lista.add(copia);
 			}
 			else if(array[1]!="0"){
-				lista.add(analisis);
-			}
-			else {
-				continue;
+				lista.add(copia);
 			}
 		}
 		return lista;
@@ -184,13 +180,15 @@ public class Puerto {
 	public List<Muelle> muellesCerca(GPSCoordinate puntoGps,double distancia){
 		if(puntoGps==null) throw new IllegalArgumentException("La coordenada no puede ser null ");
 		if(distancia<0) throw new IllegalArgumentException("La distacia no puede ser <0");
-		List<Muelle> lista=new ArrayList<Muelle>();
+		Cloner cloner=new Cloner();
+		List<Muelle> lista=new ArrayList<>();
 		Iterator<Muelle> itrMuelles=muelles.iterator();
 		while(itrMuelles.hasNext()) {
 			Muelle analisis=itrMuelles.next();
+			Muelle copia=cloner.deepClone(analisis);
 			GPSCoordinate localizacion=analisis.getCoordenada();
 			if (localizacion.getDistanceTo(puntoGps)<distancia) {
-				lista.add(analisis);
+				lista.add(copia);
 			}
 		}
 		return lista;

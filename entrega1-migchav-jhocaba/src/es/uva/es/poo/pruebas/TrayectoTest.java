@@ -4,13 +4,13 @@ import java.time.format.DateTimeParseException;
 
 import static org.junit.Assert.*;
 
-import java.time.LocalDate;
 
 import org.junit.Test;
 
 import es.uva.es.poo.clases.Muelle;
 import es.uva.es.poo.clases.Puerto;
 import es.uva.es.poo.clases.Trayecto;
+import es.uva.es.poo.clases.*;
 import es.uva.inf.poo.maps.GPSCoordinate;
 
 public class TrayectoTest {
@@ -138,6 +138,7 @@ public class TrayectoTest {
 		Muelle destinomuelle = new Muelle();
 		Puerto origenpuerto = new Puerto();
 		Puerto destinopuerto = new Puerto();
+		Trayecto prueba=new Simple(origenmuelle, origenpuerto, "2020-11-19", destinomuelle, destinopuerto,"2020-12-31");
 		Trayecto nuevo = new Trayecto(origenmuelle, origenpuerto, "2020-11-19", destinomuelle, destinopuerto,"2020-12-31");
 		assertEquals(nuevo.getPuertoOrigen(), origenpuerto);
 	}
@@ -215,7 +216,6 @@ public class TrayectoTest {
 		nuevo.getDistancia();
 	}
 	
-	//TODO TestInfoTrayecto
 	@Test
 	public void testCosteTrayecto()  {
 		GPSCoordinate coordenadaorigen = new GPSCoordinate(41.345, 2.14167); //Barcelona
@@ -224,9 +224,15 @@ public class TrayectoTest {
 		Muelle destinomuelle =new Muelle(20,coordenadadestino,'F',5);
 		Puerto origenpuerto = new Puerto();
 		Puerto destinopuerto = new Puerto();
-		Trayecto nuevo = new Trayecto(origenmuelle, origenpuerto, "2020-11-18", destinomuelle, destinopuerto,"2020-11-30");
-		double coste=nuevo.costeTrayecto(100, 100);
-		assertEquals(coste, 3.56257737267718E7 ,0.0);
+		Trayecto nuevo=new PackCamionBarco(1,origenmuelle, origenpuerto, "2020-11-18", destinomuelle, destinopuerto,"2020-11-30");
+		Trayecto simple=new TBarco(origenmuelle, origenpuerto, "2020-11-18", destinomuelle, destinopuerto,"2020-11-30");
+		//Trayecto casting=(PackCamionBarco)simple;
+		//System.out.println(casting.costeTrayecto());
+		System.out.println(simple instanceof Compuesto);
+		System.out.println(nuevo.costeTrayecto()+"  "+ simple.costeTrayecto());
+		//Trayecto nuevo = new Trayecto(origenmuelle, origenpuerto, "2020-11-18", destinomuelle, destinopuerto,"2020-11-30");
+		//double coste=nuevo.costeTrayecto(100, 100);
+		//assertEquals(coste, 3.56257737267718E7 ,0.0);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)

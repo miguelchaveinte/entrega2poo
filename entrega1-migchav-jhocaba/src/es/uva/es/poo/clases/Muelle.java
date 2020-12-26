@@ -1,12 +1,10 @@
 package es.uva.es.poo.clases;
 
+
 import es.uva.inf.poo.maps.GPSCoordinate;
-import es.uva.es.poo.clases.Contenedor;
-import java.lang.*; 
-//import java.util.ArrayList;
-//import java.util.List;
 import java. util. *;
-import java.util.stream.IntStream;
+import com.rits.cloning.Cloner;
+
 
 
 /**
@@ -15,42 +13,52 @@ import java.util.stream.IntStream;
  * @author migchav
  *
  */
-public class Muelle {
+public class Muelle   {
 	
 	private int identificador;
 	private GPSCoordinate coordenada;
 	private boolean estado;	
 	private int numPlazas;
-	private List<Muelle> plazas;
-	private Contenedor nivelUno;
-	private Contenedor nivelDos;
-	private Contenedor nivelTres;
-	private Contenedor nivelCuatro;
-	private String estadoPlaza;
+	private List<List<Contenedor>> plazas;
+	private int [] estadoPlaza;
+	private int [] infraestructura;
 
-	/**
-	 * Constructor sin argumentos (tiene sentido uno sin argumentos?????)
-	 */
-	public Muelle(){
-		
-	}
-
-	
+	//TODO:COMENTAR LO DE LA INFRAESTRUCTURA DEL MUELLE
 	/**
 	 * Inicializador con parametros
+	 * @param infraestructura - codigo de tres cifras que identifica las infraestructuraras
+	 * disponibles en el muelle. Esta codificación debera atender al siguiente formato binario:
+	 * primera posicion transporte por barco,segunda posicion transporte por tren y la tercera transporte por camion.
+	 * Se admiten la combinacion de transportes pero no que ninguno este disponible. Ejemplo:100 - seria un muelle con
+	 * solo posibilidad de barco,011 - posibilidad de tren y camion y no barco,111 posibilidad de transporte en los tres medios.
 	 * @param identificador- numero de dos digitos que identifica al Muelle
 	 * @param coordenada - coordenada GPS del muelle
 	 * @param estado- estado operativo o fuera de servicio ('O'=>OPERATIVO,'F'=>fuera de servicio)
 	 * @param numPlazas - numero de plazas del muelle
-	 * @throws IllegalArgumentException-si {@param coordena=null}
+	 * @throws IllegalArgumentException-si {@param coordenada} ==null
+	 * @throws IllegalArgumentException-si {@param estado} !=('O' || 'F')
+	 * @throws IllegalArgumentException-si {@param numPlazas} <1
+	 * @throws IllegalArgumentException-si {@param identificador.length} !=2
+	 * @throws IllegalArgumentException-si {@param infraestructura.length} !=3
+	 * @throws IllegalArgumentException-si {@param infraestructura} ==000
 	 */
-	public Muelle(int identificador,GPSCoordinate coordenada,char estado,int numPlazas) {
+	public Muelle(int infraestructura,int identificador,GPSCoordinate coordenada,char estado,int numPlazas) {
 		if(Integer.toString(identificador).length()!=2 )throw new IllegalArgumentException("El identificador de muelle debe ser un número de 2 digitos");
 		if(coordenada==null) throw new IllegalArgumentException("la coordenada debe no ser  nula ");
+		//TODO:nuevos test!!!!!!!!!!!!!!!!!!!
+		if(Integer.toString(infraestructura).length()!=3 )throw new IllegalArgumentException("El identificador de infraestructura debe ser un número de 3 digitos");
+		if(infraestructura==000) throw new IllegalArgumentException("El identificador de infraestructura no puede ser que no admita ningun transporte");
 		this.identificador=identificador;
 		this.coordenada=coordenada;
 		this.numPlazas=numPlazas;
+		plazas=new ArrayList<>();
+		estadoPlaza=new int[numPlazas];
 		setEstado(estado);	
+		String codigoInfra=String.valueOf(infraestructura);
+		this.infraestructura=new int[3];
+		for(int i=0; i<3; i++){
+			this.infraestructura[i] = Character.getNumericValue(codigoInfra.charAt(i));
+		}
 		setPlazas(numPlazas);
 	}
 
@@ -68,10 +76,32 @@ public class Muelle {
 			this.estado=false;
 		}
 	}
+	
+	//TODO: TEST DE ESTAS DOS DE ABAJO!!!!!!!!!!!!!
+	
+	/**
+	 * Setea el estado de la plaza dada por {@param posicion}  a 0 (que significa que 
+	 * no esta llena) en el vector que guardamos los estado de todas las plazas.
+	 * @param posicion - plaza que queremos modificar su estado
+	 */
+	public void setVaciaYSemi(int posicion) {
+		estadoPlaza[posicion]=0;
+	}
+	
+	/**
+	 * Setea el estado de la plaza dada por {@param posicion}  a 1 (que significa que 
+	 * esta llena) en el vector que guardamos los estado de todas las plazas.
+	 * @param posicion - plaza que queremos modificar su estado
+	 */
+	public void setLlena(int posicion) {
+		estadoPlaza[posicion]=1;
+	}
+	
 	/**
 	 * Retorna el identificador del muelle
 	 * @return Identificador del muelle
 	 */
+
 	public int getIdMuelle() {
 		return identificador;
 	}
@@ -94,16 +124,19 @@ public class Muelle {
 	 * 
 	 * @return lista de las plazas
 	 */
-	public List<Muelle> getListPlazas(){
-		return plazas;
+	public List<List<Contenedor>> getListPlazas(){
+		Cloner cloner=new Cloner();
+		List<List<Contenedor>> plazasClone=cloner.deepClone(plazas);
+		return plazasClone;
 	}
 	/**
 	 * Retorna el string del estado de la plaza
 	 * @return "vacia" si la plaza no tiene contenedores,"semillena" si tiene contenedores
 	 * y espacio o llena  si no admite mas espacio
 	 */
-	public String getEstadoPlaza() {
-		return estadoPlaza;
+	public int getEstadoPlaza(int posicion) {
+		int estado=estadoPlaza[posicion];
+		return estado;
 	}
 	/**
 	 * Guardamos un arraylist de las plazas inicializado a vacio
@@ -114,15 +147,10 @@ public class Muelle {
 		if(numPlazas<=0) {
 			throw new IllegalArgumentException("El número de plazas no puede ser menor o igual a 0");
 		}
-		plazas=new ArrayList<Muelle>();
 		for(int i=0;i<numPlazas;i++) {
-			Muelle descripcionPlazas=new Muelle();
-			descripcionPlazas.setNivelUno(new Contenedor());
-			descripcionPlazas.setNivelDos(new Contenedor());
-			descripcionPlazas.setNivelTres(new Contenedor());
-			descripcionPlazas.setNivelCuatro(new Contenedor());
-			descripcionPlazas.setEstPlazaVacia();
-			plazas.add(descripcionPlazas);
+			List <Contenedor>nivelContenedores=new ArrayList<>(4);
+			setVaciaYSemi(i);
+			plazas.add(nivelContenedores);
 		}
 	}
 	/**
@@ -132,138 +160,118 @@ public class Muelle {
 	public GPSCoordinate getCoordenada() {
 		return coordenada;
 	}
+
 	/**
-	 * Setea el estado de la plaza a vacia
-	 */
-	public void setEstPlazaVacia() {
-		estadoPlaza="vacia";
-	}
-	/**
-	 * Setea el estado de la plaza a semillena 
-	 */
-	public void setEstPlazaSemi() {
-		estadoPlaza="semillena";
-	}
-	/**
-	 * Setea el estado de la plaza a llena
-	 */
-	public void setEstPlazaLlena() {
-		estadoPlaza="llena";
-	}
-	/**
-	 * Almacena en nivel uno de la plaza que lo llama el contenedor de parametro
-	 * @param contenedor - no debe ser nulo
-	 * @throws IllegalArgumentException si el {@param contenedor} es null
-	 */
-	public void setNivelUno(Contenedor contenedor){
-		if(contenedor==null) throw new IllegalArgumentException("El contenedor no puede ser null");
-		nivelUno=contenedor;
-	}
-	/**
-	 * Almacena en nivel dos de la plaza que lo llama el contenedor de parametro
-	 * @param contenedor - no debe ser nulo
-	 * @throws IllegalArgumentException si el {@param contenedor} es null
-	 */
-	public void setNivelDos(Contenedor contenedor){
-		if(contenedor==null) throw new IllegalArgumentException("El contenedor no puede ser null");
-		nivelDos=contenedor;
-	}
-	/**
-	 * Almacena en nivel tres de la plaza que lo llama el contenedor de parametro
-	 * @param contenedor - no debe ser nulo
-	 * @throws IllegalArgumentException si el {@param contenedor} es null
-	 */
-	public void setNivelTres(Contenedor contenedor){
-		if(contenedor==null) throw new IllegalArgumentException("El contenedor no puede ser null");
-		nivelTres=contenedor;
-	}
-	/**
-	 * Almacena en nivel cuatro de la plaza que lo llama el contenedor de parametro
-	 * @param contenedor - no debe ser nulo
-	 * @throws IllegalArgumentException si el {@param contenedor} es null
-	 */
-	public void setNivelCuatro(Contenedor contenedor){
-		if(contenedor==null) throw new IllegalArgumentException("El contenedor no puede ser null");
-		nivelCuatro=contenedor;
-	}
-	/**
-	 * Retorna el contenedor que se encuentra en el nivel uno de la plaza que lo llama
-	 * @return contenedor nivelUno
-	 */
-	public Contenedor getNivelUno() {
-		return nivelUno;
-	}
-	/**
-	 * Retorna el contenedor que se encuentra en el nivel dos de la plaza que lo llama
-	 * @return contenedor nivelDos
-	 */
-	public Contenedor getNivelDos() {
-		return nivelDos;
-	}
-	/**
-	 * Retorna el contenedor que se encuentra en el nivel tres de la plaza que lo llama
-	 * @return contenedor nivelTres
-	 */
-	public Contenedor getNivelTres() {
-		return nivelTres;
-	}
-	/**
-	 * Retorna el contenedor que se encuentra en el nivel cuatro de la plaza que lo llama
-	 * @return contenedor nivelCuatro
-	 */
-	public Contenedor getNivelCuatro() {
-		return nivelCuatro;
-	}
-	/**
-	 * Mete el contenedor dado en la plaza indicada con preferencia a 
-	 * las plazas semillenas 
+	 * Mete el contenedor dado en la plaza indicada si la infraestructura del muelle permite posteriormente transportar el contenedor.
+	 * Si esta está llena o el contenedor es FlatRack y necesita dos plazas buscamos una nueva plaza si es posible.
+	 * Si es un Contenedor Estandar o Refrigerado que necesitan de espacio un nivel buscamos una plaza con preferencia 
+	 * de que este en estado semillena, y si eso no es posible asignamos una vacia. Si el contenedor es FlatRack 
+	 * buscaremos dos plazas consecutivas vacias. Si estas nuestro puerto no puede satisfacer estas
+	 * peticiones lanzaremos una excepcion de que no podemos almacenar ese contenedor.
 	 * @param contenedor- que se va a meter en la plaza
-	 * @param plaza-plaza en el cual se va a incluir
+	 * @param plaza-plaza en el cual se va a incluir (indice desde 0 hasta numPlazas-1)
+	 * @throws IllegalArgumentException - no se va a poder transportar el contenedor posteriormente por la infraestructura del muelle
+	 * @throws IllegalArgumentException - no se puede almacenar el contenedor por falta de espacio
 	 * @throws IllegalArgumentException - contenedor nulo
 	 * @throws IllegalArgumentException - plaza<0
 	 */
 	public void asignarPlaza(Contenedor contenedor,int plaza) {
 		if(contenedor==null || contenedor.getIdentificador()==null) throw new IllegalArgumentException("El contenedor no puede ser nulo");
 		if(plaza<0) throw new IllegalArgumentException("La plaza no debe ser <0");
-		String estado=plazas.get(plaza).estadoPlaza;
-		if (estado=="llena") {
-			for(int iterador=0;iterador<plazas.size();iterador++) {
-				if(plazas.get(iterador).estadoPlaza.equals("semillena")){
-					asignarPlaza(contenedor,iterador);
-					break;
+		boolean esPosibleTrans=false;
+		int i=0;
+		while(!esPosibleTrans && i<3) {
+			if(infraestructura[i]==contenedor.getCodigoTransporte()[i] && infraestructura[i]==1) {
+				esPosibleTrans=true;
+			}
+			i++;
+		}
+		if(!esPosibleTrans) throw new IllegalArgumentException("No es posible asignar ese contenedor ya que el muelle no puede realizar el transporte");
+		int estadoPlaza=getEstadoPlaza(plaza);
+		//Comprobar que si quiere dos plazas la de al lado tb esta libre
+		int contenedorDosPlazas=0;
+		int plazaNueva=plaza;
+		if(contenedor.getEspacio()==2) {
+			if(plaza==0) {
+				int estadoPlazaSigui=getEstadoPlaza(plaza+1);
+				if((estadoPlazaSigui!=0 || estadoPlaza!=0 || plazas.get(plaza).size()!=0|| plazas.get(plaza+1).size()!=0)) {
+					plazaNueva=buscaEspacio(2);
 				}
-				if(plazas.get(iterador).estadoPlaza.equals("vacia")) {
-					asignarPlaza(contenedor,iterador);
-					break;
+				contenedorDosPlazas=1;
+			}
+			else if(plaza==numPlazas-2) {
+				int estadoPlazaAnte=getEstadoPlaza(plaza-1);
+				if((estadoPlazaAnte!=0 || estadoPlaza!=0 || plazas.get(plaza).size()!=0|| plazas.get(plaza-1).size()!=0)) {
+					plazaNueva=buscaEspacio(2);
 				}
+				contenedorDosPlazas=-1;
+			}
+			else {
+				int estadoPlazaSigui=getEstadoPlaza(plaza+1);
+				int estadoPlazaAnte=getEstadoPlaza(plaza-1);
+				if((estadoPlazaSigui!=0 || estadoPlaza!=0 || plazas.get(plaza).size()!=0|| plazas.get(plaza+1).size()!=0) && (estadoPlazaAnte!=0 || estadoPlaza!=0|| plazas.get(plaza).size()!=0|| plazas.get(plaza-1).size()!=0)) {
+					plazaNueva=buscaEspacio(2);
+				}
+				if(estadoPlazaSigui==0 && plazas.get(plaza+1).size()==0) contenedorDosPlazas=1;
+				else contenedorDosPlazas=-1;
 			}
 		}
+		if(plazaNueva!=plaza) asignarPlaza(contenedor,plazaNueva);
 		else {
-			if(estado=="semillena"){
-				if(plazas.get(plaza).getNivelDos().getIdentificador()==null) {
-					plazas.get(plaza).setNivelDos(contenedor);
-				} 
-				else {
-					if (plazas.get(plaza).getNivelTres().getIdentificador()==null) {
-						plazas.get(plaza).setNivelTres(contenedor);
-					}
-					else {
-						plazas.get(plaza).setNivelCuatro(contenedor);
-						plazas.get(plaza).setEstPlazaLlena();
-					}
-				}
+			if( estadoPlaza==1) {
+				plazaNueva=buscaEspacio(1);
+				asignarPlaza(contenedor,plazaNueva);
 			}
-			else {//vacia
-				plazas.get(plaza).setNivelUno(contenedor);
-				if(contenedor.getTecho()) {
-					plazas.get(plaza).setEstPlazaSemi();
+			else {
+				if(contenedor.getEspacio()==1) {
+					plazas.get(plaza).add(contenedor);
+					if(plazas.get(plaza).size()==4) setLlena(plaza);
 				}
 				else {
-					plazas.get(plaza).setEstPlazaLlena();
+					plazas.get(plaza).add(contenedor);
+					System.out.println(contenedorDosPlazas);
+					plazas.get(plaza+contenedorDosPlazas).add(contenedor);
+					setLlena(plaza);
+					setLlena(plaza+contenedorDosPlazas);
 				}
 			}
 		}
 	}
+	//TODO:JAVADOC!!!!!!!!!!!!!!!!
+	/**
+	 * Nos busca una ...
+	 * @param espacio
+	 * @return retorno - plaza nueva encontrada segun el caso de preferencia que vienen dado por {@param espacio}
+	 */
+	private int buscaEspacio(int espacio) {
+		int semi=-1;
+		int retorno=-1;
+		int vaciaPrefe=-1;
+		boolean posibleAnterior=false;
+		if(espacio==1) {
+			for(int i=0;i<numPlazas;i++) {
+				if(estadoPlaza[i]==0 && plazas.get(i).size()!=0) semi=i;
+				else if(estadoPlaza[i]==0 && plazas.get(i).size()==0) {
+					retorno=i;
+					if(posibleAnterior && (estadoPlaza[i-1]==1 || (0<plazas.get(i-1).size() && plazas.get(i-1).size()<3))) vaciaPrefe=i;
+				}
+				posibleAnterior=true;
+			}
+		if(retorno==-1) throw new IllegalArgumentException("No se puede almacenar ese contenedor por falta de espacio");
+		}
+		else {
+			for(int i=0;i<numPlazas-1 && retorno==-1;i++) {
+				if(estadoPlaza[i]==0 && plazas.get(i).size()==0 && estadoPlaza[i+1]==0 && plazas.get(i+1).size()==0) {
+					retorno=i;	
+				}
+			}
+			if(retorno==-1) throw new IllegalArgumentException("No se puede almacenar ese contenedor por falta de espacio");
+		}
+		if(semi!=-1) retorno=semi;
+		else if(vaciaPrefe!=-1) retorno=vaciaPrefe;
+		return retorno;
+	}
+		
 	/**
 	 * Sacamos un contenedor dado su identificador.
 	 * Primero le buscamos  en que plaza se encuentra y posteriormente
@@ -274,140 +282,57 @@ public class Muelle {
 	 * @throws IllegalArgumentException -contenedor no encontrado
 	 */
 	public Contenedor sacarContenedor(String identificador)  {
-		//TODO: ELSE IF -> Y SI NO COINCIDE CON NINGUNO ELSE Y RETURN new Contenedor() o return null??;
-		int indexPlaza=getPlaza(identificador);
-		if (indexPlaza==-1){
-			throw new IllegalArgumentException("El contenedor no se ha encontrado");
+		String indexPlaza=getNivelPlaza(identificador);
+		String[] posicion=indexPlaza.split("/");
+		int plaza=Integer.parseInt(posicion[0]);
+		int nivel=Integer.parseInt(posicion[1]);
+		Contenedor extraido=plazas.get(plaza).remove(nivel);
+		if(extraido.getEspacio()==1) {
+			setVaciaYSemi(plaza);
 		}
-		if((plazas.get(indexPlaza).getNivelUno().getIdentificador())==identificador){
-			Contenedor retorno=plazas.get(indexPlaza).getNivelUno();
-			if	(retorno.getTecho()){
-				plazas.get(indexPlaza).setNivelUno(plazas.get(indexPlaza).getNivelDos());
-				plazas.get(indexPlaza).setNivelDos(plazas.get(indexPlaza).getNivelTres());
-				plazas.get(indexPlaza).setNivelTres(plazas.get(indexPlaza).getNivelCuatro());
-				plazas.get(indexPlaza).setNivelCuatro(new Contenedor());
-				if (plazas.get(indexPlaza).getNivelUno().getIdentificador()==null) {
-					plazas.get(indexPlaza).setEstPlazaVacia();
-					return retorno;
-				}
-				else {
-					if (plazas.get(indexPlaza).getNivelDos().getIdentificador()==null) {
-						if(plazas.get(indexPlaza).getNivelUno().getTecho()) {
-							plazas.get(indexPlaza).setEstPlazaSemi();
-							return retorno;
-						}
-						else {
-							plazas.get(indexPlaza).setEstPlazaLlena();
-							return retorno;
-						}
-					}
-					else if (plazas.get(indexPlaza).getNivelTres().getIdentificador()==null) {
-						if(plazas.get(indexPlaza).getNivelDos().getTecho()) {
-							plazas.get(indexPlaza).setEstPlazaSemi();
-							return retorno;
-						}
-						else {
-							plazas.get(indexPlaza).setEstPlazaLlena();
-							return retorno;
-						}
-					}
-					else {
-						if(plazas.get(indexPlaza).getNivelTres().getTecho()) {
-							plazas.get(indexPlaza).setEstPlazaSemi();
-							return retorno;
-						}
-						else {
-							plazas.get(indexPlaza).setEstPlazaLlena();
-							return retorno;
-						}
-					}
-				}
+		else {
+			if(plaza==0) {
+				plazas.get(plaza+1).remove(0);
+				setVaciaYSemi(plaza);
+				setVaciaYSemi(plaza+1);			
+			}
+			else if(plaza==numPlazas-1) {
+				plazas.get(plaza-1).remove(0);
+				setVaciaYSemi(plaza);
+				setVaciaYSemi(plaza-1);
 			}
 			else {
-				plazas.get(indexPlaza).setNivelUno(new Contenedor());
-				plazas.get(indexPlaza).setEstPlazaVacia();
-				return retorno;
-			}
-		}
-		else if((plazas.get(indexPlaza).getNivelDos().getIdentificador())==identificador){
-			Contenedor retorno=plazas.get(indexPlaza).getNivelDos();
-			if	(retorno.getTecho()){
-				plazas.get(indexPlaza).setNivelDos(plazas.get(indexPlaza).getNivelTres());
-				plazas.get(indexPlaza).setNivelTres(plazas.get(indexPlaza).getNivelCuatro());
-				plazas.get(indexPlaza).setNivelCuatro(new Contenedor());
-				if (plazas.get(indexPlaza).getNivelDos().getIdentificador()==null) {
-					plazas.get(indexPlaza).setEstPlazaSemi();
-					return retorno;
-				}
-				else if (plazas.get(indexPlaza).getNivelTres().getIdentificador()==null) {
-					if(plazas.get(indexPlaza).getNivelDos().getTecho()) {
-						plazas.get(indexPlaza).setEstPlazaSemi();
-						return retorno;
-					}
-					else {
-						plazas.get(indexPlaza).setEstPlazaLlena();
-						return retorno;
-					}
+				if(plazas.get(plaza+1).get(0).equals(extraido)) {
+					plazas.get(plaza+1).remove(0);
+					setVaciaYSemi(plaza);
+					setVaciaYSemi(plaza+1);	
 				}
 				else {
-					plazas.get(indexPlaza).setEstPlazaSemi();
-					return retorno;
-				}
-			}	
-			else {
-				plazas.get(indexPlaza).setNivelDos(new Contenedor());
-				plazas.get(indexPlaza).setEstPlazaSemi();
-				return retorno;
-			}
-		}
-		else if((plazas.get(indexPlaza).getNivelTres().getIdentificador())==identificador){
-			Contenedor retorno=plazas.get(indexPlaza).getNivelTres();
-			if	(retorno.getTecho()){
-				plazas.get(indexPlaza).setNivelTres(plazas.get(indexPlaza).getNivelCuatro());
-				plazas.get(indexPlaza).setNivelCuatro(new Contenedor());
-				if(plazas.get(indexPlaza).getNivelTres().getTecho()) {
-					plazas.get(indexPlaza).setEstPlazaSemi();
-					return retorno;
-				}
-				else {
-					plazas.get(indexPlaza).setEstPlazaLlena();
-					return retorno;
+					plazas.get(plaza-1).remove(0);
+					setVaciaYSemi(plaza);
+					setVaciaYSemi(plaza-1);
 				}
 			}
-			else {
-				plazas.get(indexPlaza).setNivelCuatro(new Contenedor());
-				plazas.get(indexPlaza).setEstPlazaSemi();
-				return retorno;
-			}
 		}
-		else if((plazas.get(indexPlaza).getNivelCuatro().getIdentificador())==identificador){
-			Contenedor retorno=plazas.get(indexPlaza).getNivelCuatro();
-			plazas.get(indexPlaza).setNivelCuatro(new Contenedor());
-			plazas.get(indexPlaza).setEstPlazaSemi();
-			return retorno;
-		}
-		else 
-			return new Contenedor();		
+		return extraido;
 	}
+
 	/**
 	 * Retorna en un string del tipo: numeroplazasvacias/numeroplazassemillenas/numeroplazasllenas
 	 * asociado al muelle sus numero de plazas segun tippo
 	 * @return numeroplazasvacias/numeroplazassemillenas/numeroplazasllenas de ese muelle
 	 */
 	public String estadoPlazas() {
-		Iterator<Muelle> itrPlazas=plazas.iterator();
 		int vacias=0;
 		int semi=0;
 		int llenas=0;
-		while(itrPlazas.hasNext()) {
-			Muelle plaza=itrPlazas.next();
-			String estado = plaza.estadoPlaza;
-			if (estado=="vacia")
-				vacias++;
-			else if (estado=="semillena")
-				semi++;
-			else
-				llenas++;
+		for(int i=0;i<numPlazas;i++) {
+			int estado=estadoPlaza[i];
+			if(estado==1) llenas++;
+			else {
+				if(plazas.get(i).size()==0) vacias++;
+				else semi++;
+			}
 		}
 		return (vacias+"/"+semi+"/"+llenas);
 	}
@@ -421,33 +346,25 @@ public class Muelle {
 	 * @throws IllegalArgumentException-si el identificador del contenedor no es valido
 	 */
 	public int getPlaza(String identificador)  {
-		Contenedor identificadorCorrecto=new Contenedor(identificador,"500-Kg",200.0,"100-m3",true);
+		Contenedor identificadorCorrecto=new Estandar(identificador,500,"Kg",200.0,100,"m3");
 		int index=-1;
-		for(int iterador=0;iterador<plazas.size();iterador++) {
-			if((plazas.get(iterador).getNivelUno().getIdentificador())==identificador){
-				index=iterador;
-				break;
+		int iterador=0;
+		while(index==-1 && iterador<plazas.size()) {
+			for(int nivel=0;nivel<plazas.get(iterador).size();nivel++) {
+					if(plazas.get(iterador).get(nivel).getIdentificador().equals(identificador)) {
+						index=iterador;	
+				}
 			}
-			if((plazas.get(iterador).getNivelDos().getIdentificador())==identificador){
-				index=iterador;
-				break;
-			}
-			if((plazas.get(iterador).getNivelTres().getIdentificador())==identificador){
-				index=iterador;
-				break;
-			}
-			if((plazas.get(iterador).getNivelCuatro().getIdentificador())==identificador){
-				index=iterador;
-				break;
-			}
+			iterador++;
 		}
 		return index;
-		}
-		//TODO: INDEX ==-1 NO SE ENCUENTRA creo que esta implementado en las clases que lo piden
+	}
+
 
 	
 	/**
 	 * Retorna un string que nos dice la plaza y el nivel de esta de un contenedor dado
+	 * con el siguiente formato: "plaza/nivel"
 	 * @param identificador-identificador del contenedor 
 	 * @return string que nos especifica en la plaza y el nivel donde se ha encontrado el contenedor
 	 * @throws IllegalArgumentException-si el contenedor no se ha encontrado
@@ -455,28 +372,16 @@ public class Muelle {
 	 */
 	public String getNivelPlaza(String identificador)  {
 		int indexPlaza=getPlaza(identificador);
-		String nivel;
+		String nivel="";
 		if (indexPlaza==-1){
 			throw new IllegalArgumentException("El contenedor no se ha encontrado");
 		}
-		if((plazas.get(indexPlaza).getNivelUno().getIdentificador())==identificador){
-			nivel="Ese contenedor se encuentra en la plaza "+indexPlaza+" y en el nivel 1";
-			return nivel;
+		int i=0;
+		while(i<plazas.get(indexPlaza).size() && nivel.equals("")) {
+			if(plazas.get(indexPlaza).get(i).getIdentificador().equals(identificador)) nivel=String.valueOf(indexPlaza)+"/"+String.valueOf(i);
+			i++;
 		}
-		else if((plazas.get(indexPlaza).getNivelDos().getIdentificador())==identificador){
-			nivel="Ese contenedor se encuentra en la plaza "+indexPlaza+" y en el nivel 2";
-			return nivel;
-		}
-		else if((plazas.get(indexPlaza).getNivelTres().getIdentificador())==identificador){
-			nivel="Ese contenedor se encuentra en la plaza "+indexPlaza+" y en el nivel 3";
-			return nivel;
-		}
-		else if((plazas.get(indexPlaza).getNivelCuatro().getIdentificador())==identificador){
-			nivel="Ese contenedor se encuentra en la plaza "+indexPlaza+" y en el nivel 4";
-			return nivel;
-		}
-		else
-			return ("Ese contenedor no se encuentra en ningún nivel");
+		return nivel;
 	}
 
 

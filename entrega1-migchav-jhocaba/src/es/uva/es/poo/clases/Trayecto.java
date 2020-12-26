@@ -1,8 +1,6 @@
 package es.uva.es.poo.clases;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter; 
-import java.time.Period;
-import java.time.temporal.ChronoUnit;
 
 import es.uva.inf.poo.maps.GPSCoordinate;
 
@@ -15,7 +13,7 @@ import es.uva.inf.poo.maps.GPSCoordinate;
  *
  */
 
-public class Trayecto {	
+public abstract class Trayecto {	
 	
 	private Muelle muelleOrigen;
 	private Puerto puertoOrigen;
@@ -25,14 +23,7 @@ public class Trayecto {
 	private LocalDate fechaFin;
 	private Puerto puertoFinal;
 	
-	
-	/**
-	 * Inicialización sin argumentos(tiene sentido sin argumentos????????)
-	*/
-	
-	public Trayecto() {
-		
-	}
+
 	
 	/**
 	 * Inicialización a partir de los argumentos, almacenando todas las instancias necesarias.
@@ -174,6 +165,7 @@ public class Trayecto {
 				+ "del fin de trayecto es: "+fin);
 	}
 	
+	//TODO:ACTUALIZAR JAVADOCS METODOS ABSTRACTOS DONDE???!!!!!!!
 	/**
 	 * Calcula el coste en euros para un determinado trayecto. 
 	 * El coste viene dado por el precio de la milla y precio por dia del trayecto, ambos deben ser >0, 
@@ -183,12 +175,19 @@ public class Trayecto {
 	 * @throws IllegalArgumentException si se reciben precios negativos
 	 * @return el coste en euros total del trayecto.
 	 */
-	public double costeTrayecto(int precioMilla,int precioDia) {
+	/**public double costeTrayecto(int precioMilla,int precioDia) {
 		if(precioMilla<=0 || precioDia<=0)
 			throw new IllegalArgumentException("Los precios no pueden ser<=0");
 		GPSCoordinate coordenadaOrigen = getMuelleOrigen().getCoordenada();
 		GPSCoordinate coordenadaDestino=getMuelleDestino().getCoordenada();
 		//Uso de ChronoUnit.DAYS para obtener el numero de dias entre las fechas indicadas
-		return (double) (precioMilla*coordenadaOrigen.getDistanceTo(coordenadaDestino)*((int)ChronoUnit.DAYS.between(getFechaIni(),getFechaFin()))*precioDia);
+		return (precioMilla*coordenadaOrigen.getDistanceTo(coordenadaDestino)*((int)ChronoUnit.DAYS.between(getFechaIni(),getFechaFin()))*precioDia);
 	}
+	
+	*/
+	public abstract double costeTrayecto();
+	public abstract int [] getTipoPack();
+	public abstract int getCodigoSimple();
+	public abstract String getInicioFech();
+	public abstract String getFinFech();
 }
