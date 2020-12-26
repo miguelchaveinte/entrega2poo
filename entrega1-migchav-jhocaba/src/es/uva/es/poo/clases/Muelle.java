@@ -207,7 +207,7 @@ public class Muelle   {
 			else {
 				int estadoPlazaSigui=getEstadoPlaza(plaza+1);
 				int estadoPlazaAnte=getEstadoPlaza(plaza-1);
-				if((estadoPlazaSigui!=0 || statePlaza!=0 || !plazas.get(plaza).isEmpty()|| !plazas.get(plaza+1).isEmpty()) && (estadoPlazaAnte!=0 || statePlaza!=0|| !plazas.get(plaza).isEmpty()|| plazas.get(plaza-1).size()!=0)) {
+				if((estadoPlazaSigui!=0 || statePlaza!=0 || !plazas.get(plaza).isEmpty()|| !plazas.get(plaza+1).isEmpty()) && (estadoPlazaAnte!=0 || statePlaza!=0|| !plazas.get(plaza).isEmpty()|| !plazas.get(plaza-1).isEmpty())) {
 					plazaNueva=buscaEspacio(2);
 				}
 				if(estadoPlazaSigui==0 && plazas.get(plaza+1).isEmpty()) contenedorDosPlazas=1;
