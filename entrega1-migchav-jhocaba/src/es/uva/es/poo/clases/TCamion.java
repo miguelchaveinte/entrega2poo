@@ -31,15 +31,13 @@ public class TCamion extends Simple{
 	@Override
 	public int[] getTipoPack() {
 		Cloner cloner=new Cloner();
-		int [] clonadoTipoPack=cloner.deepClone(tipoPack);
-		return clonadoTipoPack;
+		return cloner.deepClone(tipoPack);
 	}
 	@Override
 	public double costeTrayecto() {
 		GPSCoordinate coordenadaOrigen = getMuelleOrigen().getCoordenada();
 		GPSCoordinate coordenadaDestino=getMuelleDestino().getCoordenada();
-		double coste=200+4.5*coordenadaOrigen.getDistanceTo(coordenadaDestino);
-		return coste;
+		return 200+4.5*coordenadaOrigen.getDistanceTo(coordenadaDestino);
 	}
 	
 }

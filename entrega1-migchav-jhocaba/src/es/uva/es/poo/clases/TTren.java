@@ -30,14 +30,12 @@ public class TTren extends Simple{
 		@Override
 		public int[] getTipoPack() {
 			Cloner cloner=new Cloner();
-			int [] clonadoTipoPack=cloner.deepClone(tipoPack);
-			return clonadoTipoPack;
+			return cloner.deepClone(tipoPack);
 		}
 		@Override
 		public double costeTrayecto() {
 			GPSCoordinate coordenadaOrigen = getMuelleOrigen().getCoordenada();
 			GPSCoordinate coordenadaDestino=getMuelleDestino().getCoordenada();
-			double coste=20+12.5*coordenadaOrigen.getDistanceTo(coordenadaDestino);
-			return coste;
+			return 20+12.5*coordenadaOrigen.getDistanceTo(coordenadaDestino);
 		}
 }

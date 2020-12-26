@@ -4,7 +4,7 @@ import com.rits.cloning.Cloner;
 
 public class Estandar extends Contenedor {
 	private int espacio;
-	public int[] codigoTransporte;
+	private int[] codigoTransporte;
 	
 	public Estandar(String identificador,double peso ,String unidPeso,double carga,double volumen,String unidVol) {
 		super(identificador,peso,unidPeso,carga, volumen,unidVol,true);
@@ -19,8 +19,7 @@ public class Estandar extends Contenedor {
 	@Override
 	public int[] getCodigoTransporte() {
 		Cloner cloner=new Cloner();
-		int [] clonadoCodigoTransporte=cloner.deepClone(codigoTransporte);
-		return clonadoCodigoTransporte;
+		return cloner.deepClone(codigoTransporte);
 	}
 }
 

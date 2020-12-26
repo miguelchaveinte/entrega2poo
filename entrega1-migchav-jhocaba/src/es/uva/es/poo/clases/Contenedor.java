@@ -54,7 +54,7 @@ public abstract class Contenedor {
 		this.carga=carga;
 		comprobarUnidadesVolumen(volumen,uniVol);
 		setTransito();
-		trayectos=new ArrayList<Trayecto>();
+		trayectos=new ArrayList<>();
 		packActivado= new int []{0,0,0};
 	}
 
@@ -172,7 +172,7 @@ public abstract class Contenedor {
 	 */
 	public void conviertePesoKilo(double pesoContenedor) {
 		if(peso<0) throw new IllegalArgumentException("Peso no puede ser negativo");
-		double nuevoPeso = peso * PESOKILO;
+		double nuevoPeso = pesoContenedor * PESOKILO;
 		setPesoKilo(nuevoPeso);
 	}
 	
@@ -370,7 +370,7 @@ public abstract class Contenedor {
 		else {
 			int [] codigoCamionTren=new int []{0,1,1};
 			if(packActivado[trayecto.getCodigoSimple()]==1) {
-				if(packActivado.equals(codigoCamionTren)) {
+				if(packActivado==codigoCamionTren) {
 					PackCamionTren trayectoCasteado= new PackCamionTren(trayecto.getCodigoSimple(),trayecto.getMuelleOrigen(), trayecto.getPuertoOrigen(), trayecto.getInicioFech(), trayecto.getMuelleDestino(), trayecto.getPuertoDestino(),trayecto.getFinFech());
 					trayectos.add(trayectoCasteado);
 				}

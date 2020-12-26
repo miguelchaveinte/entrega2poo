@@ -4,7 +4,7 @@ import com.rits.cloning.Cloner;
 
 public class FlatRack extends Contenedor {
 	private int espacio;
-	public int[] codigoTransporte;
+	private int[] codigoTransporte;
 	public FlatRack(String identificador,double peso ,String unidPeso,double carga,double volumen,String unidVol) {
 		super(identificador,peso,unidPeso,carga, volumen,unidVol,false);
 		espacio=2;
@@ -18,7 +18,6 @@ public class FlatRack extends Contenedor {
 	@Override
 	public int[] getCodigoTransporte() {
 		Cloner cloner=new Cloner();
-		int [] clonadoCodigoTransporte=cloner.deepClone(codigoTransporte);
-		return clonadoCodigoTransporte;
+		return cloner.deepClone(codigoTransporte);
 	}
 }

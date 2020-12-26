@@ -31,12 +31,10 @@ public class TBarco extends Simple {
 	@Override
 	public int[] getTipoPack() {
 		Cloner cloner=new Cloner();
-		int [] clonadoTipoPack=cloner.deepClone(tipoPack);
-		return clonadoTipoPack;
+		return cloner.deepClone(tipoPack);
 	}
 	@Override
 	public double costeTrayecto() {
-		double coste=(int)ChronoUnit.DAYS.between(getFechaIni(),getFechaFin())*4000;
-		return coste;
+		return (double)ChronoUnit.DAYS.between(getFechaIni(),getFechaFin())*4000;
 	}
 }

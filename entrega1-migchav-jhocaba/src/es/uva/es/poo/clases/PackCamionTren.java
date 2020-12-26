@@ -12,7 +12,6 @@ public class PackCamionTren extends Compuesto{
 		super(tipoTrayecto,muelleOrigen, puertoOrigen, fechaIni, muelleDestino,puertoDestino,fechaFin);
 		inicioFechString=fechaIni;
 		finFechString=fechaFin;
-		//this.tipoTrayecto=tipoTrayecto;
 		tipoPack= new int []{0,1,1};
 		codigoSimple=tipoTrayecto;
 	}
@@ -30,15 +29,12 @@ public class PackCamionTren extends Compuesto{
 	@Override
 	public int [] getTipoPack() {
 		Cloner cloner=new Cloner();
-		int [] clonadoTipoPack=cloner.deepClone(tipoPack);
-		return clonadoTipoPack;
+		return cloner.deepClone(tipoPack);
 	}
 	@Override
 	public double costeTrayecto() {
 			GPSCoordinate coordenadaOrigen = getMuelleOrigen().getCoordenada();
 			GPSCoordinate coordenadaDestino=getMuelleDestino().getCoordenada();
-			double coste=coordenadaOrigen.getDistanceTo(coordenadaDestino)*10;	
-			return coste;
-			
+			return coordenadaOrigen.getDistanceTo(coordenadaDestino)*10;			
 	}
 }

@@ -126,8 +126,7 @@ public class Muelle   {
 	 */
 	public List<List<Contenedor>> getListPlazas(){
 		Cloner cloner=new Cloner();
-		List<List<Contenedor>> plazasClone=cloner.deepClone(plazas);
-		return plazasClone;
+		return cloner.deepClone(plazas);
 	}
 	/**
 	 * Retorna el string del estado de la plaza
@@ -135,8 +134,7 @@ public class Muelle   {
 	 * y espacio o llena  si no admite mas espacio
 	 */
 	public int getEstadoPlaza(int posicion) {
-		int estado=estadoPlaza[posicion];
-		return estado;
+		return estadoPlaza[posicion];
 	}
 	/**
 	 * Guardamos un arraylist de las plazas inicializado a vacio
@@ -187,21 +185,21 @@ public class Muelle   {
 			i++;
 		}
 		if(!esPosibleTrans) throw new IllegalArgumentException("No es posible asignar ese contenedor ya que el muelle no puede realizar el transporte");
-		int estadoPlaza=getEstadoPlaza(plaza);
+		int statePlaza=getEstadoPlaza(plaza);
 		//Comprobar que si quiere dos plazas la de al lado tb esta libre
 		int contenedorDosPlazas=0;
 		int plazaNueva=plaza;
 		if(contenedor.getEspacio()==2) {
 			if(plaza==0) {
 				int estadoPlazaSigui=getEstadoPlaza(plaza+1);
-				if((estadoPlazaSigui!=0 || estadoPlaza!=0 || plazas.get(plaza).size()!=0|| plazas.get(plaza+1).size()!=0)) {
+				if((estadoPlazaSigui!=0 || statePlaza!=0 || !plazas.get(plaza).isEmpty()|| !plazas.get(plaza+1).isEmpty())) {
 					plazaNueva=buscaEspacio(2);
 				}
 				contenedorDosPlazas=1;
 			}
 			else if(plaza==numPlazas-2) {
 				int estadoPlazaAnte=getEstadoPlaza(plaza-1);
-				if((estadoPlazaAnte!=0 || estadoPlaza!=0 || plazas.get(plaza).size()!=0|| plazas.get(plaza-1).size()!=0)) {
+				if((estadoPlazaAnte!=0 || statePlaza!=0 || !plazas.get(plaza).isEmpty()|| !plazas.get(plaza-1).isEmpty())) {
 					plazaNueva=buscaEspacio(2);
 				}
 				contenedorDosPlazas=-1;
@@ -209,16 +207,16 @@ public class Muelle   {
 			else {
 				int estadoPlazaSigui=getEstadoPlaza(plaza+1);
 				int estadoPlazaAnte=getEstadoPlaza(plaza-1);
-				if((estadoPlazaSigui!=0 || estadoPlaza!=0 || plazas.get(plaza).size()!=0|| plazas.get(plaza+1).size()!=0) && (estadoPlazaAnte!=0 || estadoPlaza!=0|| plazas.get(plaza).size()!=0|| plazas.get(plaza-1).size()!=0)) {
+				if((estadoPlazaSigui!=0 || statePlaza!=0 || !plazas.get(plaza).isEmpty()|| !plazas.get(plaza+1).isEmpty()) && (estadoPlazaAnte!=0 || statePlaza!=0|| !plazas.get(plaza).isEmpty()|| plazas.get(plaza-1).size()!=0)) {
 					plazaNueva=buscaEspacio(2);
 				}
-				if(estadoPlazaSigui==0 && plazas.get(plaza+1).size()==0) contenedorDosPlazas=1;
+				if(estadoPlazaSigui==0 && plazas.get(plaza+1).isEmpty()) contenedorDosPlazas=1;
 				else contenedorDosPlazas=-1;
 			}
 		}
 		if(plazaNueva!=plaza) asignarPlaza(contenedor,plazaNueva);
 		else {
-			if( estadoPlaza==1) {
+			if( statePlaza==1) {
 				plazaNueva=buscaEspacio(1);
 				asignarPlaza(contenedor,plazaNueva);
 			}
@@ -229,7 +227,6 @@ public class Muelle   {
 				}
 				else {
 					plazas.get(plaza).add(contenedor);
-					System.out.println(contenedorDosPlazas);
 					plazas.get(plaza+contenedorDosPlazas).add(contenedor);
 					setLlena(plaza);
 					setLlena(plaza+contenedorDosPlazas);
@@ -250,10 +247,10 @@ public class Muelle   {
 		boolean posibleAnterior=false;
 		if(espacio==1) {
 			for(int i=0;i<numPlazas;i++) {
-				if(estadoPlaza[i]==0 && plazas.get(i).size()!=0) semi=i;
-				else if(estadoPlaza[i]==0 && plazas.get(i).size()==0) {
+				if(estadoPlaza[i]==0 && !plazas.get(i).isEmpty()) semi=i;
+				else if(estadoPlaza[i]==0 && plazas.get(i).isEmpty()) {
 					retorno=i;
-					if(posibleAnterior && (estadoPlaza[i-1]==1 || (0<plazas.get(i-1).size() && plazas.get(i-1).size()<3))) vaciaPrefe=i;
+					if(posibleAnterior && (estadoPlaza[i-1]==1 || (!plazas.get(i-1).isEmpty() && plazas.get(i-1).size()<3))) vaciaPrefe=i;
 				}
 				posibleAnterior=true;
 			}
@@ -261,7 +258,7 @@ public class Muelle   {
 		}
 		else {
 			for(int i=0;i<numPlazas-1 && retorno==-1;i++) {
-				if(estadoPlaza[i]==0 && plazas.get(i).size()==0 && estadoPlaza[i+1]==0 && plazas.get(i+1).size()==0) {
+				if(estadoPlaza[i]==0 && plazas.get(i).isEmpty() && estadoPlaza[i+1]==0 && plazas.get(i+1).isEmpty()) {
 					retorno=i;	
 				}
 			}
@@ -327,10 +324,10 @@ public class Muelle   {
 		int semi=0;
 		int llenas=0;
 		for(int i=0;i<numPlazas;i++) {
-			int estado=estadoPlaza[i];
-			if(estado==1) llenas++;
+			int state=estadoPlaza[i];
+			if(state==1) llenas++;
 			else {
-				if(plazas.get(i).size()==0) vacias++;
+				if(plazas.get(i).isEmpty()) vacias++;
 				else semi++;
 			}
 		}

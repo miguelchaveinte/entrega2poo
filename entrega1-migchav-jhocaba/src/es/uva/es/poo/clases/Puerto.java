@@ -52,8 +52,7 @@ public class Puerto  {
 	 */
 	public List<Muelle> getListaMuelles(){
 		Cloner cloner=new Cloner();
-		List<Muelle> listaClonada=cloner.deepClone(muelles);
-		return listaClonada;
+		return cloner.deepClone(muelles);
 	}
 	/**
 	 * Devuelve el string correspondiente al codigo localidad 
@@ -117,10 +116,7 @@ public class Puerto  {
 			Muelle analisis=itrMuelles.next();
 			String estado = analisis.estadoPlazas();
 			String [] array = estado.split("/");
-			if(array[0]!="0") {
-				completo=false;
-			}
-			else if(array[1]!="0"){
+			if(array[0]!="0" || array[1]!="0") {
 				completo=false;
 			}
 		}
@@ -159,10 +155,7 @@ public class Puerto  {
 			Muelle copia=cloner.deepClone(analisis);
 			String estado = analisis.estadoPlazas();
 			String [] array = estado.split("/");
-			if(array[0]!="0") {
-				lista.add(copia);
-			}
-			else if(array[1]!="0"){
+			if(array[0]!="0" || array[1]!="0") {
 				lista.add(copia);
 			}
 		}
