@@ -33,6 +33,7 @@ public class ContenedorTest {
 	}
 	
 	/**
+	 * fjrfetvt..
 	//ComprobarIdentificador
 	@Test
 	public void testComprobarIdentificador() {
