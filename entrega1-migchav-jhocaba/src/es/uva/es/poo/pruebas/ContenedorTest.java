@@ -1,10 +1,6 @@
 package es.uva.es.poo.pruebas;
 
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-
 import static org.junit.Assert.*;
 
 import org.junit.Test;
@@ -31,7 +27,21 @@ public class ContenedorTest {
 		Contenedor container =new FlatRack("CSQU3054383",500.0,"Kg",200.0,100.0,"ft3");
 		assertNotNull(container);
 	}
+	
+	//Tuve que poner el metodo obtnerDigitoControl publico para resolver el throws del constructor
+	@Test(expected=IllegalArgumentException.class) 
+	public void testConstructorIdentificadorInvalido() {
+		Contenedor container=new Estandar("AAAJ3054383",500.0,"Kg",200.0,100.0,"ft3");
+		int codigoArgumento =Character.getNumericValue("CSQU3054383".charAt("CSQU3054383".length()- 1));
 		
+		assertTrue(container.obtenerDigitoControl("AAAJ3054383") == codigoArgumento);
+	}
+	
+	@Test(expected=IllegalArgumentException.class) 
+	public void testConstructorCargaNegativa() {
+		Contenedor container=new Estandar("CSQU3054383",500.0,"Kg",-200.0,100.0,"ft3");
+	}
+	
 	@Test
 	public void testSetDestinoFinal() {
 		Contenedor container=new Estandar("CSQU3054383",500.0,"Kg",200.0,100.0,"ft3");
@@ -271,13 +281,13 @@ public class ContenedorTest {
 	
 	@Test
 	public void testHacerViajesSimple() {
-		Contenedor container=new Estandar("CSQU3054383",500.0,"Kg",200.0,100.0,"m3");
+		Contenedor container=new Estandar("CSQU3054383",500.0,"Kg",200.0,100.0,"m3"); 
 		
 		Puerto origenpuerto = new Puerto("ES-BAR");
 		Puerto destinopuerto = new Puerto("ES-VAL");
 		
 		GPSCoordinate coordenadaOrigen=new GPSCoordinate(40.5,40.5);
-		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50); //Muelle
+		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
@@ -285,20 +295,19 @@ public class ContenedorTest {
 		origenMuelle.asignarPlaza(container, 0);
 		origenpuerto.addMuelle(origenMuelle);
 		
-		Trayecto nuevoTrayecto = new TCamion(origenMuelle, origenpuerto, "2020-11-19", destinoMuelle, destinopuerto,"2020-12-31");
-		
-		container.hacerViajes(nuevoTrayecto);
+		Trayecto nuevoTrayectoSimple = new TTren(origenMuelle, origenpuerto, "2020-11-19", destinoMuelle, destinopuerto,"2020-12-31");
+		container.hacerViajes(nuevoTrayectoSimple);
 	}
 	
 	@Test
-	public void testHacerViajesCompuesto() {
-		Contenedor container=new Estandar("CSQU3054383",500.0,"Kg",200.0,100.0,"m3");
+	public void testHacerViajesPackCamionTren() {
+		Contenedor container=new Estandar("CSQU3054383",500.0,"Kg",200.0,100.0,"m3"); 
 		
 		Puerto origenpuerto = new Puerto("ES-BAR");
 		Puerto destinopuerto = new Puerto("ES-VAL");
 		
 		GPSCoordinate coordenadaOrigen=new GPSCoordinate(40.5,40.5);
-		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50); //Muelle
+		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
@@ -306,9 +315,40 @@ public class ContenedorTest {
 		origenMuelle.asignarPlaza(container, 0);
 		origenpuerto.addMuelle(origenMuelle);
 		
-		Trayecto nuevoTrayecto = new PackCamionBarco(1, origenMuelle, origenpuerto, "2020-11-19", destinoMuelle, destinopuerto,"2020-12-31");
+		Trayecto nuevoTrayectoPack = new PackCamionTren(2,origenMuelle, origenpuerto, "2020-11-19", destinoMuelle, destinopuerto,"2020-12-31");
+		container.hacerViajes(nuevoTrayectoPack);
 		
-		container.hacerViajes(nuevoTrayecto);
+		Trayecto nuevoTrayectoSimpleCamion = new TCamion(origenMuelle, origenpuerto, "2020-11-19", destinoMuelle, destinopuerto,"2020-12-31");
+		container.hacerViajes(nuevoTrayectoSimpleCamion);
+		
+		Trayecto nuevoTrayectoSimpleTren = new TTren(origenMuelle, origenpuerto, "2020-11-19", destinoMuelle, destinopuerto,"2020-12-31");
+		container.hacerViajes(nuevoTrayectoSimpleTren);
+	}
+	
+	@Test
+	public void testHacerViajesPackCamionBarco() {
+		Contenedor container=new Estandar("CSQU3054383",500.0,"Kg",200.0,100.0,"m3"); 
+		
+		Puerto origenpuerto = new Puerto("ES-BAR");
+		Puerto destinopuerto = new Puerto("ES-VAL");
+		
+		GPSCoordinate coordenadaOrigen=new GPSCoordinate(40.5,40.5);
+		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
+		
+		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
+		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
+
+		origenMuelle.asignarPlaza(container, 0);
+		origenpuerto.addMuelle(origenMuelle);
+		
+		Trayecto nuevoTrayectoPack = new PackCamionBarco(1,origenMuelle, origenpuerto, "2020-11-19", destinoMuelle, destinopuerto,"2020-12-31");
+		container.hacerViajes(nuevoTrayectoPack);
+		
+		Trayecto nuevoTrayectoSimpleCamion = new TCamion(origenMuelle, origenpuerto, "2020-11-19", destinoMuelle, destinopuerto,"2020-12-31");
+		container.hacerViajes(nuevoTrayectoSimpleCamion);
+		
+		Trayecto nuevoTrayectoSimpleBarco = new TBarco(origenMuelle, origenpuerto, "2020-11-19", destinoMuelle, destinopuerto,"2020-12-31");
+		container.hacerViajes(nuevoTrayectoSimpleBarco);
 	}
 	
 	@Test(expected=IllegalArgumentException.class) 
@@ -316,13 +356,9 @@ public class ContenedorTest {
 		Contenedor container=new Estandar("CSQU3054383",500.0,"Kg",200.0,100.0,"m3");
 		
 		Puerto origenpuerto = new Puerto("ES-BAR");
-		Puerto destinopuerto = new Puerto("ES-VAL");
 		
 		GPSCoordinate coordenadaOrigen=new GPSCoordinate(40.5,40.5);
-		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50); //Muelle
-		
-		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
-		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
+		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 
 		origenMuelle.asignarPlaza(container, 0);
 		origenpuerto.addMuelle(origenMuelle);
@@ -372,7 +408,7 @@ public class ContenedorTest {
 	}
 	
 	@Test
-	public void testPrecio() {
+	public void testPrecioTrayectoSimple() {
 		Contenedor container=new Estandar("CSQU3054383",500.0,"Kg",200.0,100.0,"m3");
 	
 		Puerto origenPuerto = new Puerto("ES-BAR");
@@ -388,13 +424,41 @@ public class ContenedorTest {
 		origenPuerto.addMuelle(origenMuelle);
 		
 		container.hacerTrayecto(destinoPuerto);
-		Trayecto nuevoTrayecto = new TCamion(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		Trayecto nuevoTrayecto = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		container.hacerViajes(nuevoTrayecto);
 		
-		double precioTrayecto=200+4.5*coordenadaOrigen.getDistanceTo(coordenadaDestino);
+		double precioTrayecto = 20+12.5*coordenadaOrigen.getDistanceTo(coordenadaDestino);
 		assertEquals(container.precio(),precioTrayecto,0.0);
 	}
 	
+	@Test
+	public void testPrecioTrayectoCompuesto() {
+		Contenedor container=new Estandar("CSQU3054383",500.0,"Kg",200.0,100.0,"m3");
+	
+		Puerto origenPuerto = new Puerto("ES-BAR");
+		Puerto destinoPuerto = new Puerto("ES-VAL");
+		
+		GPSCoordinate coordenadaOrigen=new GPSCoordinate(40.5,40.5);
+		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
+		
+		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
+		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
+		
+		origenMuelle.asignarPlaza(container, 0);
+		origenPuerto.addMuelle(origenMuelle);
+		
+		Trayecto nuevoTrayectoSimple = new TCamion(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		container.hacerViajes(nuevoTrayectoSimple);
+		
+		Trayecto nuevoTrayecto = new PackCamionTren(1, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		container.hacerViajes(nuevoTrayecto);
+		
+		double precio1 = 200+4.5*coordenadaOrigen.getDistanceTo(coordenadaDestino);
+		double precioTrayecto=10*coordenadaOrigen.getDistanceTo(coordenadaDestino) + precio1;
+
+		assertEquals(container.precio(),precioTrayecto,0.0);
+	}
+		
 	@Test
 	public void testGetEspacioEstandar() {
 		Contenedor container=new Estandar("CSQU3054383",500.0,"Kg",200.0,100.0,"m3");

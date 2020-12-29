@@ -27,7 +27,6 @@ public abstract class Contenedor {
 	private Puerto destinoFinal;
 
 	
-
 	//TODO: JAVADOC!!!!!
 	public abstract int getEspacio();
 	public abstract int[] getCodigoTransporte();
@@ -96,7 +95,7 @@ public abstract class Contenedor {
      * @param identificador - Identificador del contenedor
      * @return digito de control
      */
-    private int obtenerDigitoControl(String identificador) {
+    public int obtenerDigitoControl(String identificador) {
     	comprobarIdentificador(identificador);
         //utilizo un mapa para guardar las letra con sus correspondientes valor
         Map<String, Integer> tabla = new HashMap<>();
@@ -164,7 +163,7 @@ public abstract class Contenedor {
 	 * @throws IllegalArgumentException en el caso de que peso sea negativo
 	 */
 	public void conviertePesoKilo(double pesoContenedor) {
-		if(peso<0) throw new IllegalArgumentException("Peso no puede ser negativo");
+		if(pesoContenedor<0) throw new IllegalArgumentException("Peso no puede ser negativo");
 		double nuevoPeso = pesoContenedor * PESOKILO;
 		setPesoKilo(nuevoPeso);
 	}
@@ -334,9 +333,7 @@ public abstract class Contenedor {
 	 * @throws IllegalArgumentException en el caso de que el contenedor no se encuentre en el puerto
 	 * @throws IllegalArgumentException si coinciden el puerto destino coincide con el puerto fin del trayecto global.
 	 * Se deberia haber realizado un nuevo trayecto global
-	 * 
 	 */
-
 	public void hacerViajes(Trayecto trayecto) {
 		if(trayecto==null)throw new IllegalArgumentException("trayecto nulo");
 		//comprobar que el primero ya tiene el puerto destino
@@ -362,8 +359,6 @@ public abstract class Contenedor {
 			packActivado=trayecto.getTipoPack();
 		}
 		else {
-			//Para el test -> Crear un trayecto Pack, añadirlo al trayecto. Despues crear otro y añadirlo
-			//tambien. Hacerlos con los 2 packs
 			int [] codigoCamionTren=new int []{0,1,1};
 			if(packActivado[trayecto.getCodigoSimple()]==1) {
 				if(packActivado==codigoCamionTren) {

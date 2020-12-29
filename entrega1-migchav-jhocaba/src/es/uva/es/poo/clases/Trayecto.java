@@ -10,7 +10,6 @@ import es.uva.inf.poo.maps.GPSCoordinate;
  * por cada contenedor
  * @author jhocaba
  * @author migchav
- *
  */
 
 public abstract class Trayecto {	
@@ -23,8 +22,24 @@ public abstract class Trayecto {
 	private LocalDate fechaFin;
 	private Puerto puertoFinal;
 	
-
 	
+	//TODO:ACTUALIZAR JAVADOCS!!!!!!!
+	/**
+	 * Calcula el coste en euros para un determinado trayecto. 
+	 * El coste viene dado por el precio de la milla y precio por dia del trayecto, ambos deben ser >0, 
+	 * y la distancia entre los puntos origen y destino.
+	 * @param precioMilla - Coste en euros de 1 unidad de distancia marina.
+	 * @param precioDia - Coste en euros de 1 dia de trayecto.
+	 * @throws IllegalArgumentException si se reciben precios negativos
+	 * @return el coste en euros total del trayecto.
+	 */
+	public abstract double costeTrayecto();
+	public abstract int [] getTipoPack();
+	public abstract int getCodigoSimple();
+	public abstract String getInicioFech();
+	public abstract String getFinFech();
+	
+
 	/**
 	 * Inicialización a partir de los argumentos, almacenando todas las instancias necesarias.
 	 * @param muelleOrigen - Muelle de origen
@@ -112,7 +127,6 @@ public abstract class Trayecto {
 		return fechaFin;
 	}
 
-	
 	/**
 	 * Conocer si la fecha de fin de trayecto es superior a una dada
 	 * Si es superior, la funcion devolverá true
@@ -126,13 +140,12 @@ public abstract class Trayecto {
 			throw new IllegalArgumentException("La fecha no puede ser nula");
 		boolean resultado = false;
 		
-		if (this.fechaFin.isAfter(fecha)) {
+		if (fechaFin.isAfter(fecha)) {
 			resultado = true;
 		}
 		
 		return resultado;
 	}
-	
 	
 	/**
 	 * Calcular distancia de un viaje en millas marinas a partir del metodo getDistanceTo de la clase GPSCoordinate
@@ -155,7 +168,6 @@ public abstract class Trayecto {
 	 * @return cadena que agrupa de forma legible dicha informacion
 	 */
 	public String infoTrayecto() {
-
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YYYY"); 
 		String inicio=(formatter.format(getFechaIni())); 
         String fin=(formatter.format(getFechaFin())); 
@@ -164,21 +176,4 @@ public abstract class Trayecto {
 				+ getPuertoDestino().getPais()+ ". La fecha de inicio del trayecto es:"+ inicio+" y la fecha "
 				+ "del fin de trayecto es: "+fin);
 	}
-	
-	//TODO:ACTUALIZAR JAVADOCS METODOS ABSTRACTOS DONDE???!!!!!!!
-	/**
-	 * Calcula el coste en euros para un determinado trayecto. 
-	 * El coste viene dado por el precio de la milla y precio por dia del trayecto, ambos deben ser >0, 
-	 * y la distancia entre los puntos origen y destino.
-	 * @param precioMilla - Coste en euros de 1 unidad de distancia marina.
-	 * @param precioDia - Coste en euros de 1 dia de trayecto.
-	 * @throws IllegalArgumentException si se reciben precios negativos
-	 * @return el coste en euros total del trayecto.
-	 */
-
-	public abstract double costeTrayecto();
-	public abstract int [] getTipoPack();
-	public abstract int getCodigoSimple();
-	public abstract String getInicioFech();
-	public abstract String getFinFech();
 }

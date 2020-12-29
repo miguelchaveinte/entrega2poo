@@ -11,7 +11,7 @@ public class PackCamionBarco extends Compuesto {
 	//TODO:JAVADOC 
 	public PackCamionBarco(int tipoTrayecto,Muelle muelleOrigen,Puerto puertoOrigen,String fechaIni,Muelle muelleDestino,Puerto puertoDestino,String fechaFin) {
 		super(muelleOrigen, puertoOrigen, fechaIni, muelleDestino,puertoDestino,fechaFin);
-		if(tipoTrayecto!=2 && tipoTrayecto!=1 &&tipoTrayecto!=0) throw new IllegalArgumentException("El tipo trayecto no es ni 0, ni 1,ni 2, es decir ni barco ni tren ni camion");
+		if(tipoTrayecto!=2 && tipoTrayecto!=1 && tipoTrayecto!=0) throw new IllegalArgumentException("El tipo trayecto no es ni 0, ni 1,ni 2, es decir ni barco ni tren ni camion");
 		inicioFechString=fechaIni;
 		finFechString=fechaFin;
 		this.tipoTrayecto=tipoTrayecto;
