@@ -8,7 +8,7 @@ import com.rits.cloning.Cloner;
 
 
 /**
- * Clase que almacena los datos relativos a los muelles
+ * Clase que almacena los datos relativos a los muelles.dsf
  * @author jhocaba
  * @author migchav
  *
