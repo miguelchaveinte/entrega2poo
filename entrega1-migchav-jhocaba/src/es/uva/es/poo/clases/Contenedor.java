@@ -26,6 +26,11 @@ public abstract class Contenedor {
 	private int [] packActivado; //PackCamionTren - 011  y PackCamionBarco - 101 
 	private Puerto destinoFinal;
 
+	
+
+	//TODO: JAVADOC!!!!!
+	public abstract int getEspacio();
+	public abstract int[] getCodigoTransporte();
 
 	
 	//TODO:ACTUALIZAR JAVADOC!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -54,10 +59,6 @@ public abstract class Contenedor {
 		trayectos=new ArrayList<>();
 		packActivado= new int []{0,0,0};
 	}
-
-	//TODO:PONER ESTO BIEN(arrriba) Y JAVADOC????????????!!!!!
-	public abstract int getEspacio();
-	public abstract int[] getCodigoTransporte();
 	
 	/**
 	 * Comprobar que el identificador sea correcto.
@@ -361,6 +362,8 @@ public abstract class Contenedor {
 			packActivado=trayecto.getTipoPack();
 		}
 		else {
+			//Para el test -> Crear un trayecto Pack, añadirlo al trayecto. Despues crear otro y añadirlo
+			//tambien. Hacerlos con los 2 packs
 			int [] codigoCamionTren=new int []{0,1,1};
 			if(packActivado[trayecto.getCodigoSimple()]==1) {
 				if(packActivado==codigoCamionTren) {
@@ -377,11 +380,6 @@ public abstract class Contenedor {
 				packActivado=trayecto.getTipoPack(); 
 			}
 		}
-	}
-	
-	//TODO:QUITAR LUEGO .SOLO PARA PRUEBAS
-	public List<Trayecto> getLista(){
-		return trayectos;
 	}
 	
 	//TODO:ACTUALIZAR JAVADOC???????????!!!!!!!!!!
@@ -404,6 +402,3 @@ public abstract class Contenedor {
 	}
 	
 }
-
-	
-	

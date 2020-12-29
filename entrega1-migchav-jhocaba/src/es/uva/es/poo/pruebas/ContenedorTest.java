@@ -31,61 +31,6 @@ public class ContenedorTest {
 		Contenedor container =new FlatRack("CSQU3054383",500.0,"Kg",200.0,100.0,"ft3");
 		assertNotNull(container);
 	}
-	
-	/**
-	 * fjrfetvt..
-	//ComprobarIdentificador
-	@Test
-	public void testComprobarIdentificador() {
-		Contenedor container=new Estandar("CSQU3054383",500.0,"Kg",200.0,100.0,"ft3");
-		String identificador="CSQU3054383";
-		container.comprobarIdentificador(identificador);	
-	}	
-	
-	@Test(expected=IllegalArgumentException.class) 
-	public void testComprobarIdentificadorIdMasLargo() {
-		Contenedor container=new Estandar("CSQU3054383",500.0,"Kg",200.0,100.0,"ft3");
-		String identificador="CSSQU3054383";
-		container.comprobarIdentificador(identificador);	
-	}
-
-	@Test(expected=IllegalArgumentException.class) 
-	public void testComprobarIdentificadorMinusculas() {
-		Contenedor container=new Estandar("CSQU3054383",500.0,"Kg",200.0,100.0,"ft3");
-		String identificador="CSsQU3054383";
-		container.comprobarIdentificador(identificador);	
-	}
-	@Test(expected=IllegalArgumentException.class) 
-	public void testComprobarIdentificadorCodigoInvalido() {
-		Contenedor container=new Estandar("CSQU3054383",500.0,"Kg",200.0,100.0,"ft3");
-		String identificador="CSSQZ3054383";
-		container.comprobarIdentificador(identificador);
-	}
-	@Test(expected=IllegalArgumentException.class) 
-	public void testComprobarIdentificadorSerieInvalida() {
-		Contenedor container=new Estandar("CSQU3054383",500.0,"Kg",200.0,100.0,"ft3");
-		String identificador="CSSUZ30543583";
-		container.comprobarIdentificador(identificador);	
-	}
-	**/
-	/**
-	//ObtenerDigitoControl
-	@Test
-	public void obtenerDigitoControl() {
-		Contenedor container=new Estandar("CSQU3054383",500.0,"Kg",200.0,100.0,"ft3");
-		String identificador="CSQU3054383";
-		int digitoControl=container.obtenerDigitoControl(identificador);
-		assertEquals(digitoControl,3);
-	}
-	
-	@Test(expected=IllegalArgumentException.class) 
-	public void obtenerDigitoControlIdInvalido() {
-		Contenedor container=new Estandar("CSQU3054383",500.0,"Kg",200.0,100.0,"ft3");
-		String identificador="CSQU38054383";
-		int digitoControl=container.obtenerDigitoControl(identificador);
-		assertEquals(digitoControl,3);
-	}
-	**/
 		
 	@Test
 	public void testSetDestinoFinal() {
@@ -95,7 +40,6 @@ public class ContenedorTest {
 		assertEquals(container.getDestinoFinal(), puertoPrueba);
 	}
 	
-	//ComprobarUnidadesPesoVolumen
 	@Test
 	public void testComprobarUnidadesPesoKg() {
 		Contenedor container=new Estandar("CSQU3054383",500.0,"Kg",200.0,100.0,"ft3");
@@ -389,7 +333,7 @@ public class ContenedorTest {
 	
 	//Aqui no da error seria origenigualfin
 	@Test(expected=IllegalArgumentException.class) 
-	public void testHacerViajesDestinoIgualFin() {
+	public void testHacerViajesOrigenIgualFin() {
 		Contenedor container=new Estandar("CSQU3054383",500.0,"Kg",200.0,100.0,"m3");
 		
 		Puerto origenPuerto = new Puerto("ES-BAR");
@@ -404,7 +348,7 @@ public class ContenedorTest {
 		origenMuelle.asignarPlaza(container, 0);
 		origenPuerto.addMuelle(origenMuelle);
 		
-		container.setDestinoFinal(destinoPuerto);
+		container.setDestinoFinal(origenPuerto);
 		
 		Trayecto nuevoTrayecto = new TCamion(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		container.hacerViajes(nuevoTrayecto);
@@ -473,7 +417,6 @@ public class ContenedorTest {
 	public void testGetCodigoTransporteEstandar() {
 		Contenedor container=new Estandar("CSQU3054383",500.0,"Kg",200.0,100.0,"m3");
 		int[] codigoPrueba = new int[] {1,1,1};
-		
 		assertTrue(Arrays.equals(container.getCodigoTransporte(),codigoPrueba));
 	}
 	
@@ -481,15 +424,14 @@ public class ContenedorTest {
 	public void testGetCodigoTransporteRefrigerado() {
 		Contenedor container=new Refrigerado("CSQU3054383",500.0,"Kg",200.0,100.0,"m3");
 		int[] codigoPrueba=new int [] {1,0,1};
-		System.out.println(container.getCodigoTransporte()==codigoPrueba);
+		//Arrays.equals -> Compara cada elemento del array
 		assertTrue(Arrays.equals(container.getCodigoTransporte(),codigoPrueba));
 	}
 	
 	@Test
 	public void testGetCodigoTransporteFlatRack() {
 		Contenedor container=new FlatRack("CSQU3054383",500.0,"Kg",200.0,100.0,"m3");
-		int[] codigoPrueba = new int [] {1,1,0};;
-		
+		int[] codigoPrueba = new int [] {1,1,0};
 		assertTrue(Arrays.equals(container.getCodigoTransporte(),codigoPrueba));
 	}	
 }
