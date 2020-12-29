@@ -6,7 +6,7 @@ import es.uva.inf.poo.maps.GPSCoordinate;
 
 public class TCamion extends Simple{
 	static final int COSTE_FIJO=200;
-	static final double COSTE_KM=4;
+	static final double COSTE_KM=4.5;
 	private int [] tipoPack;
 	private int codigoSimple;
 	private String inicioFechString;

@@ -203,8 +203,8 @@ public abstract class Contenedor {
 	 * @throws IllegalArgumentException en el caso de que el volumen sea negativo
 	 */
 	public void convierteVolumenMetros(double volumenContenedor) {
-		if(volumen<0) throw new IllegalArgumentException("Volumen no puede ser negativo");
-		double nuevoVolumen = volumen * VOLUMENMETROS;
+		if(volumenContenedor<0) {throw new IllegalArgumentException("Volumen no puede ser negativo");}
+		double nuevoVolumen = volumenContenedor * VOLUMENMETROS;
 		setVolumenMetros(nuevoVolumen);
 	}
 		
