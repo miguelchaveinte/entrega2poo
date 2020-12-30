@@ -13,7 +13,7 @@ import es.uva.es.poo.clases.Puerto;
 import es.uva.es.poo.clases.Trayecto;
 import es.uva.inf.poo.maps.GPSCoordinate;
 
-public class CompuestoTest {	
+public class CombinadoTest {	
 	@Test
 	public void testCosteTrayectoPackCamionBarco() {
 		Puerto origenPuerto = new Puerto("ES-BAR");

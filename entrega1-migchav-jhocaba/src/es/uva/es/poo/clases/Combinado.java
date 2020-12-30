@@ -1,7 +1,7 @@
 package es.uva.es.poo.clases;
 
-public abstract class Compuesto extends Trayecto {
-	public Compuesto(Muelle muelleOrigen,Puerto puertoOrigen,String fechaIni,Muelle muelleDestino,Puerto puertoDestino,String fechaFin) {
+public abstract class Combinado extends Trayecto {
+	public Combinado(Muelle muelleOrigen,Puerto puertoOrigen,String fechaIni,Muelle muelleDestino,Puerto puertoDestino,String fechaFin) {
 		super(muelleOrigen, puertoOrigen, fechaIni, muelleDestino,puertoDestino,fechaFin);
 	}
 	@Override

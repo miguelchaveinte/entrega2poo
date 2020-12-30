@@ -354,7 +354,7 @@ public abstract class Contenedor {
 		}
 		if (posicionMuelle==-1) throw new IllegalArgumentException("El contenedor no esta en ese puerto");
 		
-		if(trayecto instanceof Compuesto) {
+		if(trayecto instanceof Combinado) {
 			trayectos.add(trayecto);
 			packActivado=trayecto.getTipoPack();
 		}

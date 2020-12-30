@@ -3,7 +3,7 @@ package es.uva.es.poo.clases;
 import es.uva.inf.poo.maps.GPSCoordinate;
 import com.rits.cloning.Cloner;
 
-public class PackCamionTren extends Compuesto{
+public class PackCamionTren extends Combinado{
 	static final int PRECIO_KM =10;
 	private String inicioFechString;
 	private String finFechString;

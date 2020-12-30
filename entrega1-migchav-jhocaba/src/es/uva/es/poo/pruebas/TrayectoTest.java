@@ -36,7 +36,7 @@ public class TrayectoTest {
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
 		
-		Compuesto trayectoNuevo = new PackCamionTren(2, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		Combinado trayectoNuevo = new PackCamionTren(2, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertNotNull(trayectoNuevo);
 	}
 	
@@ -312,7 +312,7 @@ public class TrayectoTest {
 		GPSCoordinate coordenadaDestino =new GPSCoordinate(39.4457, -0.319878); //Valencia
 		Muelle destinoMuelle =new Muelle(111, 20,coordenadaDestino,'O',5);
 		
-		Compuesto trayectoNuevoCompuesto=new PackCamionBarco(0,origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		Combinado trayectoNuevoCompuesto=new PackCamionBarco(0,origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		double precioTrayecto= (double)ChronoUnit.DAYS.between(LocalDate.parse("2020-11-19"),LocalDate.parse("2020-12-31"))*4000;
 		assertEquals(trayectoNuevoCompuesto.costeTrayecto(),precioTrayecto*0.85,0.0);
 	}

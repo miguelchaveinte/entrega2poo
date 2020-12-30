@@ -1,6 +1,6 @@
 package es.uva.es.poo.clases;
 import com.rits.cloning.Cloner;
-public class PackCamionBarco extends Compuesto {
+public class PackCamionBarco extends Combinado {
 	static final double DESCUENTO_BARCO=0.85;
 	private String inicioFechString;
 	private String finFechString;
