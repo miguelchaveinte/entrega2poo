@@ -8,13 +8,7 @@ import java.util.Arrays;
 
 import org.junit.Test;
 
-import es.uva.es.poo.clases.Contenedor;
-import es.uva.es.poo.clases.Estandar;
-import es.uva.es.poo.clases.Muelle;
-import es.uva.es.poo.clases.PackCamionBarco;
-import es.uva.es.poo.clases.PackCamionTren;
-import es.uva.es.poo.clases.Puerto;
-import es.uva.es.poo.clases.Trayecto;
+import es.uva.es.poo.clases.*;
 import es.uva.inf.poo.maps.GPSCoordinate;
 
 public class PackCamionBarcoTest {
@@ -27,8 +21,9 @@ public class PackCamionBarcoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
-		Trayecto trayectoBarco = new PackCamionBarco(0, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
+		PackCamionBarco trayectoBarco = new PackCamionBarco(0, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertNotNull(trayectoBarco);
 	}
 	
@@ -40,9 +35,9 @@ public class PackCamionBarcoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
-		Trayecto trayectoBarco = new PackCamionBarco(3, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
-		assertNotNull(trayectoBarco);
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
+		PackCamionBarco trayectoBarco = new PackCamionBarco(3, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 	}
 	
 	@Test
@@ -53,8 +48,9 @@ public class PackCamionBarcoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
-		Trayecto trayectoBarco = new PackCamionBarco(0, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
+		PackCamionBarco trayectoBarco = new PackCamionBarco(0, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertEquals(trayectoBarco.getInicioFech(),"2020-11-19");
 	}
 	
@@ -66,8 +62,9 @@ public class PackCamionBarcoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
-		Trayecto trayectoBarco = new PackCamionBarco(0, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
+		PackCamionBarco trayectoBarco = new PackCamionBarco(0, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertEquals(trayectoBarco.getFinFech(),"2020-12-31");
 	}
 	
@@ -79,8 +76,9 @@ public class PackCamionBarcoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
-		Trayecto trayectoBarco = new PackCamionBarco(1, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
+		PackCamionBarco trayectoBarco = new PackCamionBarco(1, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertEquals(trayectoBarco.getCodigoSimple(), 1);
 	}
 	
@@ -93,8 +91,9 @@ public class PackCamionBarcoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
-		Trayecto trayectoPack = new PackCamionBarco(1,origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
+		PackCamionBarco trayectoPack = new PackCamionBarco(1,origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertTrue(Arrays.equals(trayectoPack.getTipoPack(), packPrueba));
 	}
 	
@@ -106,8 +105,9 @@ public class PackCamionBarcoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
-		Trayecto trayectoBarco = new PackCamionBarco(0, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
+		PackCamionBarco trayectoBarco = new PackCamionBarco(0, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		
 		double precioTrayecto = (double)ChronoUnit.DAYS.between(LocalDate.parse("2020-11-19"),LocalDate.parse("2020-12-31"))*4000;
 		assertEquals(trayectoBarco.costeTrayecto(),precioTrayecto*0.85,0.0);
@@ -121,8 +121,9 @@ public class PackCamionBarcoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
-		Trayecto trayectoTren = new PackCamionBarco(1, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
+		PackCamionBarco trayectoTren = new PackCamionBarco(1, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		
 		double coste=20+12.5*coordenadaOrigen.getDistanceTo(coordenadaDestino);
 		assertEquals(trayectoTren.costeTrayecto(), coste,0.0);
@@ -136,8 +137,9 @@ public class PackCamionBarcoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
-		Trayecto trayectoCamion = new PackCamionBarco(2, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
+		PackCamionBarco trayectoCamion = new PackCamionBarco(2, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		
 		double coste=200+4.5*coordenadaOrigen.getDistanceTo(coordenadaDestino);
 		assertEquals(trayectoCamion.costeTrayecto(), coste,0.0);

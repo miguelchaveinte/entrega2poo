@@ -54,6 +54,11 @@ public class Puerto  {
 		Cloner cloner=new Cloner();
 		return cloner.deepClone(muelles);
 	}
+	//TODO:JAVADOC
+	public boolean puertoContieneMuelle(Muelle muelleContenido) {
+		boolean contenido=muelles.contains(muelleContenido);
+		return contenido;
+	}
 	/**
 	 * Devuelve el string correspondiente al codigo localidad 
 	 * @return codigo localidad

@@ -15,15 +15,17 @@ import es.uva.inf.poo.maps.GPSCoordinate;
 public class TrayectoTest {
 
 	@Test
-	public void testTrayectoInicializadorSimple() {
+	public void testTrayectoInicializador() {
 		Puerto origenPuerto = new Puerto("ES-BAR");
 		Puerto destinoPuerto = new Puerto("ES-VAL");
 		GPSCoordinate coordenadaOrigen=new GPSCoordinate(40.5,40.5);
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
 		
-		Simple trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		Trayecto trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertNotNull(trayectoNuevo);
 	}
 	
@@ -35,8 +37,41 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
 		
-		Combinado trayectoNuevo = new PackCamionTren(2, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		Trayecto trayectoNuevo = new PackCamionTren(2, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		assertNotNull(trayectoNuevo);
+	}
+	
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testTrayectoNoMuelleEnPuertoOrigen() {
+		Puerto origenPuerto = new Puerto("ES-BAR");
+		Puerto destinoPuerto = new Puerto("ES-VAL");
+		GPSCoordinate coordenadaOrigen=new GPSCoordinate(40.5,40.5);
+		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
+		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
+		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
+
+		destinoPuerto.addMuelle(destinoMuelle);
+		
+		Trayecto trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		assertNotNull(trayectoNuevo);
+	}
+	
+	@Test(expected=IllegalArgumentException.class)
+	public void testTrayectoNoMuelleEnPuertoDestino() {
+		Puerto origenPuerto = new Puerto("ES-BAR");
+		Puerto destinoPuerto = new Puerto("ES-VAL");
+		GPSCoordinate coordenadaOrigen=new GPSCoordinate(40.5,40.5);
+		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
+		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
+		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
+		origenPuerto.addMuelle(origenMuelle);
+
+		
+		Trayecto trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertNotNull(trayectoNuevo);
 	}
 	
@@ -46,8 +81,9 @@ public class TrayectoTest {
 		Puerto destinoPuerto = new Puerto("ES-VAL");
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
+		destinoPuerto.addMuelle(destinoMuelle);
 		
-		Simple trayectoNuevo = new TTren(null, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		Trayecto trayectoNuevo = new TTren(null, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertNotNull(trayectoNuevo);
 	}
 		
@@ -57,8 +93,9 @@ public class TrayectoTest {
 		Puerto destinoPuerto = new Puerto("ES-VAL");
 		GPSCoordinate coordenadaOrigen=new GPSCoordinate(40.5,40.5);
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
+		origenPuerto.addMuelle(origenMuelle);
 		
-		Simple trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", null, destinoPuerto,"2020-12-31");
+		Trayecto trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", null, destinoPuerto,"2020-12-31");
 		assertNotNull(trayectoNuevo);
 
 	}
@@ -70,8 +107,8 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
-		Simple trayectoNuevo = new TTren(origenMuelle, null, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		destinoPuerto.addMuelle(destinoMuelle);
+		Trayecto trayectoNuevo = new TTren(origenMuelle, null, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertNotNull(trayectoNuevo);
 	}
 	
@@ -82,8 +119,8 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
-		Simple trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, null,"2020-12-31");
+		origenPuerto.addMuelle(origenMuelle);
+		Trayecto trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, null,"2020-12-31");
 		assertNotNull(trayectoNuevo);
 	}
 	
@@ -95,7 +132,9 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		Simple trayectoNuevo = new TTren(origenMuelle, origenPuerto, "", destinoMuelle, destinoPuerto,"");
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
+		Trayecto trayectoNuevo = new TTren(origenMuelle, origenPuerto, "", destinoMuelle, destinoPuerto,"");
 		assertNotNull(trayectoNuevo);
 	}
 	
@@ -107,7 +146,9 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		Simple trayectoNuevo = new TTren(origenMuelle, origenPuerto, "1111-123-12", destinoMuelle, destinoPuerto,"0000-00-00");
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
+		Trayecto trayectoNuevo = new TTren(origenMuelle, origenPuerto, "1111-123-12", destinoMuelle, destinoPuerto,"0000-00-00");
 		assertNotNull(trayectoNuevo);
 	}
 
@@ -121,7 +162,9 @@ public class TrayectoTest {
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
 		
-		Simple trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
+		Trayecto trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 				
 		trayectoNuevo.setPuertoFinal(destinoFinal);
 		
@@ -136,8 +179,9 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
-		Simple trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
+		Trayecto trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		trayectoNuevo.setPuertoFinal(null);
 		assertEquals(trayectoNuevo.getPuertoFinal(), null);
 
@@ -152,8 +196,9 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
-		Simple trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
+		Trayecto trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertNull(trayectoNuevo.getPuertoFinal());
 	}
 	
@@ -165,8 +210,9 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
-		Simple trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
+		Trayecto trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertEquals(trayectoNuevo.getMuelleOrigen(), origenMuelle);
 	}
 	
@@ -178,8 +224,9 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
-		Simple trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
+		Trayecto trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertEquals(trayectoNuevo.getMuelleDestino(), destinoMuelle);
 	}
 	
@@ -191,8 +238,10 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
 		
-		Simple trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		Trayecto trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertEquals(trayectoNuevo.getPuertoOrigen(), origenPuerto);
 	}
 	
@@ -204,8 +253,9 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
-		Simple trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
+		Trayecto trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertEquals(trayectoNuevo.getPuertoDestino(), destinoPuerto);
 	}
 	
@@ -217,8 +267,9 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
-		Simple trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
+		Trayecto trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertEquals(trayectoNuevo.getFechaIni(), LocalDate.parse("2020-11-19"));
 	}
 	
@@ -230,8 +281,10 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
 		
-		Simple trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		Trayecto trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertEquals(trayectoNuevo.getFechaFin(), LocalDate.parse("2020-12-31"));
 	}
 
@@ -243,8 +296,10 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
 		
-		Simple trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		Trayecto trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertTrue(trayectoNuevo.fechaCorrecta(LocalDate.now()));
 	}
 	
@@ -256,8 +311,9 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
-		Simple trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
+		Trayecto trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		trayectoNuevo.fechaCorrecta(null);
 	}
 	
@@ -269,8 +325,9 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
-		Simple trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
+		Trayecto trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertEquals(trayectoNuevo.getDistancia(), 732.2205958333337, 0.0);
 		
 	}
@@ -281,13 +338,14 @@ public class TrayectoTest {
 		Puerto destinoPuerto = new Puerto("ES-VAL");
 		Muelle origenMuelle=new Muelle(111, 12,null,'O',50);
 		Muelle destinoMuelle=new Muelle(111, 15,null,'O',50);
-		
-		Simple trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
+		Trayecto trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		trayectoNuevo.getDistancia();
 	}
 	
 	@Test
-	public void testCosteTrayectoSimple()  {
+	public void testCosteTrayectoTrayecto()  {
 		Puerto origenPuerto = new Puerto("ES-BAR");
 		Puerto destinoPuerto = new Puerto("ES-VAL");
 		GPSCoordinate coordenadaOrigen = new GPSCoordinate(41.345, 2.14167); //Barcelona
@@ -295,10 +353,12 @@ public class TrayectoTest {
 		GPSCoordinate coordenadaDestino =new GPSCoordinate(39.4457, -0.319878); //Valencia
 		Muelle destinoMuelle =new Muelle(111, 20,coordenadaDestino,'O',5);
 		
-		Simple trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
+		
+		Trayecto trayectoNuevo = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 
 		double precioTrayecto=20+12.5*coordenadaOrigen.getDistanceTo(coordenadaDestino);
-		//assertEquals(trayectoBarco.costeTrayecto(),precioTrayecto*0.85,0.0);
 		
 		assertEquals(trayectoNuevo.costeTrayecto(),precioTrayecto,0.0);
 	}
@@ -311,8 +371,10 @@ public class TrayectoTest {
 		Muelle origenMuelle =new Muelle(111, 20,coordenadaOrigen,'O',5);
 		GPSCoordinate coordenadaDestino =new GPSCoordinate(39.4457, -0.319878); //Valencia
 		Muelle destinoMuelle =new Muelle(111, 20,coordenadaDestino,'O',5);
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
 		
-		Combinado trayectoNuevoCompuesto=new PackCamionBarco(0,origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		Trayecto trayectoNuevoCompuesto=new PackCamionBarco(0,origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		double precioTrayecto= (double)ChronoUnit.DAYS.between(LocalDate.parse("2020-11-19"),LocalDate.parse("2020-12-31"))*4000;
 		assertEquals(trayectoNuevoCompuesto.costeTrayecto(),precioTrayecto*0.85,0.0);
 	}
@@ -326,7 +388,8 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
 		Trayecto trayectoPack = new TCamion(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertTrue(Arrays.equals(trayectoPack.getTipoPack(), packPrueba));
 	}
@@ -340,7 +403,8 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
 		Trayecto trayectoPack = new PackCamionBarco(1,origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertTrue(Arrays.equals(trayectoPack.getTipoPack(), packPrueba));
 	}
@@ -353,7 +417,8 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
 		Trayecto trayectoBarco = new TBarco(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertEquals(trayectoBarco.getCodigoSimple(), 0);
 	}
@@ -366,7 +431,8 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
 		Trayecto trayectoPack = new PackCamionBarco(0,origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertEquals(trayectoPack.getCodigoSimple(), 0);
 	}
@@ -379,7 +445,8 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
 		Trayecto trayectoCamion = new TCamion(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertEquals(trayectoCamion.getInicioFech(), "2020-11-19");
 	}
@@ -392,7 +459,8 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
 		Trayecto trayectoCamion = new TCamion(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertEquals(trayectoCamion.getFinFech(), "2020-12-31");
 	}
@@ -405,6 +473,8 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
 		
 		Trayecto trayectoPack = new PackCamionTren(1,origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertEquals(trayectoPack.getInicioFech(), "2020-11-19");
@@ -418,6 +488,8 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
 		
 		Trayecto trayectoPack = new PackCamionTren(1,origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertEquals(trayectoPack.getFinFech(), "2020-12-31");
@@ -431,8 +503,11 @@ public class TrayectoTest {
 		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
 		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
 		Trayecto trayectoPack = new PackCamionTren(1,origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		trayectoPack.infoTrayecto();
 	}
+	
+	
 }

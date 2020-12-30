@@ -57,8 +57,9 @@ public class Muelle   {
 		String codigoInfra=String.valueOf(infraestructura);
 		this.infraestructura=new int[3];
 		for(int i=0; i<3; i++){
-			// TODO:COMPROBAR QUE SEA 1 Y 0 NADA MAS
-			this.infraestructura[i] = Character.getNumericValue(codigoInfra.charAt(i));
+			int	codigoCaracter=Character.getNumericValue(codigoInfra.charAt(i));
+			if(codigoCaracter!=0 && codigoCaracter!=1) throw new IllegalArgumentException("El identificador de infraestructura debe ser un codigo de 0 y 1");
+			this.infraestructura[i] = codigoCaracter;
 		}
 		setPlazas(numPlazas);
 	}
@@ -78,6 +79,11 @@ public class Muelle   {
 		}
 	}
 	//TODO:GET INFRAESTRUCTURA???????????? no hace falta
+	
+	public int [] getInfraestructuraMuelle() {
+		Cloner cloner=new Cloner();
+		return cloner.deepClone(infraestructura);
+	}
 	//TODO: TEST DE ESTAS DOS DE ABAJO!!!!!!!!!!!!!
 	
 	/**

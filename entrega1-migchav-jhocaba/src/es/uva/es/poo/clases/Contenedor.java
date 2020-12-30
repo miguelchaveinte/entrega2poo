@@ -95,7 +95,7 @@ public abstract class Contenedor {
      * @param identificador - Identificador del contenedor
      * @return digito de control
      */
-    public int obtenerDigitoControl(String identificador) {
+    private int obtenerDigitoControl(String identificador) {
     	comprobarIdentificador(identificador);
         //utilizo un mapa para guardar las letra con sus correspondientes valor
         Map<String, Integer> tabla = new HashMap<>();
@@ -145,13 +145,13 @@ public abstract class Contenedor {
 	 * @return IllegalArgumentException si el {@param peso} esta vacio
 	 * @return IllegalArgumentException si las unidades del {@param peso} no son Kg o lb
 	 */
-	public void comprobarUnidadesPeso(double peso, String unidPeso) {
+	private void comprobarUnidadesPeso(double peso, String unidPeso) {
 		//TODO COMPROBAR QUE HE CAMBIADO A EQUALS
 		if (unidPeso.equals("Kg")) {
     		setPesoKilo(peso);
     	}
     	else if(unidPeso.equals("lb")) {
-    		conviertePesoKilo(peso);	
+    		setPesoLibra(peso);	
     	}
     	else { throw new IllegalArgumentException("String Peso no correcto unidades");
     	}
@@ -162,7 +162,7 @@ public abstract class Contenedor {
 	 * @param pesocontenedor - Peso del contenedor en libras
 	 * @throws IllegalArgumentException en el caso de que peso sea negativo
 	 */
-	public void conviertePesoKilo(double pesoContenedor) {
+	public void setPesoLibra(double pesoContenedor) {
 		if(pesoContenedor<0) throw new IllegalArgumentException("Peso no puede ser negativo");
 		double nuevoPeso = pesoContenedor * PESOKILO;
 		setPesoKilo(nuevoPeso);
@@ -186,12 +186,12 @@ public abstract class Contenedor {
 	 * @return IllegalArgumentException si el {@param volumen} esta vacio
 	 * @return IllegalArgumentException si las unidades del {@param volumen} no son m3 o ft3
 	 */
-	public void comprobarUnidadesVolumen(double volumen, String unidVol) { 
+	private void comprobarUnidadesVolumen(double volumen, String unidVol) { 
 		if (unidVol.equals("m3")) {
 			setVolumenMetros(volumen);
 		}
 		else if(unidVol.equals("ft3")) {
-			convierteVolumenMetros(volumen);	
+			setVolumenPies(volumen);	
 		}
 		else { throw new IllegalArgumentException("String Volumen no correcto unidades o <0");
 		}
@@ -202,8 +202,8 @@ public abstract class Contenedor {
 	 * @param volumenContenedor - Volumen del contenedor en pies cubicos
 	 * @throws IllegalArgumentException en el caso de que el volumen sea negativo
 	 */
-	public void convierteVolumenMetros(double volumenContenedor) {
-		if(volumenContenedor<0) {throw new IllegalArgumentException("Volumen no puede ser negativo");}
+	public void setVolumenPies(double volumenContenedor) {
+		if(volumenContenedor<0) throw new IllegalArgumentException("Volumen no puede ser negativo");
 		double nuevoVolumen = volumenContenedor * VOLUMENMETROS;
 		setVolumenMetros(nuevoVolumen);
 	}
@@ -335,24 +335,8 @@ public abstract class Contenedor {
 	 * Se deberia haber realizado un nuevo trayecto global
 	 */
 	public void hacerViajes(Trayecto trayecto) {
-		if(trayecto==null)throw new IllegalArgumentException("trayecto nulo");
-		//comprobar que el primero ya tiene el puerto destino
-		//if(getDestinoFinal()==null)throw new IllegalArgumentException("debe inicializar el destino final global del contenedor");
-		//comprobar que el puerto origen no es el destino
-		if(trayecto.getPuertoOrigen().equals(getDestinoFinal()))throw new IllegalArgumentException("Ya se había llegado al puerto destino del trayecto.Inicie un nuevo trayecto global");
-		//que el contenedor este en ese muelle/puerto
-		//esto en un metodo private?? ->
-		List<Muelle> listaMuelles=trayecto.getPuertoOrigen().getListaMuelles();
-		int posicionMuelle=-1;
-		int i=0;
-
-		while(posicionMuelle==-1 && i<listaMuelles.size()) {
-			Muelle analisis=listaMuelles.get(i);
-			int plaza=analisis.getPlaza(this.getIdentificador());
-			if(plaza!=-1) posicionMuelle=i;
-			i++;
-		}
-		if (posicionMuelle==-1) throw new IllegalArgumentException("El contenedor no esta en ese puerto");
+		
+		comprobarTrayectosYMuelle(trayecto);
 		
 		if(trayecto instanceof Combinado) {
 			trayectos.add(trayecto);
@@ -361,7 +345,7 @@ public abstract class Contenedor {
 		else {
 			int [] codigoCamionTren=new int []{0,1,1};
 			if(packActivado[trayecto.getCodigoSimple()]==1) {
-				if(packActivado==codigoCamionTren) {
+				if(Arrays.equals(packActivado, codigoCamionTren)) {
 					PackCamionTren trayectoCasteado= new PackCamionTren(trayecto.getCodigoSimple(),trayecto.getMuelleOrigen(), trayecto.getPuertoOrigen(), trayecto.getInicioFech(), trayecto.getMuelleDestino(), trayecto.getPuertoDestino(),trayecto.getFinFech());
 					trayectos.add(trayectoCasteado);
 				}
@@ -377,6 +361,33 @@ public abstract class Contenedor {
 		}
 	}
 	
+	private void comprobarTrayectosYMuelle(Trayecto trayecto) {
+		if(trayecto==null)throw new IllegalArgumentException("trayecto nulo");
+		//comprobar que el primero ya tiene el puerto destino
+		//if(getDestinoFinal()==null)throw new IllegalArgumentException("debe inicializar el destino final global del contenedor");
+		//comprobar que el puerto origen no es el destino
+		if(trayecto.getPuertoOrigen().equals(getDestinoFinal()))throw new IllegalArgumentException("Ya se había llegado al puerto destino del trayecto.Inicie un nuevo trayecto global");
+		//que el contenedor este en ese muelle/puerto
+		//esto en un metodo private?? ->
+		//TODO:INFRAESTRUCTURA DE ESE MUELLE ACTA PARA EL TRAYECTO y meterlo en test
+		List<Muelle> listaMuellesOrigen=trayecto.getPuertoOrigen().getListaMuelles();
+		int posicionMuelleOrigen=-1;
+		int i=0;
+
+		while(posicionMuelleOrigen==-1 && i<listaMuellesOrigen.size()) {
+			Muelle analisis=listaMuellesOrigen.get(i);
+			int plaza=analisis.getPlaza(this.getIdentificador());
+			if(plaza!=-1) posicionMuelleOrigen=i;
+			i++;
+		}
+		if (posicionMuelleOrigen==-1) throw new IllegalArgumentException("El contenedor no esta en ese puerto");
+		
+		if(listaMuellesOrigen.get(posicionMuelleOrigen).getInfraestructuraMuelle()[trayecto.getCodigoSimple()]!=1) 
+			throw new IllegalArgumentException("El muelle origen no soporta este trayecto");
+		
+		if(trayecto.getMuelleDestino().getInfraestructuraMuelle()[trayecto.getCodigoSimple()]!=1)
+			throw new IllegalArgumentException("El muelle destino no soporta este trayecto");
+	}
 	//TODO:ACTUALIZAR JAVADOC???????????!!!!!!!!!!
 	/**
 	 * Calcular el precio total del trayecto global, es decir, la suma de costes de cada viaje.

@@ -1,6 +1,12 @@
 package es.uva.es.poo.clases;
+import static org.junit.Assert.assertEquals;
+
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter; 
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.List;
+
+import org.junit.Test;
 
 import es.uva.inf.poo.maps.GPSCoordinate;
 
@@ -40,6 +46,7 @@ public abstract class Trayecto {
 	public abstract String getFinFech();
 	
 
+	//TODO:ACTUALIAZAR Y HACER TEST NUEVO!!!!!!!!!!!!!!!!!!!!!! 
 	/**
 	 * Inicialización a partir de los argumentos, almacenando todas las instancias necesarias.
 	 * @param muelleOrigen - Muelle de origen
@@ -58,7 +65,12 @@ public abstract class Trayecto {
         if(muelleDestino==null) throw new IllegalArgumentException("El muelle no debe ser  nulo ");
         if(puertoOrigen==null) throw new IllegalArgumentException("El puerto no debe ser  nulo ");
         if(puertoDestino==null) throw new IllegalArgumentException("El puerto no debe ser  nulo ");
-		this.muelleOrigen = muelleOrigen; 
+       
+		if(!puertoOrigen.puertoContieneMuelle(muelleOrigen)) throw new IllegalArgumentException("El muelle origen no esta en el puerto origen");
+		
+		if(!puertoDestino.puertoContieneMuelle(muelleDestino)) throw new IllegalArgumentException("El muelle destino no esta en el puerto destino");
+        
+        this.muelleOrigen = muelleOrigen; 
 		this.puertoOrigen = puertoOrigen;
 		this.fechaIni = LocalDate.parse(fechaIni);
 		this.muelleDestino=muelleDestino;
@@ -176,4 +188,5 @@ public abstract class Trayecto {
 				+ getPuertoDestino().getPais()+ ". La fecha de inicio del trayecto es:"+ inicio+" y la fecha "
 				+ "del fin de trayecto es: "+fin);
 	}
+	
 }

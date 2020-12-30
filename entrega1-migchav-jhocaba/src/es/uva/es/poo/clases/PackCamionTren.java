@@ -9,6 +9,8 @@ public class PackCamionTren extends Combinado{
 	private String finFechString;
 	private int[] tipoPack ;
 	private int codigoSimple;
+	
+	//TODO:JAVADOC
 	public PackCamionTren(int tipoTrayecto,Muelle muelleOrigen,Puerto puertoOrigen,String fechaIni,Muelle muelleDestino,Puerto puertoDestino,String fechaFin) {
 		super(muelleOrigen, puertoOrigen, fechaIni, muelleDestino,puertoDestino,fechaFin);
 		if(tipoTrayecto!=2 && tipoTrayecto!=1 &&tipoTrayecto!=0) throw new IllegalArgumentException("El tipo trayecto no es ni 0, ni 1,ni 2, es decir ni barco ni tren ni camion");
@@ -18,9 +20,11 @@ public class PackCamionTren extends Combinado{
 		codigoSimple=tipoTrayecto;
 	}
 
+	@Override
 	public String getInicioFech() {
 		return inicioFechString;
 	}
+	@Override
 	public String getFinFech() {
 		return finFechString;
 	}
