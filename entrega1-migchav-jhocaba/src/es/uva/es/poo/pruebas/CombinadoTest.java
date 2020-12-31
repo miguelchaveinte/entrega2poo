@@ -11,6 +11,7 @@ import es.uva.inf.poo.maps.GPSCoordinate;
 
 public class CombinadoTest {	
 	
+	@SuppressWarnings("unused")
 	@Test(expected=IllegalArgumentException.class) 
 	public void testConstructorPackCamionBarcoTipoTrayectoInvalido() {
 		Puerto origenPuerto = new Puerto("ES-BAR");
@@ -24,6 +25,7 @@ public class CombinadoTest {
 		Combinado trayecto = new PackCamionBarco(3, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 	}
 	
+	@SuppressWarnings("unused")
 	@Test(expected=IllegalArgumentException.class) 
 	public void testConstructorPackCamionTrenTipoTrayectoInvalido() {
 		Puerto origenPuerto = new Puerto("ES-BAR");

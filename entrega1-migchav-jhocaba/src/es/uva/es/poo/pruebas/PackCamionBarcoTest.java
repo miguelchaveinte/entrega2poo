@@ -27,6 +27,7 @@ public class PackCamionBarcoTest {
 		assertNotNull(trayectoBarco);
 	}
 	
+	@SuppressWarnings("unused")
 	@Test(expected=IllegalArgumentException.class) 
 	public void testConstructorPackCamionBarcoTipoTrayectoInvalido() {
 		Puerto origenPuerto = new Puerto("ES-BAR");

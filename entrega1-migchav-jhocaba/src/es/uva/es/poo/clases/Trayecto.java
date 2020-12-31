@@ -1,13 +1,7 @@
 package es.uva.es.poo.clases;
-import static org.junit.Assert.assertEquals;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-
-import org.junit.Test;
-
 import es.uva.inf.poo.maps.GPSCoordinate;
 
 
@@ -26,7 +20,6 @@ public abstract class Trayecto {
 	private Muelle muelleDestino;
 	private Puerto puertoDestino;
 	private LocalDate fechaFin;
-	private Puerto puertoFinal;
 	
 	
 	//TODO:ACTUALIZAR JAVADOCS!!!!!!!
@@ -77,24 +70,7 @@ public abstract class Trayecto {
 		this.puertoDestino = puertoDestino;
 		this.fechaFin = LocalDate.parse(fechaFin);
 	}
-	/**
-	 * Guarda el puerto destino del trayecto
-	 * @param destino - Puerto destino del trayecto
-	 * @throws IllegalArgumentException en el caso de que el puerto final de destino sea nulo
-	 * @return el nombre del puerto destino final
-	 */
-	public void setPuertoFinal(Puerto destino) {
-		if(destino==null)  throw new IllegalArgumentException("Puerto destino final de trayecto no puede ser null");
-		puertoFinal=destino;
-	}
-	/**
-	 * Obtener el puerto final de un trayecto
-	 * @return El nombre del puerto 
-	 */
-	public Puerto getPuertoFinal() {
-		return puertoFinal;
-	}
-	
+
 	/**
 	 * Consulta dato Muelle de origen
 	 * @return el nombre del muelle origen

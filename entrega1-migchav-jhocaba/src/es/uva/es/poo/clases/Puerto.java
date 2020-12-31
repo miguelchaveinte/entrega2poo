@@ -56,8 +56,7 @@ public class Puerto  {
 	}
 	//TODO:JAVADOC
 	public boolean puertoContieneMuelle(Muelle muelleContenido) {
-		boolean contenido=muelles.contains(muelleContenido);
-		return contenido;
+		return muelles.contains(muelleContenido);
 	}
 	/**
 	 * Devuelve el string correspondiente al codigo localidad 
@@ -73,6 +72,7 @@ public class Puerto  {
 	public String getPais() {
 		return pais;
 	}
+	//TODO:ACTUALIZAR
 	/**
 	 * Incluye en el puerto el muelle que se pasa por argumento
 	 * @param muelleToAdd - no puede ser null
@@ -80,6 +80,7 @@ public class Puerto  {
 	 */
 	public void addMuelle(Muelle muelleToAdd) {
 		if(muelleToAdd==null)throw new IllegalArgumentException("El muelle no puede ser vacio");
+		if(puertoContieneMuelle(muelleToAdd))throw new IllegalArgumentException("El muelle ya esta en el puerto");
 		muelles.add(muelleToAdd);
 			
 	}

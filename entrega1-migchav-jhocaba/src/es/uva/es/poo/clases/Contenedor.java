@@ -363,8 +363,11 @@ public abstract class Contenedor {
 	
 	private void comprobarTrayectosYMuelle(Trayecto trayecto) {
 		if(trayecto==null)throw new IllegalArgumentException("trayecto nulo");
+		
+		if(trayectos.contains(trayecto))throw new IllegalArgumentException("trayecto ya realizado");
+		
+		if(destinoFinal==null) throw new IllegalArgumentException("establezca un destino final del trayecto global");
 		//comprobar que el primero ya tiene el puerto destino
-		//if(getDestinoFinal()==null)throw new IllegalArgumentException("debe inicializar el destino final global del contenedor");
 		//comprobar que el puerto origen no es el destino
 		if(trayecto.getPuertoOrigen().equals(getDestinoFinal()))throw new IllegalArgumentException("Ya se había llegado al puerto destino del trayecto.Inicie un nuevo trayecto global");
 		//que el contenedor este en ese muelle/puerto

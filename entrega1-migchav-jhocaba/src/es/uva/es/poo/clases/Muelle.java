@@ -166,6 +166,7 @@ public class Muelle   {
 		return coordenada;
 	}
 
+	//TODO:ACTUALIZAR JAVADOC
 	/**
 	 * Mete el contenedor dado en la plaza indicada si la infraestructura del muelle permite posteriormente transportar el contenedor.
 	 * Si esta está llena o el contenedor es FlatRack y necesita dos plazas buscamos una nueva plaza si es posible.
@@ -184,6 +185,8 @@ public class Muelle   {
 		if(contenedor==null || contenedor.getIdentificador()==null) throw new IllegalArgumentException("El contenedor no puede ser nulo");
 		if(plaza<0) throw new IllegalArgumentException("La plaza no debe ser <0");	
 		correctoInfraestructura(contenedor);
+		
+		if(getPlaza(contenedor.getIdentificador())!=-1)throw new IllegalArgumentException("El contenedor ya esta contenido en el muelle");
 		
 		int statePlaza=getEstadoPlaza(plaza);
 		//Comprobar que si quiere dos plazas la de al lado tb esta libre
@@ -258,8 +261,9 @@ public class Muelle   {
 			if(!plazas.get(plaza).isEmpty() &&(!plazas.get(plaza+1).isEmpty() || !plazas.get(plaza-1).isEmpty())) {
 				 plazaModificada=buscaEspacio(2);
 			}
+			
+			contenedorDosPlazas=-1;
 			if(plazas.get(plaza+1).isEmpty()) contenedorDosPlazas=1;
-			else contenedorDosPlazas=-1;
 		}
 		return plazaModificada+"/"+contenedorDosPlazas;
 	}
@@ -273,20 +277,9 @@ public class Muelle   {
 	 * @return retorno - plaza nueva encontrada segun el caso de preferencia que vienen dado por {@param espacio}
 	 */
 	private int buscaEspacio(int espacio) {
-		int semi=-1;
 		int retorno=-1;
-		int vaciaPrefe=-1;
-		boolean posibleAnterior=false;
 		if(espacio==1) {
-			for(int i=0;i<numPlazas;i++) {
-				if(estadoPlaza[i]==0 && !plazas.get(i).isEmpty()) semi=i;
-				else if(plazas.get(i).isEmpty()) {
-					retorno=i;
-					if(posibleAnterior && !plazas.get(i-1).isEmpty()) vaciaPrefe=i;
-				}
-				posibleAnterior=true;
-			}
-		if(retorno==-1) throw new IllegalArgumentException("No se puede almacenar ese contenedor por falta de espacio");
+			retorno=buscaEspacioOcupaUno();
 		}
 		else {
 			for(int i=0;i<numPlazas-1 && retorno==-1;i++) {
@@ -296,11 +289,27 @@ public class Muelle   {
 			}
 			if(retorno==-1) throw new IllegalArgumentException("No se puede almacenar ese contenedor por falta de espacio");
 		}
+		return retorno;
+	}
+		
+	private int buscaEspacioOcupaUno() {
+		int semi=-1;
+		int retorno=-1;
+		int vaciaPrefe=-1;
+		boolean posibleAnterior=false;
+		for(int i=0;i<numPlazas;i++) {
+			if(estadoPlaza[i]==0 && !plazas.get(i).isEmpty()) semi=i;
+			else if(plazas.get(i).isEmpty()) {
+				retorno=i;
+				if(posibleAnterior && !plazas.get(i-1).isEmpty()) vaciaPrefe=i;
+			}
+			posibleAnterior=true;
+		}
+		if(retorno==-1) throw new IllegalArgumentException("No se puede almacenar ese contenedor por falta de espacio");
 		if(semi!=-1) retorno=semi;
 		else if(vaciaPrefe!=-1) retorno=vaciaPrefe;
 		return retorno;
 	}
-		
 	/**
 	 * Sacamos un contenedor dado su identificador.
 	 * Primero le buscamos  en que plaza se encuentra y posteriormente
@@ -353,10 +362,9 @@ public class Muelle   {
 	 * Indice de la plaza donde hemos encontrado el contenedor(index empieza desde 0)
 	 * @param identificadoridentificador del contenedor 
 	 * @return index de la plaza en la que se encuentra el contenedor
-	 * @throws IllegalArgumentException-si el identificador del contenedor no es valido
 	 */
+
 	public int getPlaza(String identificador)  {
-		Contenedor identificadorCorrecto=new Estandar(identificador,500,"Kg",200.0,100,"m3");
 		int index=-1;
 		int iterador=0;
 		while(index==-1 && iterador<plazas.size()) {
