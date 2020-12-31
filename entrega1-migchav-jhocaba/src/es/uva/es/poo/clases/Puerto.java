@@ -11,7 +11,10 @@ import es.uva.inf.poo.maps.GPSCoordinate;
 
 
 /**
- * Clase que proporciona la gestión de un puerto de una localidad
+ * Clase que proporciona la gestión de un puerto de una localidad. Los servicios que 
+ * proporciona dicha clase van desde la propia creacion de este,añadir/eliminar muelles
+ * a dicho puerto,ofrecer la lista de los muelles a su cargo, de los muelles operativos o
+ * que tengan aún espacio para almacenar contenedores o los que estan en una ubicacion cercana.
  * @author jhocaba
  * @author migchav
  */
@@ -24,12 +27,11 @@ public class Puerto  {
 	private List<Muelle> muelles;
 		
 	/**
-	 * Inicializacion a partir de argumentos
-	 * @param identidad - Define el los atributos localidad 
-	 * y pais mediante el formato(PP-LLL) siendo PP el codigo de pais 
-	 * y LLL el codigo de localidad- no puede ser null
-	 * @throws IllegalArgumentException - cuando el argumento no cumple las condiciones PP-LLL
-	 * @throws NullPointerException - cuando identidad==null
+	 * Crea un nuevo puerto con un identificador distinguido.
+	 * @param identidad El argumento identificativo del puerto que codifica el pais y la 
+	 * localiad mediante el formato(PP-LLL) siendo PP el codigo de pais 
+	 * y LLL el codigo de localidad - no puede ser null
+	 * @throws IllegalArgumentException Si el identificador no cumple las condiciones PP-LLL
 	 */
 	public Puerto(String identidad) {
 		if(identidad.length()!=6)throw new IllegalArgumentException("Identidad no correcta");
@@ -47,50 +49,65 @@ public class Puerto  {
 			throw new IllegalArgumentException("Identidad no correcta(no contiene: - )");
 	}
 	/**
-	 * Devuelve la lista de todos los muelles del puerto
-	 * @return lista de Muelles del puerto
+	 * Devuelve la lista clonada en profundidad de todos los muelles gestionados por el puerto.
+	 * @see <a href="https://github.com/kostaskougios/cloning">Cloning Library</a>
+	 * @return Lista de muelles gestionados por el puerte clonada en profundidad.
 	 */
 	public List<Muelle> getListaMuelles(){
 		Cloner cloner=new Cloner();
 		return cloner.deepClone(muelles);
 	}
-	//TODO:JAVADOC
-	public boolean puertoContieneMuelle(Muelle muelleContenido) {
+	
+	/**
+	 * Dado un muelle por @param muelleContenido indica si este se encuentra bajo
+	 * la gestion del puerto
+	 * @param muelleContenido El muelle a analizar si esta entre los que gestiona el puerto
+	 * @see List#contains(Object)
+	 * @return true si el puerto gestiona a @param muelleContenido. Por el contrario retorna false.
+	 * @throws Si @param muelleContenido==null 
+	 */
+	public boolean puertoContainsMuelle(Muelle muelleContenido) {
+		if(muelleContenido==null)throw new IllegalArgumentException("El muelle no puede ser nulo");
 		return muelles.contains(muelleContenido);
 	}
 	/**
-	 * Devuelve el string correspondiente al codigo localidad 
-	 * @return codigo localidad
+	 * Devuelve el String correspondiente al código localidad 
+	 * @return localidad El codigo sacado del identificador 
 	 */
 	public String getLocalidad() {
 		return localidad;
 	}
 	/**
 	 * Devuelve el string correspondiente al codigo del pais 
-	 * @return codigo pais
+	 * @return pais El codigo sacado del identificador
 	 */
 	public String getPais() {
 		return pais;
 	}
-	//TODO:ACTUALIZAR
+
 	/**
-	 * Incluye en el puerto el muelle que se pasa por argumento
-	 * @param muelleToAdd - no puede ser null
-	 * @throws IllegalArgumentException-si muelleToAdd es null
+	 * Incluye en la gestion del puerto el @param muelleToAdd si este no es null ni está 
+	 * ya gestionado por este puerto.
+	 * @param muelleToAdd El muelle a incluir - no puede ser null
+	 * @throws IllegalArgumentException Si @param muelleToAdd==null
+	 * @throws IllegalArgumentException Si @param muelleToAdd ya esta siendo gestionado
+	 * por este puerto. 
+	 * @see Puerto#puertoContainsMuelle(Muelle)
 	 */
 	public void addMuelle(Muelle muelleToAdd) {
 		if(muelleToAdd==null)throw new IllegalArgumentException("El muelle no puede ser vacio");
-		if(puertoContieneMuelle(muelleToAdd))throw new IllegalArgumentException("El muelle ya esta en el puerto");
+		if(puertoContainsMuelle(muelleToAdd))throw new IllegalArgumentException("El muelle ya esta en el puerto");
 		muelles.add(muelleToAdd);
 			
 	}
 	
 	/**
-	 * Elimina un muelle del puerto pero solo si este no contiene contenedores
-	 * @param IdMuelleToEliminar-un int de dos digitos
-	 * @throws IllegalArgumentException-si IdMuelleToEliminar no es de dos digitos
-	 * @throws IllegalArgumentException-si IdMuelleToEliminar no esta en el puerto
-	 * @throws IllegalArgumentException -si el muelle no esta vacio
+	 * Elimina un muelle de la gestion del puerto dado el identificador del muelle
+	 * pero si y solo si este no contiene contenedores.
+	 * @param IdMuelleToEliminar Identificador de dos digitos del muelle
+	 * @throws IllegalArgumentException Si @param IdMuelleToEliminar no es de dos digitos
+	 * @throws IllegalArgumentException Si @parm IdMuelleToEliminar no esta en el puerto
+	 * @throws IllegalArgumentException Si el muelle con @param IdMuelleToEliminar no esta vacio
 	 */
 	public void eliminarMuelle(int idMuelleToEliminar) {
 		if(Integer.toString(idMuelleToEliminar).length()!=2) throw new IllegalArgumentException("El identificador de muelle debe ser un número de 2 digitos");
@@ -109,9 +126,9 @@ public class Puerto  {
 		if (!eliminado) throw new IllegalArgumentException("El muelle no se ha eliminado porque no se ha encontrado");
 	}
 	/***
-	 * Devuelve un boolean que nos indica si el puerto no tienes mas 
-	 * capacidad de almacenar muelles
-	 * @return boolean completo=> false -si una vez analizado todos los muelles
+	 * Devuelve un boolean que nos indica si el puerto no tienes más 
+	 * capacidad de almacenar contenedores.
+	 * @return completo-Retorna false Si una vez analizado todos los muelles
 	 * del puerton(tanto operativos como no operativos) sigue habiendo espacio. 
 	 * Sino es que esta completo y retorna true
 	 */
@@ -129,9 +146,10 @@ public class Puerto  {
 		return completo;
 	}
 	/**
-	 * Analiza todos los muelles que estan en el puerto y si estan 
-	 * operativos los introduce una lista que es la que nos devuelve
-	 * @return lista de Muelles operativos
+	 * Analiza todos los muelles que estan gestionados por el puerto y si estan 
+	 * operativos los introduce clonados en profundidas en una lista 
+	 * que es la que devolvemos
+	 * @return lista-La lista de muelles que cumplen los requisitos
 	 */
 	public List<Muelle> muellesOperativos() {
 		List<Muelle> lista=new ArrayList<>();
@@ -147,10 +165,11 @@ public class Puerto  {
 		return lista;
 	}
 	/**
-	 * Analiza todos los muelles que estan en el puerto y si estan
-	 * con espacio disponible para almacenar algun contenedor mas
-	 * los introduce en una lista que es la que nos devuelve.
-	 * @return lista de muelles con espacio esten o no esten operativos
+	 * Analiza todos los muelles que estan gestionados por el puerto y si estan
+	 * con espacio disponible para almacenar algún contenedor más.Si cumple estos 
+	 * requisitos los introducimos en una nueva lista que es la se devuelve 
+	 * previamente clonados en profundidad  
+	 * @return lista- La lista de muelles que cumplen los requisitos
 	 */
 	public List<Muelle> muellesEspacio(){
 		Cloner cloner=new Cloner();
@@ -169,12 +188,12 @@ public class Puerto  {
 	}
 	/**
 	 * Devuelve una lista de los muelles esten o no operativos que se encuentran
-	 * a una distancia menor de una cierta coordenada GPS
-	 * @param puntoGps - coordenada GPS desde la cual observaremos la distancia a medir
-	 * @param distancia - double de la distancia de la cual la distancia de los 
-	 * muelles debe ser menor.
-	 * @return lista de los muelles a una distancia menor del {@param distancia}
-	 * del punto GPS {@param puntoGps}
+	 * a una distancia menor de una cierta coordenada GPS y una cierta distancia.
+	 * @param puntoGps La coordenada GPS desde la cual observaremos la distancia a medir
+	 * @param distancia La distancia de la cual la distancia de los 
+	 * muelles a @param puntoGps debe ser menor.
+	 * @return lista - La lista de muelles cuya distancia a @param puntoGps sea < @param distancia
+	 * @see es.uva.inf.poo.maps.GPSCoordinate#getDistanceTo(GPSCoordinate)
 	 */
 	public List<Muelle> muellesCerca(GPSCoordinate puntoGps,double distancia){
 		if(puntoGps==null) throw new IllegalArgumentException("La coordenada no puede ser null ");

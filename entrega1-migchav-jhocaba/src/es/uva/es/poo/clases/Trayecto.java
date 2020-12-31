@@ -59,9 +59,9 @@ public abstract class Trayecto {
         if(puertoOrigen==null) throw new IllegalArgumentException("El puerto no debe ser  nulo ");
         if(puertoDestino==null) throw new IllegalArgumentException("El puerto no debe ser  nulo ");
        
-		if(!puertoOrigen.puertoContieneMuelle(muelleOrigen)) throw new IllegalArgumentException("El muelle origen no esta en el puerto origen");
+		if(!puertoOrigen.puertoContainsMuelle(muelleOrigen)) throw new IllegalArgumentException("El muelle origen no esta en el puerto origen");
 		
-		if(!puertoDestino.puertoContieneMuelle(muelleDestino)) throw new IllegalArgumentException("El muelle destino no esta en el puerto destino");
+		if(!puertoDestino.puertoContainsMuelle(muelleDestino)) throw new IllegalArgumentException("El muelle destino no esta en el puerto destino");
         
         this.muelleOrigen = muelleOrigen; 
 		this.puertoOrigen = puertoOrigen;
