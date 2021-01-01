@@ -150,6 +150,7 @@ public class Puerto  {
 	 * operativos los introduce clonados en profundidas en una lista 
 	 * que es la que devolvemos
 	 * @return lista-La lista de muelles que cumplen los requisitos
+	 * @see <a href="https://github.com/kostaskougios/cloning">Cloning Library</a>
 	 */
 	public List<Muelle> muellesOperativos() {
 		List<Muelle> lista=new ArrayList<>();
@@ -170,6 +171,7 @@ public class Puerto  {
 	 * requisitos los introducimos en una nueva lista que es la se devuelve 
 	 * previamente clonados en profundidad  
 	 * @return lista- La lista de muelles que cumplen los requisitos
+	 * @see <a href="https://github.com/kostaskougios/cloning">Cloning Library</a>
 	 */
 	public List<Muelle> muellesEspacio(){
 		Cloner cloner=new Cloner();
@@ -194,6 +196,7 @@ public class Puerto  {
 	 * muelles a @param puntoGps debe ser menor.
 	 * @return lista - La lista de muelles cuya distancia a @param puntoGps sea < @param distancia
 	 * @see es.uva.inf.poo.maps.GPSCoordinate#getDistanceTo(GPSCoordinate)
+	 * @see <a href="https://github.com/kostaskougios/cloning">Cloning Library</a>
 	 */
 	public List<Muelle> muellesCerca(GPSCoordinate puntoGps,double distancia){
 		if(puntoGps==null) throw new IllegalArgumentException("La coordenada no puede ser null ");

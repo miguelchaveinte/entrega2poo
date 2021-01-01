@@ -33,6 +33,10 @@ public abstract class Trayecto {
 	 * @return el coste en euros total del trayecto.
 	 */
 	public abstract double costeTrayecto();
+	/**
+	 * prueba de getTIpopack
+	 * @return
+	 */
 	public abstract int [] getTipoPack();
 	public abstract int getCodigoSimple();
 	public abstract String getInicioFech();

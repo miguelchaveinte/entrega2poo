@@ -1,11 +1,19 @@
 package es.uva.es.poo.clases;
 import java. util. *;
+
 /**
- * Clase relativa a los contenedores
+ * Clase abstracta que almacena la información relativa a los contenedores como por ejemplo sus atributos
+ * identificativos,carga,volumen y sus trayectos. Partiendo de esta base podemos llegar a realizar
+ * con esta clase algunas acciones como mover un contenedor de lugar({@link Contenedor#hacerTrayecto(Puerto)} 
+ * y {@link Contenedor#hacerViajes(Trayecto)}),calcular los costes de los trayectos y obtener todas sus
+ * caracteristicas.
+ * 
+ * @see Estandar
+ * @see Refrigerado
+ * @see FlatRack
  * 
  * @author jhocaba
  * @author migchav
- *
  */
 
 public abstract class Contenedor {
@@ -23,21 +31,38 @@ public abstract class Contenedor {
 	private boolean estado;		//Transito = False -- Recogida = True
 	private boolean techo;
 	private List<Trayecto> trayectos;
-	private int [] packActivado; //PackCamionTren - 011  y PackCamionBarco - 101 
+	private int [] packActivado; //PackCamionTren - 011  y PackCamionBarco - 101 - Trayecto Simples PackActivado=000
 	private Puerto destinoFinal;
 
 	
-	//TODO: JAVADOC!!!!!
-	public abstract int getEspacio();
-	public abstract int[] getCodigoTransporte();
-
 	
-	//TODO:ACTUALIZAR JAVADOC!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 	/**
-	 * Inicialización a partir de argumentos, almacenando todas las instancias necesarias.
-	 * @param identificador - Cadena con el que se identifica cada contenedor
-	 * @throws IllegalArgumentException en el caso de que el digito de control del identificador sea diferente del obtenido
-	 * @throws IllegalArgumentException si la carga es negativa
+	 * Crea un nuevo contenedor con un identificador, peso y su unidad,carga,volumen y su unidad,boolean de si tiene techo, distinguido.
+	 * Además de estos parametros el contenedor se inicializada a estado de transito hasta que se ejecute un trayecto global y sus 
+	 * diferentes viajes lleguen hasta el puerto destinoFinal; y el packActivado({@link Trayecto#getTipoPack()}) para los descuentos en los trayectos por haber 
+	 * contratado un {@link PackCamionBarco} o un {@link PackCamionTren} se setea a un array de codigo binario 0 que no ejecuta descuento.
+	 * @param identificador La cadena con el que se identifica cada contenedor.(Caracterizada por el codigo del dueño (3 letras mayusculas),
+	 * una letra(U,J o Z), que indica el equipamiento,un número de serie de 6 dígitos, un dígito de control obtenido de un algoritmo.
+	 * @param peso El numero de peso de la tara
+	 * @param unidPeso La unidad del @param peso que puede ser Kg(La k en mayusculas - kilogramos) o lb (libras)
+	 * @param carga La máxima carga útil permitida
+	 * @param volumen El volumen del contenedor
+	 * @param unidVol La unidad del @param volumen que puede ser m3(metros cubicos) o ft3(pies cubicos)
+	 * @param techo El boolean que indica si tiene o no techo (true para decir que SI tiene techo .Por el contrario false).
+	 * @throws IllegalArgumentException Si el digito de control del identificador sea diferente del obtenido
+	 * @throws IllegalArgumentException Si la carga<0
+	 * @throws IllegalArgumentException Si el @param identificador no cumple los requisitos expuestos
+	 * @throws IllegalArgumentException Si el peso<0
+	 * @throws IllegalArgumentException Si el volumen<0
+	 * @throws IllegalArgumentException Si la unidad de peso no son las expuestas
+	 * @throws IllegalArgumentException Si la unidad de volumen no son las expuestas
+	 * @see Contenedor#comprobarIdentificador(String)
+	 * @see Contenedor#obtenerDigitoControl(String)
+	 * @see Contenedor#comprobarUnidadesPeso(double, String)
+	 * @see Contenedor#comprobarUnidadesVolumen(double, String)
+	 * @see Contenedor#setTransito()
+	 * @see Contenedor#setTecho()
+	 * @see Contenedor#setNoTecho()
 	 */
 	public Contenedor(String identificador,double peso,String unidPeso,double carga,double volumen,String uniVol,boolean techo)  {	
 		comprobarIdentificador(identificador);
@@ -61,11 +86,9 @@ public abstract class Contenedor {
 	
 	/**
 	 * Comprobar que el identificador sea correcto.
-	 * Uso de StringBuilder para modificar el tamaño de las cadenas de caracteres al ir añadiendo caracteres, 
-	 * y la correspondiente asignacion de los atributos en el caso de que se cumplan todas las condiciones. 
-	 * @param identificador - Identificador del contenedor
-	 * @throws IllegalArgumentException si el identificador no tiene la longitud correcta
-	 * @throws IllegalArgumentException si alguna de las tres letras iniciales no son mayusculas, o si la cuarta letra no se corresponde 
+	 * @param identificador El identificador del contenedor
+	 * @throws IllegalArgumentException Si el identificador no tiene la longitud correcta
+	 * @throws IllegalArgumentException Si alguna de las tres letras iniciales no son mayusculas, o si la cuarta letra no se corresponde 
 	 * con los caracteres - 'U', 'J', 'Z' o si la longitud de la serie es distinta de 6.
 	 */
 	private void comprobarIdentificador(String identificador) {
@@ -89,11 +112,10 @@ public abstract class Contenedor {
 	}
 	
 	/**
-     * Obtener el digito de control del contenedor a partir del identificador.
-     * Uso de mapa para guardar cada letra con su correspondiente valor, además de un vector en el que se 
-     * van almacenando los respectivos valores y con los que se calculará la suma necesaria. 
-     * @param identificador - Identificador del contenedor
-     * @return digito de control
+     * Obtener el digito de control correcto del contenedor a partir del identificador 
+     * mediante el algoritmo: {@link <a href="https://en.wikipedia.org/wiki/ISO_6346">Algoritmo codigo control</a>}
+     * @param identificador El identificador del contenedor
+     * @return codigoControl El número que corresponde al codigo del dueño,equipamiento y serie del contenedor.
      */
     private int obtenerDigitoControl(String identificador) {
     	comprobarIdentificador(identificador);
@@ -118,19 +140,38 @@ public abstract class Contenedor {
         int resultado =(int) suma/11;
         resultado = resultado * 11;
         int codigoControl=(int)(suma - resultado);
-        if(codigoControl==10) return 0;
+        if(codigoControl==10) codigoControl=0;
         return codigoControl;
     }
+    
+    
+	/**
+	 * Espacio relativo al número de plazas que ocupa el contenedor según su tipo
+	 * @return 1 si solo necesita una plaza o 2 si necesita dos plazas
+	 */
+	public abstract int getEspacio();
+	
+	/**
+	 * Obtenemos el codigo de infraestructura del contenedor en un array de tamaño tres, en el que la posicion
+	 * 0 es el correspodiente al transporte por barco,la 1 al transporte por tren y la 2 al 
+	 * transporte por camión.
+	 * @return El array codificado en binario para los tres transportes siendo 1 que ese 
+	 * transporte es valido y 0 que no soporta ese transporte.
+	 */
+	public abstract int[] getCodigoTransporte();
+    
+    
 	/**
 	 * Setea el Puerto destino del trayecto global que realizará el contenedor
-	 * @param puerto - puerto destino del trayecto global(conjunto)
+	 * @param puerto El {@link Puerto} destino del trayecto global(conjunto)
 	 */
     public void setDestinoFinal(Puerto puerto) {
     	destinoFinal=puerto;
     }
+    
 	/**
 	 * Obtiene el Puerto destino del trayecto global que realiza el contenedor
-	 * @return puerto - puerto destino del trayecto global(conjunto)
+	 * @return El puerto destino del trayecto global(conjunto)
 	 */
     public Puerto getDestinoFinal() {
     	return destinoFinal;
@@ -146,15 +187,19 @@ public abstract class Contenedor {
 	 * @return IllegalArgumentException si las unidades del {@param peso} no son Kg o lb
 	 */
 	private void comprobarUnidadesPeso(double peso, String unidPeso) {
-		//TODO COMPROBAR QUE HE CAMBIADO A EQUALS
 		if (unidPeso.equals("Kg")) {
     		setPesoKilo(peso);
     	}
     	else if(unidPeso.equals("lb")) {
     		setPesoLibra(peso);	
     	}
-    	else { throw new IllegalArgumentException("String Peso no correcto unidades");
+    	else { throw new IllegalArgumentException("String unidPeso no correcto unidades");
     	}
+	}
+	
+	//TODO:JAVADOC!!
+	public double getCarga() {
+		return carga;
 	}
 	
 	/**
@@ -359,6 +404,7 @@ public abstract class Contenedor {
 				packActivado=trayecto.getTipoPack(); 
 			}
 		}
+		if(trayecto.getPuertoDestino().equals(destinoFinal)) this.setRecogida();
 	}
 	
 	private void comprobarTrayectosYMuelle(Trayecto trayecto) {

@@ -336,6 +336,28 @@ public class ContenedorTest {
 		container.hacerViajes(nuevoTrayectoSimple);
 	}
 	
+	@Test
+	public void testHacerViajesSimpleEstadoRecogida() {
+		Contenedor container=new Estandar("CSQU3054383",500.0,"Kg",200.0,100.0,"m3"); 
+		Puerto destino=new Puerto("ES-MAD");
+		container.hacerTrayecto(destino);
+		
+		Puerto origenPuerto = new Puerto("ES-BAR");
+		
+		GPSCoordinate coordenadaOrigen=new GPSCoordinate(40.5,40.5);
+		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
+		
+		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
+		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
+
+		origenMuelle.asignarPlaza(container, 0);
+		origenPuerto.addMuelle(origenMuelle);
+		destino.addMuelle(destinoMuelle);
+		
+		Trayecto nuevoTrayectoSimple = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destino,"2020-12-31");
+		container.hacerViajes(nuevoTrayectoSimple);
+		assertTrue(container.getEstado());
+	}
 
 	
 	@Test

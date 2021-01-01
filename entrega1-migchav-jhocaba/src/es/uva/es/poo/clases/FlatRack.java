@@ -11,10 +11,17 @@ public class FlatRack extends Contenedor {
 		codigoTransporte=new int [] {1,1,0};
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int getEspacio() {
 		return espacio;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int[] getCodigoTransporte() {
 		Cloner cloner=new Cloner();
