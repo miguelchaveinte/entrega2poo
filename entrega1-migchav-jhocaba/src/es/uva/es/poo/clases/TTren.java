@@ -70,6 +70,9 @@ public class TTren extends Simple{
 	
 	/**
 	 * {@inheritDoc}
+	 * El coste trayecto en {@link TTren} viene dado que es de 200 euros fijos más 4,5 euros por cada 
+	 * kilometro recorrido para transportarlo.
+	 * @see es.uva.inf.poo.maps.GPSCoordinate#getDistanceTo(GPSCoordinate)
 	 */
 	@Override
 	public double costeTrayecto() {

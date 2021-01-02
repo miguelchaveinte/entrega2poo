@@ -81,6 +81,12 @@ public class PackCamionBarco extends Combinado {
 	
 	/**
 	 * {@inheritDoc}
+	 * El coste trayecto en {@link PackCamionBarco} viene dado por los costes de 
+	 * los trayectos simples {@link TTren},{@link TCamion} o {@link TBarco},
+	 * pero solo aquellos que son de tipo {@link TBarco} tienen un 15% de descuento en el coste.
+	 * @see TTren
+	 * @see TBarco
+	 * @see TCamion
 	 */
 	@Override
 	public double costeTrayecto() {

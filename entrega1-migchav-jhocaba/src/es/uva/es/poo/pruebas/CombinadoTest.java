@@ -97,11 +97,26 @@ public class CombinadoTest {
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
 		origenPuerto.addMuelle(origenMuelle);
 		destinoPuerto.addMuelle(destinoMuelle);
-		Combinado trayectoBarco = new PackCamionTren(1, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		Combinado trayectoTren = new PackCamionTren(1, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		
 		double coste=coordenadaOrigen.getDistanceTo(coordenadaDestino)*10;
-		assertEquals(trayectoBarco.costeTrayecto(), coste,0.0);
+		assertEquals(trayectoTren.costeTrayecto(), coste,0.0);
 	}
+	@Test
+	public void testCosteTrayectoPackCamionTrenTipoBarco() {
+		Puerto origenPuerto = new Puerto("ES-BAR");
+		Puerto destinoPuerto = new Puerto("ES-VAL");
+		GPSCoordinate coordenadaOrigen=new GPSCoordinate(40.5,40.5);
+		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
+		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
+		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
+		origenPuerto.addMuelle(origenMuelle);
+		destinoPuerto.addMuelle(destinoMuelle);
+		Combinado trayectoBarcoCombinado = new PackCamionTren(0, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		Simple trayectoBarcoSimple=new TBarco(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		assertEquals(trayectoBarcoCombinado.costeTrayecto(), trayectoBarcoSimple.costeTrayecto(),0.0);
+	}
+	
 	
 	@Test
 	public void testgetTipoPackCamionBarco() {

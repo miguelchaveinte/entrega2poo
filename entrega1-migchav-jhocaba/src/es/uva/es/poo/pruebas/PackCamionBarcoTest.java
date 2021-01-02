@@ -52,8 +52,8 @@ public class PackCamionBarcoTest {
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
 		origenPuerto.addMuelle(origenMuelle);
 		destinoPuerto.addMuelle(destinoMuelle);
-		PackCamionBarco trayectoBarco = new PackCamionBarco(1, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
-		assertEquals(trayectoBarco.getCodigoSimple(), 1);
+		PackCamionBarco trayectoTren = new PackCamionBarco(1, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		assertEquals(trayectoTren.getCodigoSimple(), 1);
 	}
 	
 	@Test

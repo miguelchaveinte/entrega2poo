@@ -70,6 +70,9 @@ public class TCamion extends Simple{
 	}
 	/**
 	 * {@inheritDoc}
+	 * El coste del trayecto en {@link TCamion} viene dado que es de 20 euros 
+	 * fijos más 12,5 euros por cada kilometro recorrido para transportarlo.
+	 * @see es.uva.inf.poo.maps.GPSCoordinate#getDistanceTo(GPSCoordinate)
 	 */
 	@Override
 	public double costeTrayecto() {

@@ -24,6 +24,7 @@ public class PackCamionTren extends Combinado{
 	static final int PRECIO_KM =10;
 	private int[] tipoPack ;
 	private int codigoSimple;
+	private int tipoTrayecto;
 	
 	/**
 	 * Crea un Trayecto Combinado de tipo PackCamionBarco, es decir,puede utilizar cualquiera
@@ -61,6 +62,7 @@ public class PackCamionTren extends Combinado{
 		super(muelleOrigen, puertoOrigen, fechaIni, muelleDestino,puertoDestino,fechaFin);
 		if(tipoTrayecto!=2 && tipoTrayecto!=1 &&tipoTrayecto!=0) 
 			throw new IllegalArgumentException("El tipo trayecto no es ni 0, ni 1,ni 2, es decir ni barco ni tren ni camion");
+		this.tipoTrayecto=tipoTrayecto;
 		tipoPack= new int []{0,1,1};
 		codigoSimple=tipoTrayecto;
 	}
@@ -85,11 +87,24 @@ public class PackCamionTren extends Combinado{
 	
 	/**
 	 * {@inheritDoc}
+	 * El coste trayecto en {@link PackCamionTren} viene dado por los costes de 
+	 * los trayectos simples {@link TTren},{@link TCamion} o {@link TBarco},
+	 * pero los que son de tipo {@link TTren} y {@linkTCamion} su precio
+	 * es de 10 euros por kilometros recorrido en el trayecto,sin costes fijos.
+	 * @see TTren
+	 * @see TBarco
+	 * @see TCamion
 	 */
 	@Override
 	public double costeTrayecto() {
+		 if(tipoTrayecto==0) {
+			Trayecto trayectoBarco=new TBarco(super.getMuelleOrigen(), super.getPuertoOrigen(), super.getFechaIni().toString(), super.getMuelleDestino(), super.getPuertoDestino(),super.getFechaFin().toString());
+			return trayectoBarco.costeTrayecto();
+		 }
+		 else {
 			GPSCoordinate coordenadaOrigen = getMuelleOrigen().getCoordenada();
 			GPSCoordinate coordenadaDestino=getMuelleDestino().getCoordenada();
-			return coordenadaOrigen.getDistanceTo(coordenadaDestino)* PRECIO_KM;			
+			return coordenadaOrigen.getDistanceTo(coordenadaDestino)* PRECIO_KM;
+		 }						
 	}
 }

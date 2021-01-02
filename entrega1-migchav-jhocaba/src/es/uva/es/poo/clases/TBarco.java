@@ -66,6 +66,9 @@ public class TBarco extends Simple {
 	}
 	/**
 	 * {@inheritDoc}
+	 * El coste en el caso de {@link TBarco} viene dado por 4000 euros por dia que 
+	 * transcurre.
+	 * @see ChronoUnit#between(java.time.temporal.Temporal, java.time.temporal.Temporal)
 	 */
 	@Override
 	public double costeTrayecto() {
