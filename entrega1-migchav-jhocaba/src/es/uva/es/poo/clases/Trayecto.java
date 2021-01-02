@@ -6,10 +6,28 @@ import es.uva.inf.poo.maps.GPSCoordinate;
 
 
 /**
- * Clase en la que se almacena la información relativa a los viajes realizados 
- * por cada contenedor
- * @author jhocaba
- * @author migchav
+ * Clase abstracta que almacena aquella información relevante de cada uno de los viajes 
+ * que realiza un {@link Contenedor}. Esta informacion básicamente consiste en el {@link Puerto}
+ * y {@link Muelle} origen y destino de ese viaje como su fecha de inicio y fin prevista. Con 
+ * todos estos datos podemos calcular toda la información relativa al viaje,como la distancia
+ * que recorre el contenedor.Además podemos calcular cuanto cuesta ese viaje, pero dicha 
+ * implementación viene dada por los tipos de trayectos que tenemos según medio de transporte y coste/descuento:
+ * {@link Simple} que agrupa a su vez a {@link TTren}, {@link TBarco} y {@link TCamion}; y por otro lado 
+ * {@link Combinado} que contiene los Packs {@link PackCamionBarco} y {@link PackCamionTren} que lo que hace
+ * es ofertar una combinación de los trayectos {@link Simple} a un mejor precio.
+ * 
+ * @see Simple
+ * @see TTren
+ * @see TBarco
+ * @see TCamion
+ * 
+ * @see Combinado
+ * @see PackCamionBarco
+ * @see PackCamionTren
+ * 
+ * @see LocalDate
+ * 
+ * @author migchav,jhocaba
  */
 
 public abstract class Trayecto {	
@@ -22,50 +40,38 @@ public abstract class Trayecto {
 	private LocalDate fechaFin;
 	
 	
-	//TODO:ACTUALIZAR JAVADOCS!!!!!!!
 	/**
-	 * Calcula el coste en euros para un determinado trayecto. 
-	 * El coste viene dado por el precio de la milla y precio por dia del trayecto, ambos deben ser >0, 
-	 * y la distancia entre los puntos origen y destino.
-	 * @param precioMilla - Coste en euros de 1 unidad de distancia marina.
-	 * @param precioDia - Coste en euros de 1 dia de trayecto.
-	 * @throws IllegalArgumentException si se reciben precios negativos
-	 * @return el coste en euros total del trayecto.
-	 */
-	public abstract double costeTrayecto();
-	/**
-	 * prueba de getTIpopack
-	 * @return
-	 */
-	public abstract int [] getTipoPack();
-	public abstract int getCodigoSimple();
-	public abstract String getInicioFech();
-	public abstract String getFinFech();
-	
-
-	//TODO:ACTUALIAZAR Y HACER TEST NUEVO!!!!!!!!!!!!!!!!!!!!!! 
-	/**
-	 * Inicialización a partir de los argumentos, almacenando todas las instancias necesarias.
-	 * @param muelleOrigen - Muelle de origen
-	 * @param puertoOrigen - Puerto de origen
-	 * @param fechaIni - Fecha de inicio de trayecto (Formato: aaaa-mm-dd)
-	 * @param muelleDestino - Muelle de destino
-	 * @param puertoDestino - Puerto de destino
-	 * @param fechaFinFecha de fin de trayecto (Formato: aaaa-mm-dd)	
-	 * @throws IllegalArgumentException-si muelleOrigen==null
-	 * @throws IllegalArgumentException-si muelleDestino==null
-	 * @throws IllegalArgumentException-si puertoOrigen==null
-	 * @throws IllegalArgumentException-si puertoDestino==null
+	 * Crea un nuevo Trayecto, almacenando todas las instancias necesarias.
+	 * @param muelleOrigen El muelle de origen
+	 * @param puertoOrigen El puerto de origen
+	 * @param fechaIni La fecha de inicio de trayecto (Formato: aaaa-mm-dd)
+	 * @param muelleDestino El muelle de destino
+	 * @param puertoDestino El puerto de destino
+	 * @param fechaFinFecha La fecha de fin de trayecto (Formato: aaaa-mm-dd)	
+	 * @throws IllegalArgumentException Si @param muelleOrigen==null
+	 * @throws IllegalArgumentException Si @param muelleDestino==null
+	 * @throws IllegalArgumentException Si @param puertoOrigen==null
+	 * @throws IllegalArgumentException Si @param puertoDestino==null
+	 * @throws IllegalArgumentException Si @param puertoOrigen no contiene @param muelleOrigen
+	 * @throws IllegalArgumentException Si @param puertoDestino no contiene @param muelleDestino
+	 * @see LocalDate
+	 * @see LocalDate#parse(CharSequence)
 	 */
 	public Trayecto(Muelle muelleOrigen,Puerto puertoOrigen,String fechaIni,Muelle muelleDestino,Puerto puertoDestino,String fechaFin) {
-		if(muelleOrigen==null) throw new IllegalArgumentException("El muelle no debe ser  nulo ");
-        if(muelleDestino==null) throw new IllegalArgumentException("El muelle no debe ser  nulo ");
-        if(puertoOrigen==null) throw new IllegalArgumentException("El puerto no debe ser  nulo ");
-        if(puertoDestino==null) throw new IllegalArgumentException("El puerto no debe ser  nulo ");
+		if(muelleOrigen==null) 
+			throw new IllegalArgumentException("El muelle no debe ser  nulo ");
+        if(muelleDestino==null)
+        	throw new IllegalArgumentException("El muelle no debe ser  nulo ");
+        if(puertoOrigen==null) 
+        	throw new IllegalArgumentException("El puerto no debe ser  nulo ");
+        if(puertoDestino==null) 
+        	throw new IllegalArgumentException("El puerto no debe ser  nulo ");
        
-		if(!puertoOrigen.puertoContainsMuelle(muelleOrigen)) throw new IllegalArgumentException("El muelle origen no esta en el puerto origen");
+		if(!puertoOrigen.puertoContainsMuelle(muelleOrigen)) 
+			throw new IllegalArgumentException("El muelle origen no esta en el puerto origen");
 		
-		if(!puertoDestino.puertoContainsMuelle(muelleDestino)) throw new IllegalArgumentException("El muelle destino no esta en el puerto destino");
+		if(!puertoDestino.puertoContainsMuelle(muelleDestino)) 
+			throw new IllegalArgumentException("El muelle destino no esta en el puerto destino");
         
         this.muelleOrigen = muelleOrigen; 
 		this.puertoOrigen = puertoOrigen;
@@ -75,16 +81,66 @@ public abstract class Trayecto {
 		this.fechaFin = LocalDate.parse(fechaFin);
 	}
 
+	
+	/**
+	 * Calcula el coste en euros para un determinado trayecto. 
+	 * El coste viene dado por el tipo de trayecto que se trate.
+	 * @see Simple#costeTrayecto()
+	 * @see TTren#costeTrayecto()
+	 * @see TBarco#costeTrayecto()
+	 * @see TCamion#costeTrayecto()
+	 * 
+	 * @see Combinado#costeTrayecto()
+	 * @see PackCamionBarco#costeTrayecto()
+	 * @see PackCamionTren#costeTrayecto()
+	 * @return el coste en euros total del trayecto.
+	 */
+	public abstract double costeTrayecto();
+	
+	/**
+	 * Obtenemos el codigo de Pack descuento en un array de tamaño tres, en el que la posicion
+	 * 0 es el correspodiente al transporte por barco,la 1 al transporte por tren y la 2 al 
+	 * transporte por camión.
+	 * @return El array codificado en binario para los tres transportes siendo 1 que ese 
+	 * transporte tiene un descuento en el precio al pertenecer a un Pack {@link Combinado} 
+	 * y 0 que el Pack no tiene un descuento para ese transporte por ese medio.
+	 * @see Simple#getTipoPack()
+	 * @see TTren#getTipoPack()
+	 * @see TBarco#getTipoPack()
+	 * @see TCamion#getTipoPack()
+	 * 
+	 * @see Combinado#getTipoPack()
+	 * @see PackCamionBarco#getTipoPack()
+	 * @see PackCamionTren#getTipoPack()
+	 */
+	public abstract int [] getTipoPack();
+	/**
+	 * Obtenemos el numero que codifica que tipo de transporte se esta utilizando para ese transporte.
+	 * @return El numero que indica el medio de transporte:0 es el correspodiente al transporte por barco,
+	 * el 1 al transporte por tren y el 2 al transporte por camión.
+	 * @see Simple#getCodigoSimple()
+	 * @see TTren#getCodigoSimple()
+	 * @see TBarco#getCodigoSimple()
+	 * @see TCamion#getCodigoSimple()
+	 * 
+	 * @see Combinado#getCodigoSimple()
+	 * @see PackCamionBarco#getCodigoSimple()
+	 * @see PackCamionTren#getCodigoSimple()
+	 */
+	public abstract int getCodigoSimple();
+	
+
+	
 	/**
 	 * Consulta dato Muelle de origen
-	 * @return el nombre del muelle origen
+	 * @return El nombre del muelle origen
 	 */
 	public Muelle getMuelleOrigen() {
 		return muelleOrigen;
 	}
 	/**
 	 * Consulta dato Puerto de origen
-	 * @return el nombre del puerte origen
+	 * @return El nombre del puerte origen
 	 */
 	public Puerto getPuertoOrigen() {
 		return puertoOrigen;
@@ -92,28 +148,30 @@ public abstract class Trayecto {
 	
 	/**
 	 * Consulta dato Muelle de destino
-	 * @return el nombre del muelle origen
+	 * @return El nombre del muelle origen
 	 */
 	public Muelle getMuelleDestino() {
 		return muelleDestino;
 	}
 	/**
 	 * Consulta dato Puerto de Destino
-	 * @return el nombre del puerto destino
+	 * @return El nombre del puerto destino
 	 */
 	public Puerto getPuertoDestino() {
 		return puertoDestino;
 	}
 	/**
 	 * Consulta dato de la fecha inicio
-	 * @return el valor de la fecha inicio del trayecto
+	 * @return El valor de la fecha inicio del trayecto en formato LocalDate
+	 * @see LocalDate
 	 */
 	public LocalDate getFechaIni() {
 		return fechaIni;
 	}
 	/**
 	 * Consulta dato de la fecha fin
-	 * @return el valor de la fecha final del trayecto
+	 * @return El valor de la fecha final del trayecto en formato LocalDate
+	 * @see LocalDate
 	 */
 	public LocalDate getFechaFin() {
 		return fechaFin;
@@ -122,10 +180,10 @@ public abstract class Trayecto {
 	/**
 	 * Conocer si la fecha de fin de trayecto es superior a una dada
 	 * Si es superior, la funcion devolverá true
-	 * @param fecha - Fecha 
+	 * @param fecha La fecha para analizar si es superior a la de fin de trayecot 
 	 * @throws DateTimeParseException - Cualquier excepcion será lanzada por la clase LocalDate 
 	 * o fechas incorrectas debido a un año bisiesto. 
-	 * @return resultado 
+	 * @return resultado Será true si la fecha fin de trayecto es superior a @param fecha. Sino retorna false. 
 	 */
 	public boolean fechaCorrecta(LocalDate fecha) {
 		if (fecha==null)
@@ -140,9 +198,9 @@ public abstract class Trayecto {
 	}
 	
 	/**
-	 * Calcular distancia de un viaje en millas marinas a partir del metodo getDistanceTo de la clase GPSCoordinate
+	 * Calcula la distancia de un viaje en millas marinas a partir del metodo getDistanceTo de la clase GPSCoordinate
 	 * @throws IllegalArgumentException - Cualquier excepcion sera lanzada por la clase GPSCoordinate
-	 * @return distancia en km entre coordenadas
+	 * @return La distancia en km entre coordenadas
 	 */
 	
 	public double getDistancia() {
@@ -152,12 +210,13 @@ public abstract class Trayecto {
 		distancia = coordenadaOrigen.getDistanceTo(coordenadaDestino);
 		return (distancia/1.852);//para pasarlo a millas marinas
 	}
+	
 	/**
 	 * Agrupa en una cadena la informacion relativa a la localidad, pais y fecha tanto
 	 * del origen como del destino. 
 	 * Uso del metodo "format" de la clase DateTimeFormatter para formatear las fechas de acuerdo con la configuración
-	 * establecida (dd/MM/YYYY)
-	 * @return cadena que agrupa de forma legible dicha informacion
+	 * establecida (dd/MM/YYYY) {@link DateTimeFormatter#format(java.time.temporal.TemporalAccessor)}
+	 * @return La cadena que agrupa de forma legible dicha informacion
 	 */
 	public String infoTrayecto() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YYYY"); 

@@ -70,8 +70,10 @@ public class SimpleTest {
 		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
 		origenPuerto.addMuelle(origenMuelle);
 		destinoPuerto.addMuelle(destinoMuelle);
-		Simple trayectoBarco = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		Simple trayectoTren = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
+		Simple trayectoBarco = new TBarco(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 		assertTrue(Arrays.equals(trayectoBarco.getTipoPack(), codigoPrueba));
+		assertTrue(Arrays.equals(trayectoTren.getTipoPack(), codigoPrueba));
 	}
 	
 	@Test
@@ -116,31 +118,4 @@ public class SimpleTest {
 		assertEquals(trayectoCamion.getCodigoSimple(), 2);
 	}
 	
-	@Test
-	public void testGetInicioFech() {
-		Puerto origenPuerto = new Puerto("ES-BAR");
-		Puerto destinoPuerto = new Puerto("ES-VAL");
-		GPSCoordinate coordenadaOrigen=new GPSCoordinate(40.5,40.5);
-		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
-		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
-		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		origenPuerto.addMuelle(origenMuelle);
-		destinoPuerto.addMuelle(destinoMuelle);
-		Simple trayectoCamion = new TCamion(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
-		assertEquals(trayectoCamion.getInicioFech(), "2020-11-19");
-	}
-	
-	@Test
-	public void testGetFinFech() {
-		Puerto origenPuerto = new Puerto("ES-BAR");
-		Puerto destinoPuerto = new Puerto("ES-VAL");
-		GPSCoordinate coordenadaOrigen=new GPSCoordinate(40.5,40.5);
-		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
-		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
-		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		origenPuerto.addMuelle(origenMuelle);
-		destinoPuerto.addMuelle(destinoMuelle);
-		Simple trayectoCamion = new TCamion(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
-		assertEquals(trayectoCamion.getFinFech(), "2020-12-31");
-	}	
 }

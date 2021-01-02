@@ -6,14 +6,15 @@ import java. util. *;
  * identificativos,carga,volumen y sus trayectos. Partiendo de esta base podemos llegar a realizar
  * con esta clase algunas acciones como mover un contenedor de lugar({@link Contenedor#hacerTrayecto(Puerto)} 
  * y {@link Contenedor#hacerViajes(Trayecto)}),calcular los costes de los trayectos y obtener todas sus
- * caracteristicas.
+ * caracteristicas. En esta aplicación consideramos tres grandes tipos de contenedores: 
+ * {@link Estandar}, {@link Refrigerado} y {@link FlatRack} que comparten gran parte de las características
+ * pero tienen diferencias en cuanto almacenamiento,transporte y características físicas del contenedor
  * 
  * @see Estandar
  * @see Refrigerado
  * @see FlatRack
  * 
- * @author jhocaba
- * @author migchav
+ * @author migchav,jhocaba
  */
 
 public abstract class Contenedor {
@@ -157,17 +158,11 @@ public abstract class Contenedor {
 	 * transporte por camión.
 	 * @return El array codificado en binario para los tres transportes siendo 1 que ese 
 	 * transporte es valido y 0 que no soporta ese transporte.
+	 * @see <a href="https://github.com/kostaskougios/cloning">Cloning Library</a>
 	 */
 	public abstract int[] getCodigoTransporte();
     
     
-	/**
-	 * Setea el Puerto destino del trayecto global que realizará el contenedor
-	 * @param puerto El {@link Puerto} destino del trayecto global(conjunto)
-	 */
-    public void setDestinoFinal(Puerto puerto) {
-    	destinoFinal=puerto;
-    }
     
 	/**
 	 * Obtiene el Puerto destino del trayecto global que realiza el contenedor
@@ -177,14 +172,24 @@ public abstract class Contenedor {
     	return destinoFinal;
     }
     
-    //TODO:CAMBIAR JAVADOC!!!!!!!!!!!!!!!
+    
+    
+	/**
+	 * Obtiene la carga util del contenedor
+	 * @return carga 
+	 */
+	public double getCarga() {
+		return carga;
+	}
+	
     /**
-	 * Para almacenar el peso, utilizamos un String y el metodo split para detectar si se trata de kilogramos o de libras. 
-	 * Modelo de uso correcto de la entrada peso-(3000-kg || 500-lb)
-	 *
-	 * @param Peso - Peso del contenedor 
-	 * @return IllegalArgumentException si el {@param peso} esta vacio
-	 * @return IllegalArgumentException si las unidades del {@param peso} no son Kg o lb
+	 * Mediante los parametros del peso y la unidad de este seteamos el peso en kilogramos
+	 * @param peso El peso del contenedor
+	 * @param unidPeso La unidad asociada al peso (Debe ser Kg(la K en mayusculas-kilogramos) o lb(libras))
+	 * @throws IllegalArgumentException si el {@param peso} <0
+	 * @throws IllegalArgumentException si las unidades del {@param unidPeso} no son Kg ni lb
+	 * @see Contenedor#setPesoKilo(double) 
+	 * @see Contenedor#setPesoLibra(double)
 	 */
 	private void comprobarUnidadesPeso(double peso, String unidPeso) {
 		if (unidPeso.equals("Kg")) {
@@ -197,15 +202,13 @@ public abstract class Contenedor {
     	}
 	}
 	
-	//TODO:JAVADOC!!
-	public double getCarga() {
-		return carga;
-	}
+
 	
 	/**
-	 * Cambiar el peso de libras a kilogramos
-	 * @param pesocontenedor - Peso del contenedor en libras
-	 * @throws IllegalArgumentException en el caso de que peso sea negativo
+	 * Cambiar el peso de libras a kilogramos y posteriormente lo setea
+	 * @param pesocontenedor El peso del contenedor en libras
+	 * @throws IllegalArgumentException Si @parm pesoContenedor <0
+	 * @see Contenedor#setPesoKilo(double)
 	 */
 	public void setPesoLibra(double pesoContenedor) {
 		if(pesoContenedor<0) throw new IllegalArgumentException("Peso no puede ser negativo");
@@ -214,22 +217,23 @@ public abstract class Contenedor {
 	}
 	
 	/**
-	 * Guardar peso 
-	 * @param peso - Peso del contenedor ya en Kilos
+	 * Guardar el peso del contenedor en kilogramos
+	 * @param peso El peso del contenedor ya en Kilos
 	 * @throws IllegalArgumentException en el caso de que peso sea negativo
 	 */
 	public void setPesoKilo(double peso) {
 		if(peso<0) throw new IllegalArgumentException("Peso no puede ser negativo");
 		this.peso = peso;
 	}
-	//TODO:ACTUALIAZAR JAVADOC!!!!!!!!!!!!!!!!
+
 	/**
-	 * Para almacenar el volumen, utilizamos el mismo metodo que para almacenar el peso para detectar si se trata de 
-	 * metros cubicos o de pies cubicos. 
-	 * Modelo de uso correcto de la entrada peso-(3000-m3 || 500-ft3)
-	 * @param Volumen - Volumen del contenedor 
-	 * @return IllegalArgumentException si el {@param volumen} esta vacio
-	 * @return IllegalArgumentException si las unidades del {@param volumen} no son m3 o ft3
+	 * Mediante los parametros del volumen y la unidad de este seteamos el volumen en metros cubicos
+	 * @param volumen El volumen del contenedor 
+	 * @param unidVol La unidad correspondiente al volumen elegida(Debe ser m3(metros cubicos) o ft3(pies cubicos))
+	 * @throws IllegalArgumentException Si el @param volumen <0
+	 * @throws IllegalArgumentException Si @param unidVol no son m3 o ft3
+	 * @see Contenedor#setVolumenMetros(double)
+	 * @see Contenedor#setVolumenPies(double)
 	 */
 	private void comprobarUnidadesVolumen(double volumen, String unidVol) { 
 		if (unidVol.equals("m3")) {
@@ -243,9 +247,10 @@ public abstract class Contenedor {
 	}
 	
 	/**
-	 * Cambiar el volumen de pies cubicos a metros cubicos
-	 * @param volumenContenedor - Volumen del contenedor en pies cubicos
+	 * Cambiar el volumen de pies cubicos a metros cubicos y lo setea 
+	 * @param volumenContenedor EL volumen del contenedor en pies cubicos
 	 * @throws IllegalArgumentException en el caso de que el volumen sea negativo
+	 * @see Contenedor#setVolumenMetros(double)
 	 */
 	public void setVolumenPies(double volumenContenedor) {
 		if(volumenContenedor<0) throw new IllegalArgumentException("Volumen no puede ser negativo");
@@ -254,8 +259,8 @@ public abstract class Contenedor {
 	}
 		
 	/**
-	 * Guardar volumen
-	 * @param volumen - Volumen del contenedor en metros cúbicos
+	 * Guardar volumen en metros cubicos
+	 * @param volumen El volumen del contenedor en metros cúbicos
 	 * @throws IllegalArgumentException en el caso de que el volumen sea negativo
 	 */
 	public void setVolumenMetros(double volumen) {
@@ -298,8 +303,6 @@ public abstract class Contenedor {
 	
 	/**
 	 * Obtener el identificador del contenedor	
-	 * @param contenedor - Contenedor inicializado
-	 * @throws IllegalArgumentException si el contenedor esta vacio o si la plaza es negativa
 	 * @return identificador del contenedor
 	 */
 	public String getIdentificador() {
@@ -322,7 +325,7 @@ public abstract class Contenedor {
 	}
 	/**
 	 * Retorna el estado(transito o en recogida) del contenedor
-	 * @return
+	 * @return false si esta en transito y true si esta en recogida
 	 */
 	public boolean getEstado() {
 		return estado;
@@ -332,93 +335,113 @@ public abstract class Contenedor {
 	 * Cambiar el contenedor para reflejar que tiene techo
 	 */
 	
-	public void setTecho() {
+	private void setTecho() {
 		techo = true;
 	}
 	
 	/**
 	 * Cambiar a contenedor no tiene techo
 	 */
-	public void setNoTecho() {
+	private void setNoTecho() {
 		techo = false;
 	}
 	
 	/**
 	 * Obtener si el contenedor tiene techo o no
 	 * Devuelve true si tiene y false en caso contrario
-	 * @param contenedor - Contenedor inicializado
-	 * @throws IllegalArgumentException si el contenedor esta vacio o si la plaza es negativa
-	 * @return techo o no techo
+	 * @return true si tiene techa y false en caso contrario
 	 */
 	public boolean getTecho() {
 		return techo;
 	}
 	
+
 	/**
-	 * Establecer el puerto destino del trayecto global
-	 * @param destino - Puerto destino del trayecto
-	 * @throws IllegalArgumentException-Puerto destino del trayecto global ==null
+	 * Establecer el puerto destino del trayecto global que realizará el contenedor
+	 * @param destino El {@link Puerto} destino del trayecto global a realizar por el contenedor
+	 * @throws IllegalArgumentException Si puerto destino (@param destino) del trayecto global ==null
 	 */
 	public void hacerTrayecto(Puerto destino) 
 	{
 		if(destino==null) throw new IllegalArgumentException("El puerto destino no debe ser nulo");
-		setDestinoFinal(destino);
+		destinoFinal=destino;
 	}
 	
-	
-	//TODO:ACTUALIZAR JAVADOC!!!!!!!!!!!!!!!!!!!
 	/**
-	 * diferentes viajes que son reliu por cont hatsa llagr desti finsl del try glbl
-	 * @param contenedor - Contenedor inicializado
-	 * @param puertoOrigen - Puerto origen del trayecto
-	 * @param puertoFin - Puerto del fin de trayecto
-	 * @param muelleFin - Muelle del fin de trayecto
-	 * @param fechaInicio - Fecha de inicio del trayecto
-	 * @param fechaFin - Fecha de fin de trayecto
-	 * @throws IllegalArgumentException en el caso de que el contenedor no se encuentre en el puerto
-	 * @throws IllegalArgumentException si coinciden el puerto destino coincide con el puerto fin del trayecto global.
-	 * Se deberia haber realizado un nuevo trayecto global
+	 * Realiza los diferentes viajes que hace un contenedor hasta llegar al destino final del trayecto global.
+	 * Cuando recibimos un trayecto de tipo {@link PackCamionBarco} o {@link PackCamionTren} se activa el 
+	 * atributo PackActivado que es igual al {@link Trayecto#getTipoPack()} del tipo de trayecto, que hace 
+	 * que ese trayecto y los siguientes que acoja ese tipo de Pack se aplican costes reducidos,como si los
+	 * trayectos simples se trataran de trayectos Packs. Por lo tanto,una vez que reciba un trayecto Combinado,
+	 * los siguientes trayectos simples que sean compatibles con ese Combinado adoptan un descuento; hasta que
+	 * llegue el otro tipo de trayecto Combinado o recibamos un trayecto simple no compatible con el Pack( Por 
+	 * ejemplo el tipo de trayecto no compatible con {@link PackCamionBarco} es el trayecto simple {@link TTren})
+	 * @param trayecto Uno de los diferentes trayectos que se ejecutan por el contenedor hasta el destino final
+	 * @throws IllegalArgumentException Si @param trayecto==null
+	 * @throws IllegalArgumentException Si @param trayecto ya se ha realizado. 
+	 * Es decir el conjunto trayectos realizados contains @param trayecto
+	 * @throws IllegalArgumentException Si no se ha inicializado el destino final del trayecto global.Es decir
+	 * no hay un plan de llegada final del contenedor.
+	 * @throws IllegalArgumentException Si el contenedor no se encuentre en el puerto origen del trayecto
+	 * @throws IllegalArgumentException Si el puerto origen coincide con el destino final del trayecto global.
+	 * Se deberia haber realizado un nuevo trayecto global,ya que sino el contenedor esta en estado de recogida.
+	 * @throws IllegalArgumentException Si el contenedor no puede realizar ese transporte por la infraestructura utilizada del trayecto.
+	 * @throws IllegalArgumentException Si el muelle origen no soporta la infraestructura de transporte que marca el transporte.
+	 * @throws IllegalArgumentException Si el muelle destino no soporta la infraestructura de transporte que marca el transporte.
+	 * @see Contenedor#comprobarTrayectosYMuelle(Trayecto)
+	 * @see Trayecto
 	 */
 	public void hacerViajes(Trayecto trayecto) {
-		
+		//Comprueba que cumple las condiciones
 		comprobarTrayectosYMuelle(trayecto);
-		
+		//Si es Combinado,adoptamos el codigo binario tipo pack y lo guardamos en Arraylist
 		if(trayecto instanceof Combinado) {
 			trayectos.add(trayecto);
 			packActivado=trayecto.getTipoPack();
 		}
-		else {
+		else {//Trayecto simple, miramos si es compatible con el pack activado de descuentos que tenemos activo
 			int [] codigoCamionTren=new int []{0,1,1};
-			if(packActivado[trayecto.getCodigoSimple()]==1) {
-				if(Arrays.equals(packActivado, codigoCamionTren)) {
-					PackCamionTren trayectoCasteado= new PackCamionTren(trayecto.getCodigoSimple(),trayecto.getMuelleOrigen(), trayecto.getPuertoOrigen(), trayecto.getInicioFech(), trayecto.getMuelleDestino(), trayecto.getPuertoDestino(),trayecto.getFinFech());
+			if(packActivado[trayecto.getCodigoSimple()]==1) { //Trayecto simple compatible con el pack por lo que se aplica descuento
+				if(Arrays.equals(packActivado, codigoCamionTren)) {// El pack que tenemos activado es el del {@link PackCamionTren}.Creamos un {@link PackCamionTren} con las caracteristicas del trayecto para que el coste del viaje sea el del descuento.Guardamos en Arraylist
+					PackCamionTren trayectoCasteado= new PackCamionTren(trayecto.getCodigoSimple(),trayecto.getMuelleOrigen(), trayecto.getPuertoOrigen(), trayecto.getFechaIni().toString(), trayecto.getMuelleDestino(), trayecto.getPuertoDestino(),trayecto.getFechaFin().toString());
 					trayectos.add(trayectoCasteado);
 				}
-				else {
-					PackCamionBarco trayectoCasteado= new PackCamionBarco(trayecto.getCodigoSimple(),trayecto.getMuelleOrigen(), trayecto.getPuertoOrigen(), trayecto.getInicioFech(), trayecto.getMuelleDestino(), trayecto.getPuertoDestino(),trayecto.getFinFech());
+				else {// El pack que tenemos activado es el del {@link PackCamionBarco}.Creamos un {@link PackCamionBarco} con las caracteristicas del trayecto para que el coste del viaje sea el del descuento.Guardamos en Arraylist
+					PackCamionBarco trayectoCasteado= new PackCamionBarco(trayecto.getCodigoSimple(),trayecto.getMuelleOrigen(), trayecto.getPuertoOrigen(), trayecto.getFechaIni().toString(), trayecto.getMuelleDestino(), trayecto.getPuertoDestino(),trayecto.getFechaFin().toString());
 					trayectos.add(trayectoCasteado);
 				}
 			}
-			else {
+			else {//No compatible con el pack activado .Guardamos trayecto simple y ponemos el packActivado a sin descuento({0,0,0})
 				trayectos.add(trayecto);
 				packActivado=trayecto.getTipoPack(); 
 			}
 		}
-		if(trayecto.getPuertoDestino().equals(destinoFinal)) this.setRecogida();
+		if(trayecto.getPuertoDestino().equals(destinoFinal)) this.setRecogida(); //Si hemos llegado al destino final global esta listo para recogerse el contenedor
 	}
-	
+	/**
+	 * Comprueba las condiciones para que el contenedor puede hacer el trayecto
+	 * @param trayecto El trayecto a analizar que cumple las condiciones de {@link Contenedor#hacerViajes(Trayecto)}
+	 * @throws IllegalArgumentException Si @param trayecto==null
+	 * @throws IllegalArgumentException Si @param trayecto ya se ha realizado. 
+	 * Es decir el conjunto trayectos realizados contains @param trayecto
+	 * @throws IllegalArgumentException Si no se ha inicializado el destino final del trayecto global.Es decir
+	 * no hay un plan de llegada final del contenedor.
+	 * @throws IllegalArgumentException Si el contenedor no se encuentre en el puerto origen del trayecto
+	 * @throws IllegalArgumentException Si el puerto origen coincide con el destino final del trayecto global.
+	 * Se deberia haber realizado un nuevo trayecto global,ya que sino el contenedor esta en estado de recogida.
+	 * @throws IllegalArgumentException Si el contenedor no puede realizar ese transporte por la infraestructura utilizada del trayecto.
+	 * @throws IllegalArgumentException Si el muelle origen no soporta la infraestructura de transporte que marca el transporte.
+	 * @throws IllegalArgumentException Si el muelle destino no soporta la infraestructura de transporte que marca el transporte.
+	 */
 	private void comprobarTrayectosYMuelle(Trayecto trayecto) {
 		if(trayecto==null)throw new IllegalArgumentException("trayecto nulo");
 		
 		if(trayectos.contains(trayecto))throw new IllegalArgumentException("trayecto ya realizado");
 		
 		if(destinoFinal==null) throw new IllegalArgumentException("establezca un destino final del trayecto global");
-		//comprobar que el primero ya tiene el puerto destino
-		//comprobar que el puerto origen no es el destino
+
 		if(trayecto.getPuertoOrigen().equals(getDestinoFinal()))throw new IllegalArgumentException("Ya se había llegado al puerto destino del trayecto.Inicie un nuevo trayecto global");
 		//que el contenedor este en ese muelle/puerto
-		//esto en un metodo private?? ->
-		//TODO:INFRAESTRUCTURA DE ESE MUELLE ACTA PARA EL TRAYECTO y meterlo en test
 		List<Muelle> listaMuellesOrigen=trayecto.getPuertoOrigen().getListaMuelles();
 		int posicionMuelleOrigen=-1;
 		int i=0;
@@ -431,19 +454,19 @@ public abstract class Contenedor {
 		}
 		if (posicionMuelleOrigen==-1) throw new IllegalArgumentException("El contenedor no esta en ese puerto");
 		
+		if(this.getCodigoTransporte()[trayecto.getCodigoSimple()]!=1)
+			throw new IllegalArgumentException("El contenedor no puede realizar ese trayecto por la infraestructura");
+		
 		if(listaMuellesOrigen.get(posicionMuelleOrigen).getInfraestructuraMuelle()[trayecto.getCodigoSimple()]!=1) 
 			throw new IllegalArgumentException("El muelle origen no soporta este trayecto");
 		
 		if(trayecto.getMuelleDestino().getInfraestructuraMuelle()[trayecto.getCodigoSimple()]!=1)
 			throw new IllegalArgumentException("El muelle destino no soporta este trayecto");
 	}
-	//TODO:ACTUALIZAR JAVADOC???????????!!!!!!!!!!
+
 	/**
-	 * Calcular el precio total del trayecto global, es decir, la suma de costes de cada viaje.
-	 * @param precioMilla - Coste en euros de 1 unidad de distancia marina. 
-	 * @param precioDia - Coste en euros de 1 dia de trayecto.
-	 * @throws IllegalArgumentException si el precio de milla o el precio por dia son negativos
-	 * @return 
+	 * Calcular el precio total en euros del trayecto global, es decir, la suma de costes de cada viaje.
+	 * @return sumaTrayectos El coste total de los viajes que se han realizado para llegar al destino final.
 	 */
 	
 	public double precio() {

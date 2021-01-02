@@ -11,8 +11,7 @@ import com.rits.cloning.Cloner;
  * Clase que almacena los datos de la gestion de los muelles. Mediante un codigo de infraestructura,
  * identificador,coordenada GPS,estado y numero de plazas podemos hacer las gestionespara
  * almacenar,obtener y transportar contenedores en él de una forma eficiente en cuanto al espacio.
- * @author jhocaba
- * @author migchav
+ * @author migchav,jhocaba
  *
  */
 public class Muelle   {

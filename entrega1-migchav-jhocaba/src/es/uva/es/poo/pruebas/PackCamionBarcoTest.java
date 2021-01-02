@@ -41,33 +41,6 @@ public class PackCamionBarcoTest {
 		PackCamionBarco trayectoBarco = new PackCamionBarco(3, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
 	}
 	
-	@Test
-	public void testGetInicioFech() {
-		Puerto origenPuerto = new Puerto("ES-BAR");
-		Puerto destinoPuerto = new Puerto("ES-VAL");
-		GPSCoordinate coordenadaOrigen=new GPSCoordinate(40.5,40.5);
-		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
-		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
-		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		origenPuerto.addMuelle(origenMuelle);
-		destinoPuerto.addMuelle(destinoMuelle);
-		PackCamionBarco trayectoBarco = new PackCamionBarco(0, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
-		assertEquals(trayectoBarco.getInicioFech(),"2020-11-19");
-	}
-	
-	@Test
-	public void testGetFinFech() {
-		Puerto origenPuerto = new Puerto("ES-BAR");
-		Puerto destinoPuerto = new Puerto("ES-VAL");
-		GPSCoordinate coordenadaOrigen=new GPSCoordinate(40.5,40.5);
-		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
-		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
-		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		origenPuerto.addMuelle(origenMuelle);
-		destinoPuerto.addMuelle(destinoMuelle);
-		PackCamionBarco trayectoBarco = new PackCamionBarco(0, origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
-		assertEquals(trayectoBarco.getFinFech(),"2020-12-31");
-	}
 	
 	@Test
 	public void testGetCodigoSimplePackCamionBarco() {

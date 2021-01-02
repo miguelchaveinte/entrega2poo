@@ -388,63 +388,6 @@ public class TrayectoTest {
 		assertEquals(trayectoPack.getCodigoSimple(), 0);
 	}
 	
-	@Test
-	public void testGetInicioFech() {
-		Puerto origenPuerto = new Puerto("ES-BAR");
-		Puerto destinoPuerto = new Puerto("ES-VAL");
-		GPSCoordinate coordenadaOrigen=new GPSCoordinate(40.5,40.5);
-		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
-		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
-		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		origenPuerto.addMuelle(origenMuelle);
-		destinoPuerto.addMuelle(destinoMuelle);
-		Trayecto trayectoCamion = new TCamion(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
-		assertEquals(trayectoCamion.getInicioFech(), "2020-11-19");
-	}
-	
-	@Test
-	public void testGetFinFech() {
-		Puerto origenPuerto = new Puerto("ES-BAR");
-		Puerto destinoPuerto = new Puerto("ES-VAL");
-		GPSCoordinate coordenadaOrigen=new GPSCoordinate(40.5,40.5);
-		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
-		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
-		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		origenPuerto.addMuelle(origenMuelle);
-		destinoPuerto.addMuelle(destinoMuelle);
-		Trayecto trayectoCamion = new TCamion(origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
-		assertEquals(trayectoCamion.getFinFech(), "2020-12-31");
-	}
-	
-	@Test
-	public void testGetInicioFechPackCamionTren() {
-		Puerto origenPuerto = new Puerto("ES-BAR");
-		Puerto destinoPuerto = new Puerto("ES-VAL");
-		GPSCoordinate coordenadaOrigen=new GPSCoordinate(40.5,40.5);
-		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
-		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
-		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		origenPuerto.addMuelle(origenMuelle);
-		destinoPuerto.addMuelle(destinoMuelle);
-		
-		Trayecto trayectoPack = new PackCamionTren(1,origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
-		assertEquals(trayectoPack.getInicioFech(), "2020-11-19");
-	}
-	
-	@Test
-	public void testGetFinFechPackCamionTren() {
-		Puerto origenPuerto = new Puerto("ES-BAR");
-		Puerto destinoPuerto = new Puerto("ES-VAL");
-		GPSCoordinate coordenadaOrigen=new GPSCoordinate(40.5,40.5);
-		Muelle origenMuelle=new Muelle(111, 12,coordenadaOrigen,'O',50);
-		GPSCoordinate coordenadaDestino=new GPSCoordinate(50.5,50.5);
-		Muelle destinoMuelle=new Muelle(111, 15,coordenadaDestino,'O',50);
-		origenPuerto.addMuelle(origenMuelle);
-		destinoPuerto.addMuelle(destinoMuelle);
-		
-		Trayecto trayectoPack = new PackCamionTren(1,origenMuelle, origenPuerto, "2020-11-19", destinoMuelle, destinoPuerto,"2020-12-31");
-		assertEquals(trayectoPack.getFinFech(), "2020-12-31");
-	}
 	
 	@Test
 	public void testInfoTrayecto() {

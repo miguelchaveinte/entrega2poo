@@ -15,8 +15,7 @@ import es.uva.inf.poo.maps.GPSCoordinate;
  * proporciona dicha clase van desde la propia creacion de este,añadir/eliminar muelles
  * a dicho puerto,ofrecer la lista de los muelles a su cargo, de los muelles operativos o
  * que tengan aún espacio para almacenar contenedores o los que estan en una ubicacion cercana.
- * @author jhocaba
- * @author migchav
+ * @author migchav,jhocaba
  */
 
 public class Puerto  {
