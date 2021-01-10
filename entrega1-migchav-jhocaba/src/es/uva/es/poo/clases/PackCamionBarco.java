@@ -1,5 +1,8 @@
 package es.uva.es.poo.clases;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import com.rits.cloning.Cloner;
 
@@ -18,27 +21,21 @@ import com.rits.cloning.Cloner;
 
 public class PackCamionBarco extends Combinado {
 	static final double DESCUENTO_BARCO=0.85;
-	private int[] tipoPack;
-	private int tipoTrayecto;
-	private int codigoSimple;
+	private List<Simple> trayectitos;
+	boolean inicioPack;
+	boolean finalPack;
 	
 	/**
 	 * Crea un Trayecto Combinado de tipo PackCamionBarco, es decir,puede utilizar cualquiera
 	 * de los tres tipos de transporte simple: {@link TTren},{@link TCamion} o {@link TBarco},
 	 * pero solo aquellos que son de tipo {@link TBarco} tienen un 15% de descuento en el coste.
-	 * En cuanto a nivel interno su tipoPack de descuento es {1,0,1}, para poder realizar los 
-	 * costes oportunos segun el tipo(posicion 0 del array es el transporte por barco,la 1 por tren
 	 * y la 2 por camion).
-	 * @param tipoTrayecto Codigo que adopta el tipo de medio de transporte que se va a hacer para
-	 * ese viaje de origen-destino. (0 del array es el transporte por barco,1 por tren
-	 * y 2 por camion). Sino se corresponde con alguno de estos tres numeros lanzará excepción.
 	 * @param muelleOrigen El muelle de origen
 	 * @param puertoOrigen El puerto de origen
 	 * @param fechaIni La fecha de inicio de trayecto (Formato: aaaa-mm-dd)
 	 * @param muelleDestino El muelle de destino
 	 * @param puertoDestino El puerto de destino
 	 * @param fechaFinFecha La fecha de fin de trayecto (Formato: aaaa-mm-dd)	
-	 * @throws IllegalArgumentException Si @param tipoTrayecto !=(0||1||2)
 	 * @throws IllegalArgumentException Si @param muelleOrigen==null
 	 * @throws IllegalArgumentException Si @param muelleDestino==null
 	 * @throws IllegalArgumentException Si @param puertoOrigen==null
@@ -53,20 +50,30 @@ public class PackCamionBarco extends Combinado {
 	 * @see TBarco
 	 * @see TCamion
 	 */
-	public PackCamionBarco(int tipoTrayecto,Muelle muelleOrigen,Puerto puertoOrigen,String fechaIni,Muelle muelleDestino,Puerto puertoDestino,String fechaFin) {
+	public PackCamionBarco(Muelle muelleOrigen,Puerto puertoOrigen,String fechaIni,Muelle muelleDestino,Puerto puertoDestino,String fechaFin) {
 		super(muelleOrigen, puertoOrigen, fechaIni, muelleDestino,puertoDestino,fechaFin);
-		if(tipoTrayecto!=2 && tipoTrayecto!=1 && tipoTrayecto!=0) throw new IllegalArgumentException("El tipo trayecto no es ni 0, ni 1,ni 2, es decir ni barco ni tren ni camion");
-		this.tipoTrayecto=tipoTrayecto;
-		tipoPack= new int []{1,0,1};
-		codigoSimple=tipoTrayecto;
+		trayectitos=new ArrayList<>();
+		inicioPack=false;
+		finalPack=false;
 	}
 	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
-	public int getCodigoSimple() {
-		return codigoSimple;
+	public void addTrayecto(Simple trayecto) {
+		if(trayecto==null) 
+			throw new IllegalArgumentException ("El trayecto no puede ser nulo");
+		if(containsTrayecto(trayecto)) 
+			throw new IllegalArgumentException ("El trayecto ya ha sido incluido");
+		if(trayectoRealiazado())
+			throw new IllegalArgumentException ("El Pack trayecto ya llegó a su fin");
+		trayectitos.add(trayecto);
+		if(trayecto.getPuertoOrigen().equals(this.getPuertoOrigen())) 
+			inicioPack=true;
+		if(trayecto.getPuertoDestino().equals(this.getPuertoDestino()))
+			finalPack=true;
 	}
 	
 	/**
@@ -74,9 +81,27 @@ public class PackCamionBarco extends Combinado {
 	 * @see <a href="https://github.com/kostaskougios/cloning">Cloning Library</a>
 	 */
 	@Override
-	public int[] getTipoPack() {
+	public List<Simple> getTrayectosPack() {
 		Cloner cloner=new Cloner();
-		return cloner.deepClone(tipoPack);
+		return cloner.deepClone(trayectitos);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean containsTrayecto(Simple trayecto) {
+		if(trayecto==null) 
+			throw new IllegalArgumentException ("El trayecto no puede ser nulo");
+		return trayectitos.contains(trayecto);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean trayectoRealiazado() {
+		return (inicioPack && finalPack);
 	}
 	
 	/**
@@ -90,17 +115,17 @@ public class PackCamionBarco extends Combinado {
 	 */
 	@Override
 	public double costeTrayecto() {
-		if(tipoTrayecto==2) {
-			Trayecto trayectoCamion=new TCamion(super.getMuelleOrigen(), super.getPuertoOrigen(), super.getFechaIni().toString(), super.getMuelleDestino(), super.getPuertoDestino(),super.getFechaFin().toString());
-			return trayectoCamion.costeTrayecto();
+		double costePack=0.0;
+		Iterator<Simple> iteradorTrayec=trayectitos.iterator();
+		while(iteradorTrayec.hasNext()) {
+			Simple trayecAnalisis=iteradorTrayec.next();
+			if(trayecAnalisis instanceof TBarco) {
+				costePack+=trayecAnalisis.costeTrayecto()*DESCUENTO_BARCO;
+			}
+			else {
+				costePack+=trayecAnalisis.costeTrayecto();
+			}
 		}
-		else if (tipoTrayecto==0){
-			Trayecto trayectoBarco=new TBarco(super.getMuelleOrigen(), super.getPuertoOrigen(), super.getFechaIni().toString(), super.getMuelleDestino(), super.getPuertoDestino(),super.getFechaFin().toString());
-			return trayectoBarco.costeTrayecto()*DESCUENTO_BARCO;
-		}
-		else {
-			Trayecto trayectoTren=new TTren(super.getMuelleOrigen(), super.getPuertoOrigen(), super.getFechaIni().toString(), super.getMuelleDestino(), super.getPuertoDestino(),super.getFechaFin().toString());
-			return trayectoTren.costeTrayecto();
-		}		
+		return costePack;
 	}
 }

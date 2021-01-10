@@ -35,6 +35,17 @@ public abstract class Simple extends Trayecto {
 	public Simple(Muelle muelleOrigen,Puerto puertoOrigen,String fechaIni,Muelle muelleDestino,Puerto puertoDestino,String fechaFin) {
 		super(muelleOrigen, puertoOrigen, fechaIni, muelleDestino,puertoDestino,fechaFin);
 	}
+
+	/**
+	 * Obtenemos el numero que codifica que tipo de transporte se esta utilizando para ese transporte.
+	 * @return El numero que indica el medio de transporte:0 es el correspodiente al transporte por barco,
+	 * el 1 al transporte por tren y el 2 al transporte por camión.
+	 * @see TTren#getCodigoSimple()
+	 * @see TBarco#getCodigoSimple()
+	 * @see TCamion#getCodigoSimple()
+	 */
+	public abstract int getCodigoSimple();
+	
 	/**
 	 * {@inheritDoc}
 	 */
@@ -43,11 +54,4 @@ public abstract class Simple extends Trayecto {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
-	public abstract int [] getTipoPack();
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public abstract int getCodigoSimple();
 }

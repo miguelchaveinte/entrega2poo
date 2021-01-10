@@ -1,7 +1,6 @@
 package es.uva.es.poo.clases;
 
 import java.time.LocalDate;
-import com.rits.cloning.Cloner;
 import es.uva.inf.poo.maps.GPSCoordinate;
 
 /**
@@ -17,15 +16,13 @@ import es.uva.inf.poo.maps.GPSCoordinate;
 public class TCamion extends Simple{
 	static final int COSTE_FIJO=200;
 	static final double COSTE_KM=4.5;
-	private int [] tipoPack;
+	static final double MILLAS_MARINAS=1.852;
 	private int codigoSimple;
 	
 	/**
 	 * Crea un Trayecto Simple de tipo TCamion, es decir,utiliza el camion como
 	 * medio de transporte para transportar el contenedor.
-	 * En cuanto a nivel interno de codificación su codigo simple es 1 y su tipoPack de descuento
-	 * es {0,0,0}, lo que quiere decir que una vez realizado un trayecto de este tipo no se aplicará
-	 * un descuento en los trayectos posteriores.
+	 * En cuanto a nivel interno de codificación su codigo simple es 1.
 	 * @param muelleOrigen El muelle de origen
 	 * @param puertoOrigen El puerto de origen
 	 * @param fechaIni La fecha de inicio de trayecto (Formato: aaaa-mm-dd)
@@ -46,28 +43,17 @@ public class TCamion extends Simple{
 	
  	public TCamion(Muelle muelleOrigen,Puerto puertoOrigen,String fechaIni,Muelle muelleDestino,Puerto puertoDestino,String fechaFin) {
 		super(muelleOrigen, puertoOrigen, fechaIni, muelleDestino,puertoDestino,fechaFin);
-		tipoPack= new int []{0,0,0};
 		codigoSimple=2;
-
  	}
  	
- 	/**
- 	 * {@inheritDoc}
- 	 */
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int getCodigoSimple() {
 		return codigoSimple;
 	}
-	
-	/**
-	 * {@inheritDoc}
-	 * @see <a href="https://github.com/kostaskougios/cloning">Cloning Library</a>
-	 */
-	@Override
-	public int[] getTipoPack() {
-		Cloner cloner=new Cloner();
-		return cloner.deepClone(tipoPack);
-	}
+ 	
 	/**
 	 * {@inheritDoc}
 	 * El coste del trayecto en {@link TCamion} viene dado que es de 20 euros 
@@ -76,9 +62,8 @@ public class TCamion extends Simple{
 	 */
 	@Override
 	public double costeTrayecto() {
-		GPSCoordinate coordenadaOrigen = getMuelleOrigen().getCoordenada();
-		GPSCoordinate coordenadaDestino=getMuelleDestino().getCoordenada();
-		return COSTE_FIJO+COSTE_KM*coordenadaOrigen.getDistanceTo(coordenadaDestino);
+		return COSTE_FIJO+COSTE_KM*this.getDistancia()*MILLAS_MARINAS;
 	}
+
 	
 }

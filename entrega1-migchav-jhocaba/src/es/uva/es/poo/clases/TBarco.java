@@ -2,7 +2,6 @@ package es.uva.es.poo.clases;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import com.rits.cloning.Cloner;
 
 /**
  * Clase que implementa la creación de un {@link Trayecto} {@link Simple} que utiliza como
@@ -16,14 +15,11 @@ import com.rits.cloning.Cloner;
 public class TBarco extends Simple {
 	static final int COSTE_DIA=4000;
 	private int codigoSimple;
-	private int [] tipoPack;
 	
 	/**
 	 * Crea un Trayecto Simple de tipo TBarco, es decir,utiliza el barco como
 	 * medio de transporte para transportar el contenedor.
-	 * En cuanto a nivel interno de codificación su codigo simple es 0 y su tipoPack de descuento
-	 * es {0,0,0}, lo que quiere decir que una vez realizado un trayecto de este tipo no se aplicará
-	 * un descuento en los trayectos posteriores.
+	 * En cuanto a nivel interno de codificación su codigo simple es 0.
 	 * @param muelleOrigen El muelle de origen
 	 * @param puertoOrigen El puerto de origen
 	 * @param fechaIni La fecha de inicio de trayecto (Formato: aaaa-mm-dd)
@@ -45,7 +41,6 @@ public class TBarco extends Simple {
 	public TBarco(Muelle muelleOrigen,Puerto puertoOrigen,String fechaIni,Muelle muelleDestino,Puerto puertoDestino,String fechaFin) {
 		super(muelleOrigen, puertoOrigen, fechaIni, muelleDestino,puertoDestino,fechaFin);
 		codigoSimple=0;
-		tipoPack= new int []{0,0,0};
 	}
 
 	/**
@@ -55,15 +50,8 @@ public class TBarco extends Simple {
 	public int getCodigoSimple() {
 		return codigoSimple;
 	}
-	/**
-	 * {@inheritDoc}
-	 * @see <a href="https://github.com/kostaskougios/cloning">Cloning Library</a>
-	 */
-	@Override
-	public int[] getTipoPack() {
-		Cloner cloner=new Cloner();
-		return cloner.deepClone(tipoPack);
-	}
+
+	
 	/**
 	 * {@inheritDoc}
 	 * El coste en el caso de {@link TBarco} viene dado por 4000 euros por dia que 
@@ -74,4 +62,7 @@ public class TBarco extends Simple {
 	public double costeTrayecto() {
 		return (double)ChronoUnit.DAYS.between(getFechaIni(),getFechaFin())*COSTE_DIA;
 	}
+
+
+
 }

@@ -32,10 +32,8 @@ public abstract class Contenedor {
 	private boolean estado;		//Transito = False -- Recogida = True
 	private boolean techo;
 	private List<Trayecto> trayectos;
-	private int [] packActivado; //PackCamionTren - 011  y PackCamionBarco - 101 - Trayecto Simples PackActivado=000
 	private Puerto destinoFinal;
 
-	
 	
 	/**
 	 * Crea un nuevo contenedor con un identificador, peso y su unidad,carga,volumen y su unidad,boolean de si tiene techo, distinguido.
@@ -82,7 +80,6 @@ public abstract class Contenedor {
 		comprobarUnidadesVolumen(volumen,uniVol);
 		setTransito();
 		trayectos=new ArrayList<>();
-		packActivado= new int []{0,0,0};
 	}
 	
 	/**
@@ -369,13 +366,10 @@ public abstract class Contenedor {
 	
 	/**
 	 * Realiza los diferentes viajes que hace un contenedor hasta llegar al destino final del trayecto global.
-	 * Cuando recibimos un trayecto de tipo {@link PackCamionBarco} o {@link PackCamionTren} se activa el 
-	 * atributo PackActivado que es igual al {@link Trayecto#getTipoPack()} del tipo de trayecto, que hace 
-	 * que ese trayecto y los siguientes que acoja ese tipo de Pack se aplican costes reducidos,como si los
-	 * trayectos simples se trataran de trayectos Packs. Por lo tanto,una vez que reciba un trayecto Combinado,
-	 * los siguientes trayectos simples que sean compatibles con ese Combinado adoptan un descuento; hasta que
-	 * llegue el otro tipo de trayecto Combinado o recibamos un trayecto simple no compatible con el Pack( Por 
-	 * ejemplo el tipo de trayecto no compatible con {@link PackCamionBarco} es el trayecto simple {@link TTren})
+	 * Cuando recibimos un trayecto de tipo {@link PackCamionBarco} o {@link PackCamionTren} analizamos 
+	 * cada uno de sus trayectos Simples ({@link Simple}) para que estos tambien cumplan las condiciones
+	 * ademásde que el Pack este finalizado,es decir, si hay un trayecto cuyo
+	 * origen es el origen del Pack y si hay un trayecto cuyo destino es el destino del Pack.
 	 * @param trayecto Uno de los diferentes trayectos que se ejecutan por el contenedor hasta el destino final
 	 * @throws IllegalArgumentException Si @param trayecto==null
 	 * @throws IllegalArgumentException Si @param trayecto ya se ha realizado. 
@@ -388,34 +382,21 @@ public abstract class Contenedor {
 	 * @throws IllegalArgumentException Si el contenedor no puede realizar ese transporte por la infraestructura utilizada del trayecto.
 	 * @throws IllegalArgumentException Si el muelle origen no soporta la infraestructura de transporte que marca el transporte.
 	 * @throws IllegalArgumentException Si el muelle destino no soporta la infraestructura de transporte que marca el transporte.
+	 * @throws IllegalArgumentException Si el Pack no está finalizado tal como se explicita en las condiciones anteriores.
 	 * @see Contenedor#comprobarTrayectosYMuelle(Trayecto)
+	 * @see Combinado#trayectoRealiazado()
 	 * @see Trayecto
 	 */
 	public void hacerViajes(Trayecto trayecto) {
 		//Comprueba que cumple las condiciones
 		comprobarTrayectosYMuelle(trayecto);
-		//Si es Combinado,adoptamos el codigo binario tipo pack y lo guardamos en Arraylist
 		if(trayecto instanceof Combinado) {
-			trayectos.add(trayecto);
-			packActivado=trayecto.getTipoPack();
+			comprobarCombinado(trayecto);
 		}
-		else {//Trayecto simple, miramos si es compatible con el pack activado de descuentos que tenemos activo
-			int [] codigoCamionTren=new int []{0,1,1};
-			if(packActivado[trayecto.getCodigoSimple()]==1) { //Trayecto simple compatible con el pack por lo que se aplica descuento
-				if(Arrays.equals(packActivado, codigoCamionTren)) {// El pack que tenemos activado es el del {@link PackCamionTren}.Creamos un {@link PackCamionTren} con las caracteristicas del trayecto para que el coste del viaje sea el del descuento.Guardamos en Arraylist
-					PackCamionTren trayectoCasteado= new PackCamionTren(trayecto.getCodigoSimple(),trayecto.getMuelleOrigen(), trayecto.getPuertoOrigen(), trayecto.getFechaIni().toString(), trayecto.getMuelleDestino(), trayecto.getPuertoDestino(),trayecto.getFechaFin().toString());
-					trayectos.add(trayectoCasteado);
-				}
-				else {// El pack que tenemos activado es el del {@link PackCamionBarco}.Creamos un {@link PackCamionBarco} con las caracteristicas del trayecto para que el coste del viaje sea el del descuento.Guardamos en Arraylist
-					PackCamionBarco trayectoCasteado= new PackCamionBarco(trayecto.getCodigoSimple(),trayecto.getMuelleOrigen(), trayecto.getPuertoOrigen(), trayecto.getFechaIni().toString(), trayecto.getMuelleDestino(), trayecto.getPuertoDestino(),trayecto.getFechaFin().toString());
-					trayectos.add(trayectoCasteado);
-				}
-			}
-			else {//No compatible con el pack activado .Guardamos trayecto simple y ponemos el packActivado a sin descuento({0,0,0})
-				trayectos.add(trayecto);
-				packActivado=trayecto.getTipoPack(); 
-			}
+		else {
+			comprobarSimple(trayecto);
 		}
+		trayectos.add(trayecto);
 		if(trayecto.getPuertoDestino().equals(destinoFinal)) this.setRecogida(); //Si hemos llegado al destino final global esta listo para recogerse el contenedor
 	}
 	/**
@@ -429,18 +410,19 @@ public abstract class Contenedor {
 	 * @throws IllegalArgumentException Si el contenedor no se encuentre en el puerto origen del trayecto
 	 * @throws IllegalArgumentException Si el puerto origen coincide con el destino final del trayecto global.
 	 * Se deberia haber realizado un nuevo trayecto global,ya que sino el contenedor esta en estado de recogida.
-	 * @throws IllegalArgumentException Si el contenedor no puede realizar ese transporte por la infraestructura utilizada del trayecto.
-	 * @throws IllegalArgumentException Si el muelle origen no soporta la infraestructura de transporte que marca el transporte.
-	 * @throws IllegalArgumentException Si el muelle destino no soporta la infraestructura de transporte que marca el transporte.
 	 */
 	private void comprobarTrayectosYMuelle(Trayecto trayecto) {
-		if(trayecto==null)throw new IllegalArgumentException("trayecto nulo");
+		if(trayecto==null)
+			throw new IllegalArgumentException("Trayecto nulo");
 		
-		if(trayectos.contains(trayecto))throw new IllegalArgumentException("trayecto ya realizado");
+		if(trayectos.contains(trayecto))
+			throw new IllegalArgumentException("Trayecto ya realizado");
 		
-		if(destinoFinal==null) throw new IllegalArgumentException("establezca un destino final del trayecto global");
+		if(destinoFinal==null) 
+			throw new IllegalArgumentException("Establezca un destino final del trayecto global");
 
-		if(trayecto.getPuertoOrigen().equals(getDestinoFinal()))throw new IllegalArgumentException("Ya se había llegado al puerto destino del trayecto.Inicie un nuevo trayecto global");
+		if(trayecto.getPuertoOrigen().equals(getDestinoFinal()))
+			throw new IllegalArgumentException("Ya se había llegado al puerto destino del trayecto.Inicie un nuevo trayecto global");
 		//que el contenedor este en ese muelle/puerto
 		List<Muelle> listaMuellesOrigen=trayecto.getPuertoOrigen().getListaMuelles();
 		int posicionMuelleOrigen=-1;
@@ -452,16 +434,44 @@ public abstract class Contenedor {
 			if(plaza!=-1) posicionMuelleOrigen=i;
 			i++;
 		}
-		if (posicionMuelleOrigen==-1) throw new IllegalArgumentException("El contenedor no esta en ese puerto");
-		
-		if(this.getCodigoTransporte()[trayecto.getCodigoSimple()]!=1)
+		if (posicionMuelleOrigen==-1) 
+			throw new IllegalArgumentException("El contenedor no esta en ese puerto");
+	}
+	
+	/**
+	 * Comprueba más reglas para realizar viajes de un contenedor, en el caso de que
+	 * el trayecto propuesto sea un trayecto Simple ({@link Simple})
+	 * @param trayecto El trayecto a analizar que cumple las condiciones de {@link Contenedor#hacerViajes(Trayecto)}
+	 * @throws IllegalArgumentException Si el contenedor no puede realizar ese transporte por la infraestructura utilizada del trayecto.
+	 * @throws IllegalArgumentException Si el muelle origen no soporta la infraestructura de transporte que marca el transporte.
+	 * @throws IllegalArgumentException Si el muelle destino no soporta la infraestructura de transporte que marca el transporte.
+	 */
+	private void comprobarSimple(Trayecto trayecto) {
+		if (this.getCodigoTransporte()[((Simple) trayecto).getCodigoSimple()]!=1)
 			throw new IllegalArgumentException("El contenedor no puede realizar ese trayecto por la infraestructura");
-		
-		if(listaMuellesOrigen.get(posicionMuelleOrigen).getInfraestructuraMuelle()[trayecto.getCodigoSimple()]!=1) 
+		if(trayecto.getMuelleOrigen().getInfraestructuraMuelle()[((Simple) trayecto).getCodigoSimple()]!=1) 
 			throw new IllegalArgumentException("El muelle origen no soporta este trayecto");
 		
-		if(trayecto.getMuelleDestino().getInfraestructuraMuelle()[trayecto.getCodigoSimple()]!=1)
+		if(trayecto.getMuelleDestino().getInfraestructuraMuelle()[((Simple) trayecto).getCodigoSimple()]!=1)
 			throw new IllegalArgumentException("El muelle destino no soporta este trayecto");
+	}
+
+	/**
+	 * Comprueba más reglas para realizar viajes de un contenedor, en el caso de que
+	 * el trayecto propuesto sea un trayecto Combinado ({@link Combinado})
+	 * @param trayecto El trayecto a analizar que cumple las condiciones de {@link Contenedor#hacerViajes(Trayecto)}
+	 * @throws IllegalArgumentException Si el contenedor no puede realizar ese transporte por la infraestructura utilizada del trayecto.
+	 * @throws IllegalArgumentException Si el muelle origen no soporta la infraestructura de transporte que marca el transporte.
+	 * @throws IllegalArgumentException Si el muelle destino no soporta la infraestructura de transporte que marca el transporte.
+	 */
+	private void comprobarCombinado(Trayecto trayecto) {
+		if(!((Combinado)trayecto).trayectoRealiazado())
+			throw new IllegalArgumentException("No se inicio o finalizó correctamente con un trayecto en los puertos del constructor del pack");
+		Iterator<Simple> iteradorTrayec=((Combinado)trayecto).getTrayectosPack().iterator();
+		while(iteradorTrayec.hasNext()) {
+			Simple trayecAnalisis=iteradorTrayec.next();
+			comprobarSimple(trayecAnalisis);
+		}
 	}
 
 	/**

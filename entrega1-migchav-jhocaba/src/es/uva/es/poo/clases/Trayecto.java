@@ -32,6 +32,7 @@ import es.uva.inf.poo.maps.GPSCoordinate;
 
 public abstract class Trayecto {	
 	
+	static final double MILLAS_MARINAS=1.852;
 	private Muelle muelleOrigen;
 	private Puerto puertoOrigen;
 	private LocalDate fechaIni;
@@ -96,38 +97,6 @@ public abstract class Trayecto {
 	 * @return el coste en euros total del trayecto.
 	 */
 	public abstract double costeTrayecto();
-	
-	/**
-	 * Obtenemos el codigo de Pack descuento en un array de tamaño tres, en el que la posicion
-	 * 0 es el correspodiente al transporte por barco,la 1 al transporte por tren y la 2 al 
-	 * transporte por camión.
-	 * @return El array codificado en binario para los tres transportes siendo 1 que ese 
-	 * transporte tiene un descuento en el precio al pertenecer a un Pack {@link Combinado} 
-	 * y 0 que el Pack no tiene un descuento para ese transporte por ese medio.
-	 * @see Simple#getTipoPack()
-	 * @see TTren#getTipoPack()
-	 * @see TBarco#getTipoPack()
-	 * @see TCamion#getTipoPack()
-	 * 
-	 * @see Combinado#getTipoPack()
-	 * @see PackCamionBarco#getTipoPack()
-	 * @see PackCamionTren#getTipoPack()
-	 */
-	public abstract int [] getTipoPack();
-	/**
-	 * Obtenemos el numero que codifica que tipo de transporte se esta utilizando para ese transporte.
-	 * @return El numero que indica el medio de transporte:0 es el correspodiente al transporte por barco,
-	 * el 1 al transporte por tren y el 2 al transporte por camión.
-	 * @see Simple#getCodigoSimple()
-	 * @see TTren#getCodigoSimple()
-	 * @see TBarco#getCodigoSimple()
-	 * @see TCamion#getCodigoSimple()
-	 * 
-	 * @see Combinado#getCodigoSimple()
-	 * @see PackCamionBarco#getCodigoSimple()
-	 * @see PackCamionTren#getCodigoSimple()
-	 */
-	public abstract int getCodigoSimple();
 	
 
 	
@@ -200,7 +169,7 @@ public abstract class Trayecto {
 	/**
 	 * Calcula la distancia de un viaje en millas marinas a partir del metodo getDistanceTo de la clase GPSCoordinate
 	 * @throws IllegalArgumentException - Cualquier excepcion sera lanzada por la clase GPSCoordinate
-	 * @return La distancia en km entre coordenadas
+	 * @return La distancia en millas marinas entre coordenadas
 	 */
 	
 	public double getDistancia() {
@@ -208,7 +177,7 @@ public abstract class Trayecto {
 		GPSCoordinate coordenadaOrigen = getMuelleOrigen().getCoordenada();
 		GPSCoordinate coordenadaDestino=getMuelleDestino().getCoordenada();
 		distancia = coordenadaOrigen.getDistanceTo(coordenadaDestino);
-		return (distancia/1.852);//para pasarlo a millas marinas
+		return (distancia/MILLAS_MARINAS);//para pasarlo a millas marinas
 	}
 	
 	/**

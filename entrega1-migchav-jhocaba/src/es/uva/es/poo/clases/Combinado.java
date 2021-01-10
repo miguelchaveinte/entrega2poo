@@ -1,15 +1,14 @@
 package es.uva.es.poo.clases;
 
 import java.time.LocalDate;
+import java.util.*;
 
 /**
  * Clase abstracta que genera un {@link Trayecto} Combinado, los cuales ofertan varios
- * trayectos simples en formato Pack para mejorar su coste. Estos se distinguen porque el trayecto
- * que generan es compatible con el Pack(ya que un pack soporta trayectos 
- * no agrupados para descuentos)tienen descuento en el coste y tambien aquellos 
- * trayectos posteriores,incluso si son del tipo {@link Simple},si ese trayecto es compatible con el Pack 
- * que generamos tambien obtiene ese descuento, hasta que el contenedor reciba otro tipo de Pack 
- * o un trayecto {@link Simple} no compatible con el Pack.
+ * trayectos simples en formato Pack para mejorar su coste. Estos lo que hacen es 
+ * agrupar en un trayecto global ,de inicio y fin marcado por el constructor del Pack, los
+ * diferentes trayectos que se realizan y aquellos que sean 
+ * TODO
  * @see PackCamionBarco
  * @see PackCamionTren
  * @author migchav,jhocaba
@@ -38,19 +37,41 @@ public abstract class Combinado extends Trayecto {
 	public Combinado(Muelle muelleOrigen,Puerto puertoOrigen,String fechaIni,Muelle muelleDestino,Puerto puertoDestino,String fechaFin) {
 		super(muelleOrigen, puertoOrigen, fechaIni, muelleDestino,puertoDestino,fechaFin);
 	}
+
+	/**
+	 * TODO
+	 * @param trayecto
+	 */
+	public abstract void addTrayecto(Simple trayecto);
+	
+	/**
+	 * Retorna la lista clonada de los trayectos que almacena el Pack
+	 * @see <a href="https://github.com/kostaskougios/cloning">Cloning Library</a>
+	 * @see Simple
+	 * @return La lista de los trayectos incluidos en el Pack
+	 */
+	public abstract List<Simple> getTrayectosPack();
+	
+	/**
+	 * Indica si un trayecto ya está contenido en el Pack
+	 * @param trayecto El trayacto para ver si esta contenido
+	 * @return true si el trayecto ya esta contenido en el Pack.Si es al contrario,false.
+	 * @see ArrayList#contains(Object)
+	 */
+	public abstract boolean containsTrayecto(Simple trayecto);
+	
+	/**
+	 * Indica si el trayecto Pack ha sido completado,es decir, si hay un trayecto cuyo
+	 * origen es el origen del Pack y si hay un trayecto cuyo destino es el destino del Pack.
+	 * @return true si se cumplen ambas condiciones anteriores,es decir,si el Pack ya 
+	 * ha sido cubierto de inicio a fin , sino retorna false
+	 */
+	public abstract boolean trayectoRealiazado();
+	
+	
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public abstract double costeTrayecto();
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public abstract int [] getTipoPack();
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public abstract int getCodigoSimple(); 
 }
