@@ -8,7 +8,6 @@ import java.util.*;
  * trayectos simples en formato Pack para mejorar su coste. Estos lo que hacen es 
  * agrupar en un trayecto global ,de inicio y fin marcado por el constructor del Pack, los
  * diferentes trayectos que se realizan y aquellos que sean 
- * TODO
  * @see PackCamionBarco
  * @see PackCamionTren
  * @author migchav,jhocaba
@@ -39,8 +38,10 @@ public abstract class Combinado extends Trayecto {
 	}
 
 	/**
-	 * TODO
-	 * @param trayecto
+	 * Añade el trayecto que se pasa como parámetro a la lista de los trayectos del Pack.
+	 * Este debe cumplir que no sea null, y sea compatible con el Pack seleccionado.
+	 * Se admiten un trayecto Camion y un trayecto en tren o en barco según el pack.
+	 * @param trayecto El trayecto a añadir
 	 */
 	public abstract void addTrayecto(Simple trayecto);
 	

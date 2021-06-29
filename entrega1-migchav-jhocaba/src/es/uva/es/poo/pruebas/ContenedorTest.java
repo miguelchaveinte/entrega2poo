@@ -398,7 +398,7 @@ public class ContenedorTest {
 		origenPuertoCombinado.addMuelle(origenMuelleCombinado);
 		destinoPuertoCombinado.addMuelle(destinoMuelleCombinado);
 		
-		Simple trayectoMas = new TBarco(origenMuelle, origenPuerto, "2020-11-19", destinoMuelleCombinado, destinoPuertoCombinado,"2020-12-31");
+		Simple trayectoMas = new TTren(origenMuelle, origenPuerto, "2020-11-19", destinoMuelleCombinado, destinoPuertoCombinado,"2020-12-31");
 		
 		nuevoTrayectoPack.addTrayecto(trayectoMas);
 		
